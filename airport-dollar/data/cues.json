@@ -1,0 +1,173 @@
+{
+ "duration": 42.632,
+ "cues": [
+  {
+   "t": 0,
+   "type": "whoosh"
+  },
+  {
+   "t": 3.24,
+   "type": "boing"
+  },
+  {
+   "t": 3.826,
+   "type": "whoosh"
+  },
+  {
+   "t": 4.24,
+   "type": "stamp",
+   "gain": 1
+  },
+  {
+   "t": 4.34,
+   "type": "slam",
+   "gain": 0.8
+  },
+  {
+   "t": 4.927,
+   "type": "whoosh"
+  },
+  {
+   "t": 5.427,
+   "type": "pop"
+  },
+  {
+   "t": 6.072,
+   "type": "whoosh"
+  },
+  {
+   "t": 9.56,
+   "type": "plop"
+  },
+  {
+   "t": 10.36,
+   "type": "boing"
+  },
+  {
+   "t": 11.099,
+   "type": "whoosh"
+  },
+  {
+   "t": 11.26,
+   "type": "chirp",
+   "dur": 1.5,
+   "gain": 0.3
+  },
+  {
+   "t": 15.345,
+   "type": "whoosh"
+  },
+  {
+   "t": 16.42,
+   "type": "plop"
+  },
+  {
+   "t": 16.856,
+   "type": "whoosh"
+  },
+  {
+   "t": 17.06,
+   "type": "plop"
+  },
+  {
+   "t": 18.118,
+   "type": "whoosh"
+  },
+  {
+   "t": 20.46,
+   "type": "plop",
+   "gain": 0.6
+  },
+  {
+   "t": 21.753,
+   "type": "whoosh"
+  },
+  {
+   "t": 22.78,
+   "type": "pop"
+  },
+  {
+   "t": 23.68,
+   "type": "boing"
+  },
+  {
+   "t": 24.44,
+   "type": "whoosh"
+  },
+  {
+   "t": 25.34,
+   "type": "boing",
+   "gain": 1.2
+  },
+  {
+   "t": 25.846,
+   "type": "whoosh"
+  },
+  {
+   "t": 26.3,
+   "type": "stamp",
+   "gain": 1
+  },
+  {
+   "t": 26.38,
+   "type": "slam",
+   "gain": 0.9
+  },
+  {
+   "t": 26.999,
+   "type": "whoosh"
+  },
+  {
+   "t": 27.74,
+   "type": "boing"
+  },
+  {
+   "t": 28.243,
+   "type": "whoosh"
+  },
+  {
+   "t": 29.02,
+   "type": "ding"
+  },
+  {
+   "t": 29.584,
+   "type": "whoosh"
+  },
+  {
+   "t": 29.94,
+   "type": "stamp",
+   "gain": 0.8
+  },
+  {
+   "t": 32.48,
+   "type": "plop"
+  },
+  {
+   "t": 33.264,
+   "type": "whoosh"
+  },
+  {
+   "t": 34.08,
+   "type": "boing"
+  },
+  {
+   "t": 36.02,
+   "type": "sparkle",
+   "gain": 1
+  },
+  {
+   "t": 36.809,
+   "type": "whoosh"
+  },
+  {
+   "t": 38.18,
+   "type": "sparkle",
+   "gain": 0.8
+  },
+  {
+   "t": 40.5,
+   "type": "ding",
+   "gain": 1
+  }
+ ]
+}

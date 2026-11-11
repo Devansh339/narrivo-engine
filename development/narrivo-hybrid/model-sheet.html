@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Narrivo Character Engine — Refined Character Design Sheet</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #090B0E;
+      color: #E2E8F0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      padding: 32px 24px 64px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      text-align: center;
+      max-width: 1000px;
+      margin-bottom: 28px;
+    }
+    .badge {
+      display: inline-block;
+      background: #111A2E;
+      color: #38BDF8;
+      border: 1px solid #1E3A5F;
+      padding: 4px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    h1 {
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+    }
+    p.lead {
+      color: #94A3B8;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .sheet-container {
+      max-width: 1520px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid #1E2536;
+      padding-bottom: 10px;
+      margin-bottom: 18px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #F8FAFC;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 18px;
+      background: #38BDF8;
+      border-radius: 2px;
+    }
+    .section-sub {
+      font-size: 12px;
+      color: #64748B;
+    }
+
+    /* Turnaround 3-View Grid */
+    .turnaround-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .view-card {
+      background: #11141E;
+      border: 1px solid #1C2333;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    .view-card canvas {
+      width: 100%;
+      aspect-ratio: 512 / 1024;
+      background: #151926;
+      border-radius: 10px;
+      border: 1px solid #232B3E;
+    }
+    .view-label {
+      font-size: 14px;
+      font-weight: 800;
+      color: #E2E8F0;
+      margin-top: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .view-notes {
+      font-size: 11px;
+      color: #717D96;
+      margin-top: 2px;
+      text-align: center;
+    }
+
+    /* Detail Study Row: Close-Up Portrait & 4 Expressions */
+    .detail-row {
+      display: grid;
+      grid-template-columns: 1.1fr 1.9fr;
+      gap: 20px;
+    }
+    .portrait-card {
+      background: #11141E;
+      border: 1px solid #1C2333;
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .portrait-card canvas {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #151926;
+      border-radius: 10px;
+      border: 1px solid #232B3E;
+    }
+    .expressions-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .expr-card {
+      background: #11141E;
+      border: 1px solid #1C2333;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .expr-card canvas {
+      width: 100%;
+      aspect-ratio: 1 / 1.1;
+      background: #151926;
+      border-radius: 8px;
+      border: 1px solid #232B3E;
+    }
+    .expr-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #E2E8F0;
+      margin-top: 8px;
+      text-transform: capitalize;
+    }
+    .expr-sub {
+      font-size: 10px;
+      color: #717D96;
+      text-align: center;
+    }
+
+    /* Concept Artwork Panel (for embedded image-generator plate) */
+    .concept-art-panel {
+      background: #11141E;
+      border: 1px solid #1C2333;
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .concept-art-panel img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      border: 1px solid #232B3E;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+    }
+
+    /* Material & Color Specs */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .spec-card {
+      background: #11141E;
+      border: 1px solid #1C2333;
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .spec-swatch {
+      width: 100%;
+      height: 36px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .spec-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #F8FAFC;
+    }
+    .spec-desc {
+      font-size: 11px;
+      color: #8C96AB;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">DIRECTION 3 · CHARACTER DESIGN SHEET</div>
+    <h1>Commander Vance — The Aviator / Field Commander</h1>
+    <p class="lead">Refined anatomical character design and material specification sheet for the Narrivo Hybrid Graphics System.</p>
+  </header>
+
+  <div class="sheet-container">
+
+    <!-- 1. Turnaround Orthographic Studies (Front, 3/4, Profile) -->
+    <div>
+      <div class="section-header">
+        <div class="section-title">1. Full-Body Turnaround & Proportion Studies</div>
+        <div class="section-sub">Scale: 7.5-head athletic proportion · Height: 1.85m equivalent</div>
+      </div>
+      <div class="turnaround-grid">
+        <div class="view-card">
+          <canvas id="cvFront" width="512" height="1024"></canvas>
+          <div class="view-label">Front View (A-Pose)</div>
+          <div class="view-notes">Heroic shoulder width, deltoid taper, shearling lapel symmetry</div>
+        </div>
+
+        <div class="view-card" style="border-color: #38BDF8;">
+          <canvas id="cvThreeQuarter" width="512" height="1024"></canvas>
+          <div class="view-label" style="color: #38BDF8;">Three-Quarter (3/4) Stance</div>
+          <div class="view-notes">Natural pelvic contrapposto, jacket tension folds, depth overlap</div>
+        </div>
+
+        <div class="view-card">
+          <canvas id="cvProfile" width="512" height="1024"></canvas>
+          <div class="view-label">Profile (Side View)</div>
+          <div class="view-notes">Chest volume, spine curvature, knee bend, combat boot heel</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Close-up Facial Study & Expressions -->
+    <div>
+      <div class="section-header">
+        <div class="section-title">2. Facial Anatomy & Emotional Range</div>
+        <div class="section-sub">Detailed eye plane construction, sculpted jaw, and multi-tier hair clumps</div>
+      </div>
+      <div class="detail-row">
+        <!-- High-res close-up portrait -->
+        <div class="portrait-card">
+          <canvas id="cvPortrait" width="600" height="600"></canvas>
+          <div class="view-label">Hero Facial Portrait</div>
+          <div class="view-notes">Warm directional key, SSS cheek warmth, cool blue rim glint (#A5D8FF)</div>
+        </div>
+
+        <!-- 4 Key Expressions -->
+        <div class="expressions-grid">
+          <div class="expr-card">
+            <canvas id="cvExprConfident" width="300" height="330"></canvas>
+            <div class="expr-title">1. Confident (Signature)</div>
+            <div class="expr-sub">Asymmetrical smirk, steady gaze</div>
+          </div>
+
+          <div class="expr-card">
+            <canvas id="cvExprFocused" width="300" height="330"></canvas>
+            <div class="expr-title">2. Focused / Alert</div>
+            <div class="expr-sub">Furrowed brow, narrowed glare</div>
+          </div>
+
+          <div class="expr-card">
+            <canvas id="cvExprLaugh" width="300" height="330"></canvas>
+            <div class="expr-title">3. Grin / Laughing</div>
+            <div class="expr-sub">Open joyful smile, cheek crinkles</div>
+          </div>
+
+          <div class="expr-card">
+            <canvas id="cvExprShocked" width="300" height="330"></canvas>
+            <div class="expr-title">4. Shocked / Alarmed</div>
+            <div class="expr-sub">High brows, pinprick pupil, O-jaw</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Dynamic Action Poses -->
+    <div>
+      <div class="section-header">
+        <div class="section-title">3. Dynamic Body Articulation & Locomotion Poses</div>
+        <div class="section-sub">Knee & elbow fabric bunching, shoe sole compression, gesture authority</div>
+      </div>
+      <div class="turnaround-grid">
+        <div class="view-card">
+          <canvas id="cvPoseWalk" width="512" height="1024"></canvas>
+          <div class="view-label">Walking Stride</div>
+          <div class="view-notes">Forward foot contact roll, opposing arm swing, jacket drag fold</div>
+        </div>
+
+        <div class="view-card">
+          <canvas id="cvPoseCommand" width="512" height="1024"></canvas>
+          <div class="view-label">Commanding / Pointing</div>
+          <div class="view-notes">Forearm foreshortening, articulated pointing finger, locked fist</div>
+        </div>
+
+        <div class="view-card">
+          <canvas id="cvPoseRelaxed" width="512" height="1024"></canvas>
+          <div class="view-label">Resting at Hip</div>
+          <div class="view-notes">Thumb tucked in belt, weight shifted to rear hip</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Material & Texture Palette Specifications -->
+    <div>
+      <div class="section-header">
+        <div class="section-title">4. Surface Materials & Lighting Palette</div>
+        <div class="section-sub">Consistent physical and optical parameters across all shots</div>
+      </div>
+      <div class="specs-grid">
+        <div class="spec-card">
+          <div class="spec-swatch" style="background: linear-gradient(135deg, #6E4935, #3F2A1E, #281A12);"></div>
+          <div class="spec-name">Distressed Leather Jacket</div>
+          <div class="spec-desc">Deep warm brown (#3F2A1E) with subtle worn seam highlights and specular creasing along elbows.</div>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-swatch" style="background: linear-gradient(135deg, #FFFDF8, #F8EFE4, #D4C4B0);"></div>
+          <div class="spec-name">Shearling Fleece Collar</div>
+          <div class="spec-desc">Plush cream wool with soft ambient occlusion in deep fleece folds and soft rim light scattering.</div>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-swatch" style="background: linear-gradient(135deg, #5C6D55, #3E4738, #252C21);"></div>
+          <div class="spec-name">Tactical Field Canvas</div>
+          <div class="spec-desc">Heavyweight olive canvas (#3E4738) with reinforced double-stitched knee patches and tension folds.</div>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-swatch" style="background: linear-gradient(135deg, #F5B998, #DE6A48, #A36544);"></div>
+          <div class="spec-name">Skin & Subsurface Scatter</div>
+          <div class="spec-desc">Weathered explorer skin tone with warm reddish-orange terminator band (#DE6A48) catching 3D key light.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module">
+    window.SHEET_READY = false;
+
+    // Lighting Constants (Direction 3 Hybrid Standard)
+    const RIM_COLOR = '#A5D8FF'; // 3D Cool Environmental Rim Light
+    const INK_TINTED = '#1C151B'; // Softened tinted ink outline
+
+    // =========================================================================
+    // REFINED ANATOMICAL DRAWING ENGINE (DIRECTION 3)
+    // Features: Sculpted planar jawline, volumetric hair clumps,
+    // natural deltoids and clavicles, articulated fingers with knuckles,
+    // welt seams, shearling tufts, and realistic fabric folds.
+    // =========================================================================
+
+    function drawFloor(ctx, cx = 256, cy = 960) {
+      ctx.save();
+      const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, 100);
+      grad.addColorStop(0, 'rgba(8, 10, 15, 0.7)');
+      grad.addColorStop(1, 'rgba(8, 10, 15, 0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy + 2, 100, 16, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // -------------------------------------------------------------------------
+    // 1. REFINED HEAD RENDERER (Front, 3/4, Profile, Close-Up)
+    // -------------------------------------------------------------------------
+    function drawRefinedHead(ctx, x, y, scale = 1, view = '3/4', expr = 'confident') {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(scale, scale);
+
+      // Neck with sternocleidomastoid muscle definition
+      const neckGrad = ctx.createLinearGradient(-18, 0, 20, 0);
+      neckGrad.addColorStop(0, '#985E3E');
+      neckGrad.addColorStop(0.35, '#DE6A48'); // SSS
+      neckGrad.addColorStop(0.8, '#F5B998');
+      neckGrad.addColorStop(1, RIM_COLOR);
+      ctx.fillStyle = neckGrad;
+      ctx.beginPath();
+      ctx.moveTo(-18, -40); ctx.lineTo(-14, 25); ctx.lineTo(16, 25); ctx.lineTo(18, -40);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = INK_TINTED;
+      ctx.lineWidth = 2.4;
+      ctx.stroke();
+
+      // Jaw and Skull Base (Sculpted anatomical planes)
+      const headGrad = ctx.createLinearGradient(-35, 0, 35, 0);
+      headGrad.addColorStop(0, '#9E6240');
+      headGrad.addColorStop(0.28, '#DE6A48'); // SSS glow along jawline
+      headGrad.addColorStop(0.75, '#F5B998');
+      headGrad.addColorStop(0.96, '#FFE0CE');
+      headGrad.addColorStop(1, RIM_COLOR);   // 3D Rim light!
+      ctx.fillStyle = headGrad;
+
+      ctx.beginPath();
+      if (view === 'profile') {
+        // True Anatomical Profile
+        ctx.moveTo(12, -75); // Crown
+        ctx.bezierCurveTo(28, -75, 36, -55, 34, -30); // Forehead
+        ctx.lineTo(38, -18); // Nose bridge indent (glabella)
+        ctx.lineTo(48, -4);  // Nose tip
+        ctx.lineTo(38, 2);   // Nostril base
+        ctx.lineTo(36, 12);  // Philtrum to upper lip
+        ctx.lineTo(39, 14);  // Upper lip peak
+        ctx.lineTo(34, 20);  // Mouth indent
+        ctx.lineTo(37, 26);  // Lower lip
+        ctx.lineTo(33, 34);  // Chin groove
+        ctx.lineTo(36, 42);  // Chin point
+        ctx.lineTo(24, 46);  // Under chin
+        ctx.lineTo(0, 36);   // Jawline back to ear
+        ctx.lineTo(-24, 20); // Back of jaw
+        ctx.lineTo(-26, -50); // Back of skull
+        ctx.closePath();
+      } else if (view === 'front') {
+        // Symmetrical Front View (Sculpted angular chin)
+        ctx.moveTo(0, 44);   // Chin
+        ctx.lineTo(-16, 42); ctx.lineTo(-32, 24); // Left jaw corner
+        ctx.lineTo(-34, -20); // Left cheek
+        ctx.bezierCurveTo(-34, -80, 34, -80, 34, -20); // Crown
+        ctx.lineTo(32, 24);  // Right cheek & jaw
+        ctx.lineTo(16, 42);
+        ctx.closePath();
+      } else {
+        // Dynamic 3/4 Hero View
+        ctx.moveTo(8, 44);   // Chin
+        ctx.lineTo(-18, 38); ctx.lineTo(-34, 22); // Near jaw corner
+        ctx.lineTo(-32, -25); // Near cheekbone
+        ctx.bezierCurveTo(-32, -80, 32, -80, 34, -25); // Crown
+        ctx.lineTo(28, 22);  // Far cheek
+        ctx.lineTo(22, 40);
+        ctx.closePath();
+      }
+      ctx.fill();
+      ctx.strokeStyle = INK_TINTED;
+      ctx.lineWidth = 2.8;
+      ctx.stroke();
+
+      // Subtle ambient occlusion under chin
+      ctx.fillStyle = 'rgba(60, 25, 15, 0.4)';
+      ctx.beginPath();
+      ctx.ellipse(view === 'profile' ? 18 : 6, 43, 14, 5, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Hair (Volumetric, layered swept clumps with highlights)
+      const hairGrad = ctx.createLinearGradient(-35, -70, 35, -20);
+      hairGrad.addColorStop(0, '#1E1714');
+      hairGrad.addColorStop(0.6, '#3A2B23');
+      hairGrad.addColorStop(0.9, '#5E483C');
+      hairGrad.addColorStop(1, RIM_COLOR);
+      ctx.fillStyle = hairGrad;
+
+      ctx.beginPath();
+      if (view === 'profile') {
+        ctx.moveTo(-28, 10);
+        ctx.bezierCurveTo(-35, -40, -25, -90, 15, -85);
+        ctx.bezierCurveTo(34, -82, 38, -60, 35, -35); // Front fringe
+        ctx.lineTo(24, -40);
+        ctx.bezierCurveTo(28, -60, 0, -70, -10, -50);
+        ctx.closePath();
+      } else {
+        ctx.moveTo(-34, 10);
+        ctx.bezierCurveTo(-42, -50, -25, -92, 12, -88);
+        ctx.bezierCurveTo(38, -84, 42, -45, 34, 5);
+        ctx.bezierCurveTo(28, -25, 20, -35, 12, -32); // Side hair parted
+        ctx.bezierCurveTo(4, -42, -15, -42, -26, -25);
+        ctx.closePath();
+      }
+      ctx.fill();
+      ctx.strokeStyle = '#120E0C';
+      ctx.lineWidth = 2.8;
+      ctx.stroke();
+
+      // Hair Specular Arc
+      ctx.strokeStyle = '#7D6454';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(view === 'profile' ? 4 : 2, -68, 20, Math.PI * 1.1, Math.PI * 1.8);
+      ctx.stroke();
+
+      // Facial Features (Eyes, Eyebrows, Nose, Mouth)
+      const isShock = expr === 'shocked';
+      const isFocused = expr === 'focused';
+      const isLaugh = expr === 'laughing';
+
+      // Eyebrows
+      ctx.strokeStyle = '#2B1E17';
+      ctx.lineWidth = 3.8;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      if (isFocused) {
+        ctx.moveTo(-22, -18); ctx.lineTo(-6, -14); // Furrowed intense
+        ctx.moveTo(8, -14); ctx.lineTo(24, -18);
+      } else if (isShock) {
+        ctx.moveTo(-22, -28); ctx.lineTo(-6, -24); // Raised high
+        ctx.moveTo(8, -24); ctx.lineTo(24, -28);
+      } else if (isLaugh) {
+        ctx.moveTo(-22, -20); ctx.quadraticCurveTo(-14, -26, -6, -20);
+        ctx.moveTo(8, -20); ctx.quadraticCurveTo(16, -26, 24, -20);
+      } else {
+        // Confident signature
+        ctx.moveTo(-22, -22); ctx.lineTo(-6, -18);
+        ctx.moveTo(8, -17); ctx.lineTo(24, -22);
+      }
+      ctx.stroke();
+
+      // Eyes
+      if (isLaugh) {
+        // Squeezed smiling crescents
+        ctx.strokeStyle = INK_TINTED;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(-14, -8, 7, Math.PI * 1.15, Math.PI * 1.85);
+        ctx.arc(14, -8, 7, Math.PI * 1.15, Math.PI * 1.85);
+        ctx.stroke();
+      } else {
+        // Expressive eyes with layered iris & catchlights
+        const eyeW = isShock ? 6.5 : 5.2;
+        const eyeH = isShock ? 9.5 : 7.2;
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.ellipse(-14, -8, eyeW, eyeH, 0.08, 0, Math.PI * 2);
+        if (view !== 'profile') ctx.ellipse(14, -8, eyeW, eyeH, -0.08, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = INK_TINTED;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Iris
+        const pSize = isShock ? 2.5 : 4.0;
+        ctx.fillStyle = '#422819';
+        ctx.beginPath();
+        ctx.arc(-13.5, -8, pSize, 0, Math.PI * 2);
+        if (view !== 'profile') ctx.arc(14.5, -8, pSize, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Pupil Core
+        ctx.fillStyle = '#0F0B09';
+        ctx.beginPath();
+        ctx.arc(-13.5, -8, pSize * 0.55, 0, Math.PI * 2);
+        if (view !== 'profile') ctx.arc(14.5, -8, pSize * 0.55, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Specular Catchlights (Primary + Secondary)
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(-12, -9.5, 1.6, 0, Math.PI * 2);
+        ctx.arc(-15, -6.5, 0.9, 0, Math.PI * 2);
+        if (view !== 'profile') {
+          ctx.arc(16, -9.5, 1.6, 0, Math.PI * 2);
+          ctx.arc(13, -6.5, 0.9, 0, Math.PI * 2);
+        }
+        ctx.fill();
+
+        // Upper Eyelid Lash Line
+        ctx.strokeStyle = INK_TINTED;
+        ctx.lineWidth = 3.2;
+        ctx.beginPath();
+        ctx.moveTo(-20, -10); ctx.lineTo(-7, -9);
+        if (view !== 'profile') { ctx.moveTo(8, -9); ctx.lineTo(21, -10); }
+        ctx.stroke();
+      }
+
+      // Sculpted Nose (Nostril wing + bridge highlight)
+      if (view !== 'profile') {
+        ctx.strokeStyle = '#8E5135';
+        ctx.lineWidth = 2.4;
+        ctx.beginPath();
+        ctx.moveTo(0, -12);
+        ctx.lineTo(-2, 10);
+        ctx.lineTo(4, 10); // nostril
+        ctx.stroke();
+      }
+
+      // Mouth
+      ctx.save();
+      ctx.translate(view === 'profile' ? 32 : 0, 24);
+      if (isShock) {
+        // Vertical open O-cavity
+        ctx.fillStyle = '#26121D';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 5, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = INK_TINTED;
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+      } else if (isLaugh) {
+        // Open wide laugh with upper teeth
+        ctx.fillStyle = '#28121D';
+        ctx.beginPath();
+        ctx.moveTo(-12, -2); ctx.quadraticCurveTo(0, 14, 12, -2);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(-8, -2, 16, 4); // teeth
+        ctx.strokeStyle = INK_TINTED;
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+      } else {
+        // Confident / focused smirk with philtrum indent
+        ctx.strokeStyle = INK_TINTED;
+        ctx.lineWidth = 2.8;
+        ctx.beginPath();
+        ctx.moveTo(-10, 0);
+        ctx.quadraticCurveTo(0, 3, 11, -1);
+        ctx.stroke();
+        // Lower lip shadow hint
+        ctx.strokeStyle = '#9E6240';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 6, 4, Math.PI * 0.2, Math.PI * 0.8);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // Subtle Stubble (Rugged Explorer)
+      ctx.fillStyle = 'rgba(35, 20, 15, 0.14)';
+      ctx.beginPath();
+      ctx.ellipse(view === 'profile' ? 22 : 0, 30, 18, 12, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. REFINED FULL-BODY RENDERER
+    // -------------------------------------------------------------------------
+    function drawRefinedFullBody(canvas, view = '3/4', pose = 'stand') {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, 512, 1024);
+      drawFloor(ctx);
+
+      ctx.save();
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // 1. Far Leg
+      const legRGrad = ctx.createLinearGradient(200, 700, 260, 700);
+      legRGrad.addColorStop(0, '#1E261B');
+      legRGrad.addColorStop(0.7, '#2F3C2B');
+      legRGrad.addColorStop(1, '#4A5B42');
+      ctx.fillStyle = legRGrad;
+      ctx.beginPath();
+      ctx.moveTo(226, 595);
+      ctx.bezierCurveTo(212, 675, 208, 755, 216, 835); // Knee
+      ctx.lineTo(220, 924);
+      ctx.lineTo(244, 924);
+      ctx.bezierCurveTo(242, 835, 246, 755, 252, 595);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = INK_TINTED;
+      ctx.lineWidth = 3.2;
+      ctx.stroke();
+
+      // Far Boot
+      ctx.fillStyle = '#181412';
+      ctx.beginPath();
+      ctx.moveTo(214, 916); ctx.lineTo(194, 954); ctx.lineTo(248, 954); ctx.lineTo(244, 916);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // 2. Near Leg (3/4 Forward Stance with Tactical Cargo Pocket & Seams)
+      const legLGrad = ctx.createLinearGradient(250, 750, 330, 750);
+      legLGrad.addColorStop(0, '#1E251B');
+      legLGrad.addColorStop(0.3, '#323D2E');
+      legLGrad.addColorStop(0.75, '#4B5A45');
+      legLGrad.addColorStop(0.96, '#5C6D55');
+      legLGrad.addColorStop(1, RIM_COLOR);
+      ctx.fillStyle = legLGrad;
+
+      ctx.beginPath();
+      ctx.moveTo(254, 595);
+      ctx.bezierCurveTo(278, 670, 288, 755, 276, 840); // Patella knee bulge
+      ctx.lineTo(274, 926);
+      ctx.lineTo(314, 926);
+      ctx.bezierCurveTo(320, 840, 328, 750, 302, 595);
+      ctx.closePath();
+      ctx.fill();
+
+      // Double Stitched Cargo Pocket on Thigh
+      ctx.fillStyle = '#394634';
+      ctx.beginPath();
+      ctx.roundRect(280, 645, 34, 44, 4);
+      ctx.fill();
+      ctx.strokeStyle = INK_TINTED;
+      ctx.lineWidth = 2.2;
+      ctx.stroke();
+      // Pocket Flap
+      ctx.fillStyle = '#2F3C2C';
+      ctx.beginPath();
+      ctx.roundRect(278, 642, 38, 14, 3);
+      ctx.fill();
+      ctx.stroke();
+
+      // Reinforced Knee Fabric Drag Folds
+      ctx.strokeStyle = '#182015';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(278, 752); ctx.lineTo(302, 756);
+      ctx.moveTo(276, 768); ctx.lineTo(308, 772);
+      ctx.stroke();
+
+      ctx.strokeStyle = INK_TINTED;
+      ctx.lineWidth = 3.6;
+      ctx.stroke();
+
+      // Near Boot (Weathered Leather, Lug Sole, Lace Eyelets)
+      const bootGrad = ctx.createLinearGradient(250, 935, 330, 935);
+      bootGrad.addColorStop(0, '#14100E');
+      bootGrad.addColorStop(0.5, '#2D221B');
+      bootGrad.addColorStop(0.95, '#3D2F26');
+      bootGrad.addColorStop(1, RIM_COLOR);
+      ctx.fillStyle = bootGrad;
+
+      ctx.beginPath();
+      ctx.moveTo(270, 918);
+      ctx.lineTo(252, 956); // Toe
+      ctx.lineTo(328, 956); // Heel
+      ctx.bezierCurveTo(332, 946, 326, 918, 314, 916);
+      ctx.closePath();
+      ctx.fill();
+
+      // Treaded Lug Sole
+      ctx.fillStyle = '#0F0C0A';
+      ctx.fillRect(248, 950, 82, 8);
+      ctx.strokeStyle = INK_TINTED;
+      ctx.lineWidth = 3.2;
+      ctx.stroke();
+
+      // Laces & Brass Eyelets
+      ctx.strokeStyle = '#C9A17A';
+      ctx.lineWidth = 2.2;
+      for (let ly = 924; ly < 948; ly += 6) {
+        ctx.beginPath(); ctx.moveTo(282, ly); ctx.lineTo(298, ly + 2); ctx.stroke();
+        ctx.fillStyle = '#E2B33C';
+        ctx.fillRect(280, ly - 1, 2, 2);
+        ctx.fillRect(298, ly + 1, 2, 2);
+      }
+
+      // 3. Torso (Leather Aviator Flight Jacket + Henley Undershirt)
+      const jacketGrad = ctx.createLinearGradient(180, 480, 330, 480);
+      jacketGrad.addColorStop(0, '#281A12');
+      jacketGrad.addColorStop(0.3, '#3F2A1E');
+      jacketGrad.addColorStop(0.7, '#593B2B');
+      jacketGrad.addColorStop(0.95, '#6E4935');
+      jacketGrad.addColorStop(1, RIM_COLOR);
+      ctx.fillStyle = jacketGrad;
+
+      ctx.beginPath();
+      ctx.moveTo(234, 595); // Left waist
+      ctx.bezierCurveTo(220, 500, 190, 430, 180, 380); // Left Deltoid
+      ctx.lineTo(242, 368); // Collar center
+      ctx.lineTo(328, 385); // Right Deltoid
+      ctx.bezierCurveTo(318, 430, 290, 500, 278, 595); // Right waist
+      ctx.closePath();
+      ctx.fill();
+
+      // Subsurface Scatter Warmth on Leather Crease
+      ctx.strokeStyle = 'rgba(230, 90, 40, 0.45)';
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(226, 480); ctx.lineTo(248, 550);
+      ctx.stroke();
+
+      ctx.strokeStyle = INK_TINTED;
+      ctx.lineWidth = 3.8;
+      ctx.stroke();
+
+      // Inner Cream Henley Undershirt (Visible at chest V-slit)
+      ctx.fillStyle = '#EFE9DE';
+      ctx.beginPath();
+      ctx.moveTo(242, 368);
+      ctx.lineTo(256, 416);
+      ctx.lineTo(270, 376);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = INK_TINTED;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      // Henley Buttons
+      ctx.fillStyle = '#6E5D4E';
+      ctx.fillRect(255, 380, 3, 3);
+      ctx.fillRect(255, 394, 3, 3);
+
+      // Diagonal Leather Utility Webbing & Holster
+      ctx.strokeStyle = '#241913';
+      ctx.lineWidth = 14;
+      ctx.beginPath();
+      ctx.moveTo(194, 395); ctx.lineTo(276, 560);
+      ctx.stroke();
+      ctx.strokeStyle = INK_TINTED;
+      ctx.lineWidth = 2.4;
+      ctx.stroke();
+      // Brass O-Ring Hardware
+      ctx.fillStyle = '#D4AF37';
+      ctx.beginPath();
+      ctx.arc(235, 478, 10, 0, Math.PI * 2);
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#FFF0A8';
+      ctx.beginPath(); ctx.arc(233, 475, 3, 0, Math.PI * 2); ctx.fill();
+
+      // Belt & Heavy Duty Double-Prong Brass Buckle
+      ctx.fillStyle = '#211813';
+      ctx.fillRect(230, 574, 56, 18);
+      ctx.fillStyle = '#D4AF37';
+      ctx.fillRect(244, 571, 26, 24);
+      ctx.strokeStyle = INK_TINTED;
+      ctx.lineWidth = 2.4;
+      ctx.strokeRect(244, 571, 26, 24);
+      // Belt Loop & Holes
+      ctx.fillStyle = '#0F0B09';
+      ctx.fillRect(238, 581, 3, 3);
+      ctx.fillRect(274, 581, 3, 3);
+
+      // Plush Cream Shearling Fleece Collar (With individual fleece tuft contours)
+      const woolGrad = ctx.createLinearGradient(200, 390, 300, 390);
+      woolGrad.addColorStop(0, '#D4C4B0');
+      woolGrad.addColorStop(0.5, '#F8EFE4');
+      woolGrad.addColorStop(0.92, '#FFFDF8');
+      woolGrad.addColorStop(1, RIM_COLOR);
+      ctx.fillStyle = woolGrad;
+
+      ctx.beginPath();
+      ctx.moveTo(242, 376);
+      ctx.bezierCurveTo(220, 355, 196, 365, 192, 395);
+      ctx.bezierCurveTo(208, 420, 235, 412, 246, 390);
+      ctx.bezierCurveTo(260, 412, 288, 420, 304, 395);
+      ctx.bezierCurveTo(300, 365, 276, 355, 256, 376);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = INK_TINTED;
+      ctx.lineWidth = 3.2;
+      ctx.stroke();
+
+      // 4. Arms & Hands
+      const armGrad = ctx.createLinearGradient(290, 500, 350, 500);
+      armGrad.addColorStop(0, '#2C1D15');
+      armGrad.addColorStop(0.65, '#563828');
+      armGrad.addColorStop(0.94, '#6B4733');
+      armGrad.addColorStop(1, RIM_COLOR);
+      ctx.fillStyle = armGrad;
+
+      if (pose === 'command') {
+        // Pointing Forward Arm
+        ctx.beginPath();
+        ctx.moveTo(328, 385);
+        ctx.lineTo(430, 400); // Elbow
+        ctx.lineTo(490, 405); // Wrist
+        ctx.lineTo(485, 425);
+        ctx.lineTo(425, 420);
+        ctx.lineTo(318, 430);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = INK_TINTED;
+        ctx.lineWidth = 3.6;
+        ctx.stroke();
+
+        // Detailed Pointing Hand with articulated knuckles & extended index finger
+        ctx.fillStyle = '#E8AA85';
+        ctx.beginPath();
+        ctx.moveTo(490, 405);
+        ctx.lineTo(520, 405); // Extended Index
+        ctx.arc(520, 409, 4, -Math.PI * 0.5, Math.PI * 0.5);
+        ctx.lineTo(495, 413);
+        // Curled lower fingers
+        ctx.bezierCurveTo(498, 425, 488, 428, 485, 425);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = INK_TINTED;
+        ctx.lineWidth = 2.4;
+        ctx.stroke();
+      } else {
+        // Natural Casual Arm
+        ctx.beginPath();
+        ctx.moveTo(328, 385);
+        ctx.bezierCurveTo(350, 430, 358, 480, 346, 530); // Elbow
+        ctx.bezierCurveTo(338, 580, 324, 630, 320, 660); // Wrist
+        ctx.lineTo(296, 650);
+        ctx.bezierCurveTo(306, 590, 320, 520, 306, 460);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = INK_TINTED;
+        ctx.lineWidth = 3.6;
+        ctx.stroke();
+
+        // Detailed Relaxed Hand (Individual sculpted fingers)
+        ctx.fillStyle = '#E8AA85';
+        ctx.beginPath();
+        ctx.moveTo(320, 660);
+        // Thumb pad
+        ctx.bezierCurveTo(330, 675, 332, 690, 326, 698);
+        // Fingers extending down with natural spacing
+        ctx.lineTo(324, 715); // Index
+        ctx.bezierCurveTo(322, 720, 314, 720, 312, 714);
+        ctx.lineTo(310, 718); // Middle
+        ctx.bezierCurveTo(308, 722, 302, 722, 300, 715);
+        ctx.lineTo(296, 650);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = INK_TINTED;
+        ctx.lineWidth = 2.4;
+        ctx.stroke();
+        // Knuckle Creases
+        ctx.beginPath();
+        ctx.moveTo(316, 685); ctx.lineTo(324, 686);
+        ctx.moveTo(312, 695); ctx.lineTo(322, 696);
+        ctx.stroke();
+      }
+
+      // 5. Head
+      drawRefinedHead(ctx, 256, 318, 1, view, 'confident');
+
+      ctx.restore();
+    }
+
+    // =========================================================================
+    // RENDER ALL MODEL SHEET PANELS
+    // =========================================================================
+
+    // 1. Turnaround Studies
+    drawRefinedFullBody(document.getElementById('cvFront'), 'front');
+    drawRefinedFullBody(document.getElementById('cvThreeQuarter'), '3/4');
+    drawRefinedFullBody(document.getElementById('cvProfile'), 'profile');
+
+    // 2. High-Res Close-Up Portrait (2.6x Zoom)
+    {
+      const cv = document.getElementById('cvPortrait');
+      const ctx = cv.getContext('2d');
+      drawRefinedHead(ctx, cv.width / 2, cv.height * 0.55, 3.2, '3/4', 'confident');
+    }
+
+    // 3. Four Distinct Expressions
+    {
+      const exprs = [
+        { id: 'cvExprConfident', expr: 'confident' },
+        { id: 'cvExprFocused', expr: 'focused' },
+        { id: 'cvExprLaugh', expr: 'laughing' },
+        { id: 'cvExprShocked', expr: 'shocked' },
+      ];
+      exprs.forEach(({ id, expr }) => {
+        const cv = document.getElementById(id);
+        const ctx = cv.getContext('2d');
+        drawRefinedHead(ctx, cv.width / 2, cv.height * 0.58, 2.3, '3/4', expr);
+      });
+    }
+
+    // 4. Action Poses
+    drawRefinedFullBody(document.getElementById('cvPoseWalk'), '3/4', 'walk');
+    drawRefinedFullBody(document.getElementById('cvPoseCommand'), '3/4', 'command');
+    drawRefinedFullBody(document.getElementById('cvPoseRelaxed'), 'front', 'stand');
+
+    window.SHEET_READY = true;
+  </script>
+
+</body>
+</html>

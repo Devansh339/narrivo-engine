@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NARRIVO — Commander Vance Full-Body Locomotion & Gesture Prototype</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0a0d14;
+    color: #e2e8f0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Left Side: Controls & Inspector */
+  #sidebar {
+    width: 440px;
+    background: #111520;
+    border-right: 1px solid #1f2637;
+    display: flex;
+    flex-direction: column;
+    padding: 18px 20px;
+    overflow-y: auto;
+  }
+  header {
+    margin-bottom: 16px;
+    border-bottom: 1px solid #1f2637;
+    padding-bottom: 12px;
+  }
+  h1 { font-size: 16px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+  .subtitle { font-size: 11px; color: #8c97ad; margin-top: 3px; }
+  .badge {
+    display: inline-block;
+    background: #142e24;
+    border: 1px solid #28a745;
+    color: #7ef29d;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-top: 6px;
+  }
+
+  .section {
+    margin-bottom: 16px;
+    background: #161b28;
+    border: 1px solid #232a3c;
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .section h2 {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .btn-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .btn-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  button {
+    background: #20273a;
+    border: 1px solid #2d364f;
+    color: #e2e8f0;
+    padding: 8px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+  }
+  button:hover { background: #2c354e; border-color: #3b4665; color: #fff; }
+  button.active {
+    background: #1b3860;
+    border-color: #3b82f6;
+    color: #93c5fd;
+    font-weight: 700;
+  }
+  button.trans-btn {
+    background: #242238;
+    border-color: #433b66;
+    color: #d8b4fe;
+    font-size: 10.5px;
+  }
+  button.trans-btn:hover { background: #352e54; border-color: #6b5b9e; color: #fff; }
+
+  .slider-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 11px;
+  }
+  .slider-row input[type="range"] {
+    flex: 1;
+    margin: 0 10px;
+  }
+
+  .prog-bar-wrap {
+    height: 6px;
+    background: #232a3c;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .prog-bar {
+    height: 100%;
+    width: 0%;
+    background: #a855f7;
+    transition: width 0.05s linear;
+  }
+
+  /* Right Side: Viewport & Magnifier */
+  #main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 16px;
+    background: #080a10;
+  }
+
+  #viewportCard {
+    height: 94vh;
+    aspect-ratio: 1080 / 1920;
+    max-height: 940px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    border: 1px solid #232a3d;
+    position: relative;
+  }
+  #viewCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Overlay Magnifier Window */
+  #magnifier {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    width: 260px;
+    height: 260px;
+    border-radius: 8px;
+    border: 2px solid #3b82f6;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+    overflow: hidden;
+    background: #111520;
+    display: flex;
+    flex-direction: column;
+  }
+  #magHeader {
+    background: #1b2438;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #93c5fd;
+    border-bottom: 1px solid #2b3650;
+    display: flex;
+    justify-content: space-between;
+  }
+  #magCanvas {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .hud-stats {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    background: rgba(15, 20, 32, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid #242c40;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-family: monospace;
+    color: #94a3b8;
+    pointer-events: none;
+  }
+  .hud-val { color: #7ef29d; font-weight: 700; }
+  .hud-val.blue { color: #60a5fa; }
+  .hud-val.pink { color: #f472b6; }
+</style>
+</head>
+<body>
+
+  <div id="sidebar">
+    <header>
+      <h1>NARRIVO — FULL-BODY PROTOTYPE</h1>
+      <div class="subtitle">Commander Vance: 19-Component Hierarchical FK Locomotion & Gesture Rig</div>
+      <div class="badge">1080×1920 REAL-TIME 60FPS READY</div>
+    </header>
+
+    <!-- Playback Controls -->
+    <div class="section">
+      <h2>Playback & Transport</h2>
+      <div class="btn-grid-3" style="margin-bottom:8px;">
+        <button id="btnPlayPause">⏸ Pause</button>
+        <button id="btnReset">⏮ Reset</button>
+        <button id="btnLoop">🔁 Loop: ON</button>
+      </div>
+      <div class="slider-row">
+        <span>Speed: <strong id="lblSpeed">1.0×</strong></span>
+        <input type="range" id="rngSpeed" min="0.1" max="2.0" step="0.05" value="1.0">
+      </div>
+    </div>
+
+    <!-- Animation Clips -->
+    <div class="section">
+      <h2>Animation Clips (Tasks 1 & 2)</h2>
+      <div class="btn-grid" style="margin-bottom:6px;">
+        <button class="clip-btn active" data-clip="idle">🌿 Task 1: Idle (Breath/Sway)</button>
+        <button class="clip-btn" data-clip="walk">🚶 Task 2: Walk Cycle (Stride)</button>
+      </div>
+    </div>
+
+    <!-- Expressive Gestures -->
+    <div class="section">
+      <h2>Gestures (Task 3)</h2>
+      <div class="btn-grid">
+        <button class="clip-btn" data-clip="pointing">👉 1. Pointing</button>
+        <button class="clip-btn" data-clip="waving">👋 2. Waving</button>
+        <button class="clip-btn" data-clip="open_palms">👐 3. Open Palms</button>
+        <button class="clip-btn" data-clip="arms_crossed">🙅 4. Arms Crossed</button>
+        <button class="clip-btn" data-clip="thinking">🤔 5. Thinking Pose</button>
+        <button class="clip-btn" data-clip="hands_on_hips">🧍 6. Hands on Hips</button>
+      </div>
+    </div>
+
+    <!-- Transitions & Blending -->
+    <div class="section">
+      <h2>Transitions & Blending (Task 4)</h2>
+      <div class="btn-grid" style="margin-bottom:8px;">
+        <button class="trans-btn" id="btnTransIdleWalk">Idle ➔ Walk</button>
+        <button class="trans-btn" id="btnTransWalkIdle">Walk ➔ Idle</button>
+        <button class="trans-btn" id="btnTransIdlePoint">Idle ➔ Point</button>
+        <button class="trans-btn" id="btnTransPointIdle">Point ➔ Idle</button>
+        <button class="trans-btn" id="btnTransIdleWave">Idle ➔ Wave</button>
+        <button class="trans-btn" id="btnTransWaveIdle">Wave ➔ Idle</button>
+      </div>
+      <div class="slider-row">
+        <span>Duration: <strong id="lblTransDur">0.45s</strong></span>
+        <input type="range" id="rngTransDur" min="0.1" max="1.0" step="0.05" value="0.45">
+      </div>
+      <div style="font-size:10px;color:#8c97ad;margin-top:4px;">
+        Blend Progress: <span id="lblBlendProg" style="color:#d8b4fe;font-weight:700;">100%</span>
+        <div class="prog-bar-wrap"><div class="prog-bar" id="progBar"></div></div>
+      </div>
+    </div>
+
+    <!-- Viewport & Diagnostics -->
+    <div class="section">
+      <h2>Diagnostics & Viewport</h2>
+      <div class="btn-grid" style="margin-bottom:8px;">
+        <button id="btnBgMode">Backdrop: Studio</button>
+        <button id="btnToggleMag">3× Magnifier: ON</button>
+      </div>
+      <div class="slider-row">
+        <span>Magnifier Focus:</span>
+        <select id="selMagFocus" style="background:#20273a;color:#fff;border:1px solid #2d364f;border-radius:4px;padding:3px 6px;font-size:11px;">
+          <option value="leftGap">Left Hand & Thigh Gap</option>
+          <option value="rightGap">Right Hand & Thigh Gap</option>
+          <option value="knees">Knee Overlaps</option>
+          <option value="neck">Neck & Collars</option>
+          <option value="shldLeft">Left Shoulder & Axilla</option>
+          <option value="shldRight">Right Shoulder & Axilla</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Viewport Area -->
+  <div id="main">
+    <div id="viewportCard">
+      <canvas id="viewCanvas" width="1080" height="1920"></canvas>
+    </div>
+
+    <div class="hud-stats">
+      <div>FPS: <span class="hud-val" id="hudFps">60</span></div>
+      <div>Active Clip: <span class="hud-val blue" id="hudClip">idle</span></div>
+      <div>Pelvis Bob: <span class="hud-val pink" id="hudBob">0.0 px</span></div>
+      <div>Hip L/R: <span class="hud-val" id="hudHips">0.0° / 0.0°</span></div>
+      <div>Shld L/R: <span class="hud-val" id="hudShld">0.0° / 0.0°</span></div>
+    </div>
+
+    <!-- Floating 3x Zoom Magnifier -->
+    <div id="magnifier">
+      <div id="magHeader">
+        <span id="magTitle">3× ZOOM: Left Hand & Thigh Gap</span>
+        <span style="color:#7ef29d;">SEAM SEALED</span>
+      </div>
+      <canvas id="magCanvas" width="260" height="236"></canvas>
+    </div>
+  </div>
+
+  <script src="engine.js"></script>
+  <script>
+    async function init() {
+      // Load Manifest and Images
+      const manifestRes = await fetch('../poc/raster-split/fullbody-seg/manifest.json');
+      const manifest = await manifestRes.json();
+
+      const imageMap = {};
+      await Promise.all(manifest.components.map(c => new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => resolve();
+        img.onerror = () => resolve();
+        img.src = '../poc/raster-split/fullbody-seg/reconstructed/' + c.key + '.png';
+        if (img.complete) resolve();
+        imageMap[c.key] = img;
+      })));
+
+      const renderer = new VanceEngine.VanceRenderer(manifest, imageMap);
+      const controller = new VanceEngine.AnimationController();
+
+      const canvas = document.getElementById('viewCanvas');
+      const ctx = canvas.getContext('2d');
+
+      const magCanvas = document.getElementById('magCanvas');
+      const magCtx = magCanvas.getContext('2d');
+
+      let isPlaying = true;
+      let speed = 1.0;
+      let bgMode = 'studio'; // 'studio', 'checker'
+      let showMag = true;
+      let lastTime = performance.now();
+      let frameCount = 0;
+      let lastFpsTime = lastTime;
+
+      // UI Bindings
+      document.getElementById('btnPlayPause').addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        document.getElementById('btnPlayPause').textContent = isPlaying ? '⏸ Pause' : '▶ Play';
+      });
+
+      document.getElementById('btnReset').addEventListener('click', () => {
+        controller.time = 0;
+        controller.clipTime = 0;
+      });
+
+      document.getElementById('rngSpeed').addEventListener('input', e => {
+        speed = parseFloat(e.target.value);
+        document.getElementById('lblSpeed').textContent = speed.toFixed(2) + '×';
+      });
+
+      document.querySelectorAll('.clip-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.clip-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const clip = btn.getAttribute('data-clip');
+          controller.play(clip, parseFloat(document.getElementById('rngTransDur').value));
+        });
+      });
+
+      // Transition Quick Triggers
+      function setClipActive(name) {
+        document.querySelectorAll('.clip-btn').forEach(b => {
+          if (b.getAttribute('data-clip') === name) b.classList.add('active');
+          else b.classList.remove('active');
+        });
+      }
+
+      document.getElementById('btnTransIdleWalk').addEventListener('click', () => {
+        setClipActive('walk');
+        controller.play('walk', parseFloat(document.getElementById('rngTransDur').value));
+      });
+      document.getElementById('btnTransWalkIdle').addEventListener('click', () => {
+        setClipActive('idle');
+        controller.play('idle', parseFloat(document.getElementById('rngTransDur').value));
+      });
+      document.getElementById('btnTransIdlePoint').addEventListener('click', () => {
+        setClipActive('pointing');
+        controller.play('pointing', parseFloat(document.getElementById('rngTransDur').value));
+      });
+      document.getElementById('btnTransPointIdle').addEventListener('click', () => {
+        setClipActive('idle');
+        controller.play('idle', parseFloat(document.getElementById('rngTransDur').value));
+      });
+      document.getElementById('btnTransIdleWave').addEventListener('click', () => {
+        setClipActive('waving');
+        controller.play('waving', parseFloat(document.getElementById('rngTransDur').value));
+      });
+      document.getElementById('btnTransWaveIdle').addEventListener('click', () => {
+        setClipActive('idle');
+        controller.play('idle', parseFloat(document.getElementById('rngTransDur').value));
+      });
+
+      document.getElementById('rngTransDur').addEventListener('input', e => {
+        document.getElementById('lblTransDur').textContent = parseFloat(e.target.value).toFixed(2) + 's';
+      });
+
+      document.getElementById('btnBgMode').addEventListener('click', () => {
+        bgMode = (bgMode === 'studio') ? 'checker' : 'studio';
+        document.getElementById('btnBgMode').textContent = 'Backdrop: ' + (bgMode === 'studio' ? 'Studio' : 'Checkerboard');
+      });
+
+      document.getElementById('btnToggleMag').addEventListener('click', () => {
+        showMag = !showMag;
+        document.getElementById('magnifier').style.display = showMag ? 'flex' : 'none';
+        document.getElementById('btnToggleMag').textContent = '3× Magnifier: ' + (showMag ? 'ON' : 'OFF');
+      });
+
+      // Magnifier Focus regions (master coords):
+      const magTargets = {
+        leftGap:   { title: '3× ZOOM: Left Hand & Thigh Gap',  sx: 130, sy: 620, sw: 120, sh: 110 },
+        rightGap:  { title: '3× ZOOM: Right Hand & Thigh Gap', sx: 515, sy: 620, sw: 120, sh: 110 },
+        knees:     { title: '3× ZOOM: Knee Overlaps',          sx: 290, sy: 900, sw: 190, sh: 170 },
+        neck:      { title: '3× ZOOM: Neck & Collar Lapels',   sx: 300, sy: 150, sw: 170, sh: 150 },
+        shldLeft:  { title: '3× ZOOM: Left Shoulder & Axilla', sx: 200, sy: 220, sw: 160, sh: 150 },
+        shldRight: { title: '3× ZOOM: Right Shoulder & Axilla',sx: 450, sy: 220, sw: 160, sh: 150 }
+      };
+
+      // Main Loop
+      function animate(now) {
+        requestAnimationFrame(animate);
+
+        const dt = Math.min(0.1, (now - lastTime) / 1000) * (isPlaying ? speed : 0);
+        lastTime = now;
+
+        controller.update(dt);
+        const pose = controller.getCurrentPose();
+
+        // 1. Render Full Viewport (1080x1920 Full HD Canvas2D)
+        renderer.render(ctx, pose, {
+          width: 1080,
+          height: 1920,
+          is1080: true,
+          background: bgMode
+        });
+
+        // 2. Render 3x Magnifier
+        if (showMag) {
+          const focusKey = document.getElementById('selMagFocus').value;
+          const target = magTargets[focusKey] || magTargets.leftGap;
+          document.getElementById('magTitle').textContent = target.title;
+
+          magCtx.clearRect(0, 0, magCanvas.width, magCanvas.height);
+          // Draw checker background inside magnifier
+          magCtx.fillStyle = '#555963';
+          magCtx.fillRect(0, 0, magCanvas.width, magCanvas.height);
+          magCtx.fillStyle = '#434750';
+          const tSize = 16;
+          for (let y = 0; y < magCanvas.height; y += tSize) {
+            for (let x = 0; x < magCanvas.width; x += tSize) {
+              if (((x / tSize) ^ (y / tSize)) & 1) magCtx.fillRect(x, y, tSize, tSize);
+            }
+          }
+
+          // Offscreen native render to sample from:
+          const off = document.createElement('canvas');
+          off.width = 768; off.height = 1376;
+          renderer.render(off.getContext('2d'), pose, { width: 768, height: 1376, is1080: false, background: 'transparent' });
+
+          magCtx.drawImage(
+            off,
+            target.sx, target.sy, target.sw, target.sh,
+            0, 0, magCanvas.width, magCanvas.height
+          );
+        }
+
+        // 3. Update HUD & Transition Progress
+        frameCount++;
+        if (now - lastFpsTime >= 500) {
+          const fps = Math.round((frameCount * 1000) / (now - lastFpsTime));
+          document.getElementById('hudFps').textContent = fps;
+          frameCount = 0;
+          lastFpsTime = now;
+        }
+
+        const activeClip = controller.targetClip
+          ? controller.currentClip + ' ➔ ' + controller.targetClip
+          : controller.currentClip;
+        document.getElementById('hudClip').textContent = activeClip;
+        document.getElementById('hudBob').textContent = pose.pelvis.ty.toFixed(1) + ' px';
+        document.getElementById('hudHips').textContent = pose.hipL.rot.toFixed(1) + '° / ' + pose.hipR.rot.toFixed(1) + '°';
+        document.getElementById('hudShld').textContent = pose.shldL.rot.toFixed(1) + '° / ' + pose.shldR.rot.toFixed(1) + '°';
+
+        const pVal = Math.round(controller.transitionProgress * 100);
+        document.getElementById('lblBlendProg').textContent = pVal + '%';
+        document.getElementById('progBar').style.width = pVal + '%';
+      }
+
+      requestAnimationFrame(animate);
+    }
+    init();
+  </script>
+</body>
+</html>

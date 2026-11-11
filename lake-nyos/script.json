@@ -1,0 +1,27 @@
+{
+  "title": "The Lake That Stole the Air — Lake Nyos (1986)",
+  "voice": "bm_george",
+  "speed": 1.18,
+  "lead": 0.18,
+  "outro": 0.55,
+  "gap": 0.12,
+  "music": "tension",
+  "sources": [
+    "US Geological Survey (USGS Open-File Report 87-97): 'The 21 August 1986 Lake Nyos Gas Disaster, Cameroon' by George W. Kling et al. — https://pubs.usgs.gov/of/1987/0097/report.pdf (at least 1,700 people killed; magmatic CO2 accumulated in deep cold bottom waters; exact triggering mechanism undetermined; no direct volcanic eruption)",
+    "NASA Earth Science: 'Lake Nyos, Cameroon' — https://science.nasa.gov/earth-science/programs/research-analysis/lake-nyos-cameroon/ (limnic eruption / lake overturn; dense CO2 cloud flowed down valleys displacing breathable air)"
+  ],
+  "lines": [
+    { "text": "A lake killed at least seventeen hundred people in a single night.", "caps": "A *lake killed | at least *1,700 people | in a single *night.", "gap": 0.14 },
+    { "text": "And the killer was invisible.", "caps": "And the *killer | was *invisible.", "gap": 0.18 },
+    { "text": "On August twenty-first, nineteen eighty-six, at Lake Nyos in Cameroon,", "caps": "August 21, *1986, | at Lake *Nyos | in *Cameroon," },
+    { "text": "a massive cloud of carbon dioxide suddenly burst from the deep crater lake.", "caps": "a cloud of *carbon dioxide | suddenly *burst | from the deep *lake.", "gap": 0.16 },
+    { "text": "Heavier than air, an almost invisible carbon dioxide cloud spread through the valleys,", "caps": "An almost *invisible | *CO₂ cloud | spread through *valleys,", "gap": 0.12 },
+    { "text": "flowing downhill, where high concentrations displaced oxygen and caused asphyxiation.", "caps": "flowing *downhill, | displacing *oxygen | causing *asphyxiation.", "gap": 0.18 },
+    { "text": "For decades, volcanic gas from deep underground had seeped into the cold bottom water,", "caps": "For *decades, | *gas seeped into | the lake *bottom," },
+    { "text": "trapped under immense pressure like a giant sealed bottle.", "caps": "trapped under *pressure | like a *sealed | *bottle.", "gap": 0.18 },
+    { "text": "Investigators found no lava, no ash, and no conventional volcanic eruption,", "caps": "Investigators *found | no lava or *ash, | no volcanic *eruption," },
+    { "text": "and the exact trigger remained undetermined.", "caps": "and the exact *trigger | remained *undetermined.", "gap": 0.18 },
+    { "text": "Scientists called this rare phenomenon a limnic eruption:", "caps": "Scientists *called it | a *limnic | *eruption:", "break": true, "gap": 0.14 },
+    { "text": "the night a quiet lake overturned and stole the air.", "caps": "the night a *lake | *overturned and | stole the *air.", "gap": 0.15 }
+  ]
+}

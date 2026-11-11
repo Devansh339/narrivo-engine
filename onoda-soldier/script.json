@@ -1,0 +1,30 @@
+{
+  "title": "The Soldier Who Fought For 29 Years After The War Ended",
+  "voice": "am_onyx",
+  "speed": 0.95,
+  "lead": 0.6,
+  "outro": 1.4,
+  "gap": 0.42,
+  "music": "tension",
+  "sources": [
+    "Wikipedia: Hiroo Onoda — Imperial Japanese Army intelligence officer; stationed Lubang Island, Philippines 1944; surrendered March 9, 1974 after former commanding officer Yoshimi Taniguchi ordered him to stand down in person; last of the Japanese holdouts",
+    "BBC News / Time Magazine: Onoda fought for 29 years; killed at least 30 Filipino civilians and police in skirmishes believing war continued; returned to Japan a national hero; died January 16, 2014 aged 91",
+    "Hiroo Onoda, 'No Surrender: My Thirty-Year War' (1974 memoir): detailed account of jungle survival, guerrilla tactics, and refusal to believe surrender leaflets, newspapers, and family pleas were genuine"
+  ],
+  "lines": [
+    { "text": "In 1945, World War Two ended.", "caps": "In *1945, | World War Two | *ended." },
+    { "text": "Nobody told Hiroo Onoda.", "caps": "Nobody | told | *Hiroo Onoda." },
+    { "text": "He was a Japanese soldier posted to a small island in the Philippines.", "caps": "He was a *Japanese soldier | posted to a | small *island." },
+    { "text": "His orders were simple: never surrender.", "caps": "His *orders were simple: | never *surrender." },
+    { "text": "So when the war ended, he kept fighting.", "caps": "So when the *war ended, | he kept *fighting." },
+    { "text": "For twenty-nine years.", "caps": "*Twenty-nine | *years." },
+    { "text": "He found leaflets dropped from planes saying the war was over.", "caps": "He found *leaflets | saying the war | was *over." },
+    { "text": "He thought they were propaganda.", "caps": "He thought | they were *propaganda." },
+    { "text": "His family flew in a plane overhead, calling to him through a loudspeaker.", "caps": "His *family | called to him | through a *loudspeaker." },
+    { "text": "He did not come out.", "caps": "He did | not | come *out." },
+    { "text": "It was not until 1974 that his former commanding officer flew to the island,", "caps": "Not until *1974 | did his | *commanding officer | fly to the *island," },
+    { "text": "stood in the jungle, and ordered him to stop.", "caps": "stand in the *jungle, | and *order | him to stop." },
+    { "text": "Onoda walked out of the trees, still in uniform, rifle in hand.", "caps": "Onoda walked *out | still in *uniform, | rifle in *hand." },
+    { "text": "He had been fighting alone for twenty-nine years.", "caps": "*Alone. | *Twenty-nine | years.", "gap": 0.5 }
+  ]
+}

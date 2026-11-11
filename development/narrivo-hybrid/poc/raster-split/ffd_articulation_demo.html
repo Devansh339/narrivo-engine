@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Targeted Joint Deformation Test — Articulation Demonstration & Performance Benchmark</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d0f14;
+    color: #e8ecf4;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    padding: 20px 26px;
+    width: 1920px;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #262b38;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+  }
+  h1 { font-size: 20px; font-weight: 700; color: #fff; }
+  .subtitle { font-size: 12px; color: #9aa4b8; margin-top: 3px; }
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .frame-card {
+    background: #151922;
+    border: 1px solid #262c3a;
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .frame-title { font-size: 11.5px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+  .frame-sub { font-size: 10px; color: #75f096; font-family: monospace; margin-bottom: 6px; }
+  .frame-card canvas {
+    width: 286px;
+    height: 383px;
+    border-radius: 5px;
+    border: 1px solid #303748;
+    display: block;
+  }
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .info-panel {
+    background: #151922;
+    border: 1px solid #262c3a;
+    border-radius: 8px;
+    padding: 14px 18px;
+  }
+  .info-panel h3 { font-size: 14px; color: #fff; margin-bottom: 8px; border-bottom: 1px solid #242a38; padding-bottom: 6px; }
+  .info-panel table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  .info-panel th, .info-panel td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #202634; }
+  .info-panel th { color: #8c96ab; font-weight: 600; }
+  .info-panel ul { padding-left: 18px; font-size: 11.5px; color: #c2cadb; line-height: 1.55; }
+  .info-panel li { margin-bottom: 5px; }
+  .info-panel strong { color: #fff; }
+</style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>SHORT ARTICULATION DEMONSTRATION — 6-KEYFRAME MOTION CYCLE & PERFORMANCE BENCHMARK</h1>
+      <div class="subtitle">Demonstrating continuous localized 2D mesh FFD across the approved test envelope (Head ±4.0°, Neck ±2.8°, Shoulder ±3.5°) with performance and limitation telemetry.</div>
+    </div>
+  </header>
+
+  <div class="strip" id="strip"></div>
+
+  <div class="bottom-grid">
+    <div class="info-panel">
+      <h3>PERFORMANCE MEASUREMENTS (896×1200 FULL RESOLUTION, CHROME V8 CANVAS2D)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Rendering Mode</th>
+            <th>Deforming Components</th>
+            <th>Avg Frame Time</th>
+            <th>Effective FPS</th>
+            <th>Visible Master Pixels</th>
+          </tr>
+        </thead>
+        <tbody id="perfTableBody"></tbody>
+      </table>
+    </div>
+    <div class="info-panel">
+      <h3>REMAINING LIMITATIONS IDENTIFIED (TRANSPARENT ENGINEERING AUDIT)</h3>
+      <ul>
+        <li><strong>Angular Envelope Ceiling (±5°–6°):</strong> Localized 2D FFD cleanly seals the ±4.0° head, ±2.8° neck, and ±3.5° shoulder ranges, but rotations beyond ±6° begin to visibly shear the shearling fleece curls and rotate the baked cyan/warm lighting normal relative to the torso.</li>
+        <li><strong>Out-of-Plane Head Yaw (3/4 Turn):</strong> 2D planar FFD on a single front-facing bust handles roll (tilt) and subtle pitch (nod), but true 3/4 yaw rotation (>8°–10°) requires parallax occlusion and perspective foreshortening of the nose, cheeks, and ears.</li>
+        <li><strong>Bust Source Boundary (y = 1200):</strong> Because <code>00_master_bust.jpg</code> terminates above the elbows, lower arms, hands, and waist/legs are not present in this source asset.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="ffd_engine.js"></script>
+  <script>
+    const manifest = {"sourceMaster":"source/00_master_bust.jpg","dimensions":{"width":896,"height":1200},"totalMasterForegroundPixels":706569,"totalVisibleMasterPixelsInNeutral":706569,"visibleMasterPreservationPct":100,"components":[{"id":1,"zOrder":0,"key":"01_back_hair","title":"01. Back Hair & Nape Layer","cropBox":{"x":274,"y":234,"width":358,"height":293},"pivotMaster":{"x":456,"y":460},"pivotLocal":{"x":182,"y":226},"visibleMasterPixels":2364,"reconstructedHiddenPixels":60608,"reconstructedRatioPct":96.25},{"id":4,"zOrder":1,"key":"04_neck","title":"04. Neck & Throat Column","cropBox":{"x":294,"y":439,"width":323,"height":396},"pivotMaster":{"x":456,"y":735},"pivotLocal":{"x":162,"y":296},"visibleMasterPixels":36651,"reconstructedHiddenPixels":35584,"reconstructedRatioPct":49.26},{"id":8,"zOrder":2,"key":"07_shoulder_left","title":"07L. Left Shoulder & Upper Sleeve","cropBox":{"x":0,"y":589,"width":259,"height":611},"pivotMaster":{"x":205,"y":685},"pivotLocal":{"x":205,"y":96},"visibleMasterPixels":93953,"reconstructedHiddenPixels":26341,"reconstructedRatioPct":21.9},{"id":9,"zOrder":3,"key":"07_shoulder_right","title":"07R. Right Shoulder & Upper Sleeve","cropBox":{"x":652,"y":589,"width":244,"height":611},"pivotMaster":{"x":705,"y":685},"pivotLocal":{"x":53,"y":96},"visibleMasterPixels":86135,"reconstructedHiddenPixels":24281,"reconstructedRatioPct":21.99},{"id":7,"zOrder":4,"key":"06_jacket_torso","title":"06. Leather Jacket Torso & Henley","cropBox":{"x":120,"y":664,"width":672,"height":536},"pivotMaster":{"x":456,"y":950},"pivotLocal":{"x":336,"y":286},"visibleMasterPixels":245481,"reconstructedHiddenPixels":18391,"reconstructedRatioPct":6.97},{"id":5,"zOrder":5,"key":"05_collar_left","title":"05L. Left Shearling Collar","cropBox":{"x":149,"y":484,"width":217,"height":323},"pivotMaster":{"x":335,"y":725},"pivotLocal":{"x":186,"y":241},"visibleMasterPixels":34412,"reconstructedHiddenPixels":1023,"reconstructedRatioPct":2.89},{"id":6,"zOrder":6,"key":"05_collar_right","title":"05R. Right Shearling Collar","cropBox":{"x":538,"y":485,"width":210,"height":322},"pivotMaster":{"x":565,"y":725},"pivotLocal":{"x":27,"y":240},"visibleMasterPixels":32206,"reconstructedHiddenPixels":727,"reconstructedRatioPct":2.21},{"id":2,"zOrder":7,"key":"02_head_face","title":"02. Head & Face Base","cropBox":{"x":266,"y":44,"width":375,"height":581},"pivotMaster":{"x":456,"y":545},"pivotLocal":{"x":190,"y":501},"visibleMasterPixels":100010,"reconstructedHiddenPixels":17464,"reconstructedRatioPct":14.87},{"id":3,"zOrder":8,"key":"03_front_hair","title":"03. Front Hair & Swept Locks","cropBox":{"x":218,"y":24,"width":470,"height":372},"pivotMaster":{"x":456,"y":545},"pivotLocal":{"x":238,"y":521},"visibleMasterPixels":75357,"reconstructedHiddenPixels":0,"reconstructedRatioPct":0}],"validation":{"totalCanvasPixels":1075200,"exactMatchPixels":1075155,"nonZeroDiffPixels":45,"exactMatchPct":99.9958,"maxChannelDiff":1,"meanAbsChannelDiff":0.000017,"visibleArtworkPreservedFromMasterPct":100}};
+    const keyframes = [
+      { title: 'KF 1 (t=0.0s): NEUTRAL', sub: 'H:0.0° | N:0.0° | S:0.0°', pose: { headRot: 0, neckRot: 0, shldLRot: 0, shldRRot: 0 } },
+      { title: 'KF 2 (t=0.4s): TILT RIGHT', sub: 'H:+4.0° | N:+2.8° | S:+1.5°', pose: { headRot: 4.0, headDx: 2, headDy: -2, neckRot: 2.8, hairRot: 0.5, shldLRot: 1.5, shldLDx: 1, shldLDy: -2, shldRRot: -1.5, shldRDx: -1, shldRDy: 2 } },
+      { title: 'KF 3 (t=0.8s): SHRUG PEAK', sub: 'H:+2.0° | N:+1.4° | S:+3.5°', pose: { headRot: 2.0, headDx: 1, headDy: -2, neckRot: 1.4, hairRot: 0.3, shldLRot: 3.5, shldLDx: 2, shldLDy: -4, shldRRot: -3.5, shldRDx: -2, shldRDy: -4 } },
+      { title: 'KF 4 (t=1.2s): TILT LEFT', sub: 'H:-4.0° | N:-2.8° | S:-1.5°', pose: { headRot: -4.0, headDx: -2, headDy: -2, neckRot: -2.8, hairRot: -0.5, shldLRot: -1.5, shldLDx: -1, shldLDy: 2, shldRRot: 1.5, shldRDx: 1, shldRDy: -2 } },
+      { title: 'KF 5 (t=1.6s): SHOULDER DROP', sub: 'H:-2.0° | N:-1.4° | S:-3.5°', pose: { headRot: -2.0, headDx: -1, headDy: -1, neckRot: -1.4, hairRot: -0.3, shldLRot: -3.5, shldLDx: -2, shldLDy: 4, shldRRot: 3.5, shldRDx: 2, shldRDy: 4 } },
+      { title: 'KF 6 (t=2.0s): FFD X-RAY', sub: 'H:+4.0° | N:+2.8° | S:+3.5°', pose: { headRot: 4.0, headDx: 2, headDy: -2, neckRot: 2.8, hairRot: 0.5, shldLRot: 3.5, shldLDx: 2, shldLDy: -4, shldRRot: -3.5, shldRDx: -2, shldRDy: -4 }, xray: true }
+    ];
+
+    async function run() {
+      const assets = await VanceFFD.loadAllAssets(manifest);
+      const strip = document.getElementById('strip');
+
+      // Benchmark
+      const bCanvas = document.createElement('canvas');
+      bCanvas.width = 896; bCanvas.height = 1200;
+      const bCtx = bCanvas.getContext('2d');
+
+      const tR0 = performance.now();
+      for (let i = 0; i < 30; i++) VanceFFD.renderBust(bCtx, assets, manifest, keyframes[1].pose, 'rigid');
+      const rigidMs = (performance.now() - tR0) / 30;
+
+      const tF0 = performance.now();
+      for (let i = 0; i < 30; i++) VanceFFD.renderBust(bCtx, assets, manifest, keyframes[1].pose, 'ffd');
+      const ffdMs = (performance.now() - tF0) / 30;
+
+      document.getElementById('perfTableBody').innerHTML = `
+        <tr>
+          <td><strong>A. Original Segmented Rigid Rotation</strong></td>
+          <td>0 FFD / 9 Rigid Canvas2D Layers</td>
+          <td><strong>${rigidMs.toFixed(2)} ms</strong></td>
+          <td style="color:#7ef29d;font-weight:700;">${Math.min(1000, Math.round(1000 / Math.max(0.1, rigidMs)))} FPS</td>
+          <td>100.0% (706,569 px)</td>
+        </tr>
+        <tr>
+          <td><strong>B. Localized 2D Mesh FFD (Software Bilinear Grid)</strong></td>
+          <td>5 Localized FFD Zones (16×18 Lattice) + 4 Rigid Layers</td>
+          <td><strong>${ffdMs.toFixed(2)} ms</strong></td>
+          <td style="color:#7ef29d;font-weight:700;">${Math.round(1000 / Math.max(0.1, ffdMs))} FPS</td>
+          <td>100.0% (706,569 px)</td>
+        </tr>
+      `;
+
+      for (const kf of keyframes) {
+        const card = document.createElement('div');
+        card.className = 'frame-card';
+        card.innerHTML = `
+          <div class="frame-title">${kf.title}</div>
+          <div class="frame-sub">${kf.sub}</div>
+          <canvas width="896" height="1200"></canvas>
+        `;
+        strip.appendChild(card);
+        const c = card.querySelector('canvas');
+        VanceFFD.renderBust(c.getContext('2d'), assets, manifest, kf.pose, 'ffd', kf.xray ? {
+          useOriginMaps: true,
+          drawWireframe: true,
+          bgColor: '#181c26'
+        } : {});
+      }
+    }
+    run();
+  </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{
+  "title": "The Man Who Bought an Entire Airport for $1",
+  "voice": "am_michael",
+  "speed": 1.05,
+  "lead": 0.3,
+  "outro": 1.0,
+  "gap": 0.16,
+  "music": "bounce",
+  "sources": [
+    "BBC News / The Guardian (2014): Manston Airport in Kent, UK, closed April 2014 by owners Ann Gloag and Stagecoach; purchased by millionaire Charlie Sherwood for £1 (one pound) later in 2014 after the previous owner could not give it away",
+    "Kent Online / This Is Money (2014): 'Millionaire buys Manston Airport for £1' — Sherwood paid a nominal £1 for the 170-acre site and the airport's debts, saying he planned to reopen it",
+    "Wikipedia: 'Manston Airport' — closed 15 May 2014; sold for £1 to Charles Morley Sherwood; site later subject to compulsory purchase order debate for cargo hub"
+  ],
+  "lines": [
+    { "text": "A man once walked into a room and bought an entire airport.", "caps": "A man | once | walked | into a room | and bought | an entire | AIRPORT." },
+    { "text": "For one dollar.", "caps": "For | ONE | DOLLAR." },
+    { "text": "No, seriously.", "caps": "No, | seriously." },
+    { "text": "See, in 2014, a British airport called Manston went bankrupt.", "caps": "See, | in 2014, | a British | airport | called | MANSTON | went | bankrupt." },
+    { "text": "Runways, terminals, hangars — the whole thing.", "caps": "Runways, | terminals, | hangars — | the whole | thing." },
+    { "text": "The owners tried to sell it.", "caps": "The owners | tried | to sell it." },
+    { "text": "Nobody wanted it.", "caps": "Nobody | wanted it." },
+    { "text": "It sat there, empty, with planes going quiet one by one.", "caps": "It sat | there, | empty, | with planes | going | quiet | one by one." },
+    { "text": "Then a millionaire named Charlie Sherwood showed up.", "caps": "Then | a millionaire | named | Charlie | Sherwood | showed up." },
+    { "text": "And said: I'll take it.", "caps": "And said: | I'll | TAKE IT." },
+    { "text": "For one pound.", "caps": "For | ONE | POUND." },
+    { "text": "That's about a dollar.", "caps": "That's | about | a DOLLAR." },
+    { "text": "The owners said yes.", "caps": "The owners | said | YES." },
+    { "text": "So he signed the papers, handed over a single coin,", "caps": "So he | signed | the papers, | handed | over | a single | coin," },
+    { "text": "and walked out the owner of a full-sized international airport.", "caps": "and walked out | the owner | of a | full-sized | international | AIRPORT." },
+    { "text": "Because sometimes the best deal in history costs less than a candy bar.", "caps": "Because | sometimes | the best | deal | in history | costs | less than | a candy bar.", "gap": 0.4 }
+  ]
+}

@@ -1,0 +1,2580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Narrivo Hybrid — Milestone 1: Neutral Standing Character Prototype</title>
+  <style>
+    :root {
+      --bg: #0B0E14;
+      --panel-bg: #141822;
+      --panel-border: #242C3C;
+      --accent: #38BDF8;
+      --text: #F1F5F9;
+      --text-muted: #94A3B8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: var(--panel-bg);
+      border-bottom: 1px solid var(--panel-border);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      margin-bottom: 6px;
+    }
+    h1 { font-size: 20px; font-weight: 700; }
+    .subtitle { font-size: 13px; color: var(--text-muted); }
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr 340px;
+      gap: 20px;
+      padding: 24px 32px;
+      flex: 1;
+    }
+
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .viewport-container {
+      position: relative;
+      background: radial-gradient(circle at 50% 40%, #161D2C 0%, #0C0F17 100%);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 820px;
+    }
+
+    canvas {
+      display: block;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      border-radius: 8px;
+      background: transparent;
+    }
+
+    .view-toolbar {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .btn {
+      background: #1E293B;
+      color: var(--text);
+      border: 1px solid var(--panel-border);
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn:hover { background: #334155; border-color: var(--accent); }
+    .btn.active {
+      background: var(--accent);
+      color: #0F172A;
+      border-color: var(--accent);
+    }
+
+    .toggle-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .toggle-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .toggle-item label { cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .toggle-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .control-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .control-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .spec-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .spec-card strong { color: var(--text); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <span class="badge">Narrivo Hybrid · Milestone 1</span>
+      <h1>Commander Vance — Neutral Standing Character Prototype</h1>
+      <p class="subtitle">Independently manageable component architecture with Direction 3 hybrid dimensional lighting.</p>
+    </div>
+    <div style="text-align: right;">
+      <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #10B981; border-color: rgba(16, 185, 129, 0.3);">Visual Benchmark: Direction 3 Approved</span>
+      <div style="font-size: 12px; color: var(--text-muted);">Proportion: 7.5 Heads Athletic · Scale: 1024×1024</div>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    
+    <!-- LEFT PANEL: Component Visibility Toggles -->
+    <div class="panel">
+      <div class="panel-title">
+        <span>Component Layers</span>
+        <button class="btn" style="padding: 2px 8px; font-size: 10px;" id="toggleAllBtn">All On</button>
+      </div>
+      <div class="toggle-group" id="togglesContainer">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div class="panel-title" style="margin-top: 10px;">
+        <span>Anatomical Specs</span>
+      </div>
+      <div class="spec-card">
+        <div><strong>Head Proportions:</strong> 7.5 Heads (~106px head / 802px total)</div>
+        <div><strong>Deltoid Width:</strong> ~2.2x head width with clavicle pivot</div>
+        <div><strong>Waist & Pelvis:</strong> 1.2x taper with leather rib hem</div>
+        <div><strong>Boots:</strong> Lugged rubber soles with toe-break support</div>
+      </div>
+    </div>
+
+    <!-- CENTER PANEL: Interactive Viewport -->
+    <div class="viewport-container">
+      <div class="view-toolbar">
+        <button class="btn active" id="viewFullBtn">Full Body</button>
+        <button class="btn " id="viewFaceBtn">Face Close-Up (2.6x)</button>
+        <button class="btn " id="viewExplodedBtn">Exploded Breakdown</button>
+      </div>
+
+      <canvas id="charCanvas" width="1024" height="1024" style="width: 720px; height: 720px;"></canvas>
+    </div>
+
+    <!-- RIGHT PANEL: Lighting & Shading Controls -->
+    <div class="panel">
+      <div class="panel-title">
+        <span>Direction 3 Lighting</span>
+        <button class="btn" style="padding: 2px 8px; font-size: 10px;" id="resetLightingBtn">Reset</button>
+      </div>
+
+      <div class="control-row">
+        <div class="control-label">
+          <span>Key Light Angle</span>
+          <span id="keyAngleVal">45° (Top-Left)</span>
+        </div>
+        <input type="range" id="keyAngle" min="0" max="360" value="45">
+      </div>
+
+      <div class="control-row">
+        <div class="control-label">
+          <span>Key Light Intensity</span>
+          <span id="keyIntensityVal">1.0</span>
+        </div>
+        <input type="range" id="keyIntensity" min="0.2" max="1.8" step="0.05" value="1.0">
+      </div>
+
+      <div class="control-row">
+        <div class="control-label">
+          <span>Cool Rim Light Intensity</span>
+          <span id="rimIntensityVal">0.85</span>
+        </div>
+        <input type="range" id="rimIntensity" min="0" max="1.8" step="0.05" value="0.85">
+      </div>
+
+      <div class="control-row">
+        <div class="control-label">
+          <span>Rim Light Tint</span>
+          <span id="rimColorVal">Cyan #A5E3FF</span>
+        </div>
+        <select id="rimColorSelect" class="btn" style="width: 100%; text-align: left;">
+          <option value="#A5E3FF" selected>Cyan / Sky Ambient (#A5E3FF)</option>
+          <option value="#8DB4E2">Deep Twilight Blue (#8DB4E2)</option>
+          <option value="#FFF2D9">Sunset Warm Amber (#FFF2D9)</option>
+          <option value="#E2E8F0">Neutral White Studio (#E2E8F0)</option>
+        </select>
+      </div>
+
+      <div class="control-row">
+        <div class="control-label">
+          <span>Ambient Occlusion (AO)</span>
+          <span id="aoIntensityVal">0.95</span>
+        </div>
+        <input type="range" id="aoIntensity" min="0.2" max="1.8" step="0.05" value="0.95">
+      </div>
+
+      <div class="panel-title" style="margin-top: 10px;">
+        <span>Material Diagnostics</span>
+      </div>
+      <div class="spec-card">
+        <div><strong>Leather Jacket:</strong> Multi-stop radial sheen + crease AO</div>
+        <div><strong>Shearling Fleece:</strong> Textured wool tufts & warm shadows</div>
+        <div><strong>Cargo Pants:</strong> Olive drab with tension drag folds</div>
+        <div><strong>Eyes:</strong> Sclera top shadow + dual-tone hazel iris</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SCRIPT ENGINE BUNDLE -->
+  <script>
+/**
+ * Narrivo Character Engine v2 — 7.5-Head Athletic Skeletal Rig (rig.js)
+ * Forward Kinematics 2D Skeletal Hierarchy for Commander Vance.
+ *
+ * Canvas Coordinate Reference: 1024 x 1024
+ * Ground plane: Y = 950
+ * Total Height ≈ 802 px (~7.56 heads where 1 head ≈ 106 px)
+ * Unified Coordinate Convention: +Y is DOWN (matches standard Canvas2D)
+ */
+
+class Mat2D {
+  constructor() {
+    this.a = 1; this.c = 0; this.tx = 0;
+    this.b = 0; this.d = 1; this.ty = 0;
+  }
+
+  identity() {
+    this.a = 1; this.c = 0; this.tx = 0;
+    this.b = 0; this.d = 1; this.ty = 0;
+    return this;
+  }
+
+  set(a, b, c, d, tx, ty) {
+    this.a = a; this.b = b; this.c = c; this.d = d; this.tx = tx; this.ty = ty;
+    return this;
+  }
+
+  copy(m) {
+    this.a = m.a; this.b = m.b; this.c = m.c; this.d = m.d; this.tx = m.tx; this.ty = m.ty;
+    return this;
+  }
+
+  multiply(m) {
+    const a = this.a * m.a + this.c * m.b;
+    const b = this.b * m.a + this.d * m.b;
+    const c = this.a * m.c + this.c * m.d;
+    const d = this.b * m.c + this.d * m.d;
+    const tx = this.a * m.tx + this.c * m.ty + this.tx;
+    const ty = this.b * m.tx + this.d * m.ty + this.ty;
+    this.a = a; this.b = b; this.c = c; this.d = d; this.tx = tx; this.ty = ty;
+    return this;
+  }
+
+  translate(x, y) {
+    this.tx += this.a * x + this.c * y;
+    this.ty += this.b * x + this.d * y;
+    return this;
+  }
+
+  rotate(radians) {
+    const cos = Math.cos(radians);
+    const sin = Math.sin(radians);
+    const a = this.a * cos + this.c * sin;
+    const b = this.b * cos + this.d * sin;
+    const c = this.a * -sin + this.c * cos;
+    const d = this.b * -sin + this.d * cos;
+    this.a = a; this.b = b; this.c = c; this.d = d;
+    return this;
+  }
+
+  scale(sx, sy) {
+    this.a *= sx; this.b *= sx;
+    this.c *= sy; this.d *= sy;
+    return this;
+  }
+
+  transformPoint(x, y) {
+    return {
+      x: this.a * x + this.c * y + this.tx,
+      y: this.b * x + this.d * y + this.ty
+    };
+  }
+}
+
+class Bone {
+  constructor(name, parent = null, length = 100, localX = 0, localY = 0, localRotation = 0) {
+    this.name = name;
+    this.parent = parent;
+    this.length = length;
+    this.localX = localX;
+    this.localY = localY;
+    this.localRotation = localRotation; // in radians
+    this.localScaleX = 1;
+    this.localScaleY = 1;
+
+    this.localMatrix = new Mat2D();
+    this.worldMatrix = new Mat2D();
+    this.children = [];
+
+    if (parent) {
+      parent.children.push(this);
+    }
+  }
+
+  updateTransforms() {
+    this.localMatrix.identity();
+    this.localMatrix.translate(this.localX, this.localY);
+    if (this.localRotation !== 0) {
+      this.localMatrix.rotate(this.localRotation);
+    }
+    if (this.localScaleX !== 1 || this.localScaleY !== 1) {
+      this.localMatrix.scale(this.localScaleX, this.localScaleY);
+    }
+
+    if (this.parent) {
+      this.worldMatrix.copy(this.parent.worldMatrix).multiply(this.localMatrix);
+    } else {
+      this.worldMatrix.copy(this.localMatrix);
+    }
+
+    for (const child of this.children) {
+      child.updateTransforms();
+    }
+  }
+
+  getWorldOrigin() {
+    return this.worldMatrix.transformPoint(0, 0);
+  }
+
+  getWorldTip() {
+    return this.worldMatrix.transformPoint(0, this.length);
+  }
+}
+
+class AthleticRigV2 {
+  constructor() {
+    this.bones = new Map();
+    this.rootX = 512;
+    this.rootY = 950;
+    this.buildHierarchy();
+    this.applyNeutralStandingPose();
+  }
+
+  buildHierarchy() {
+    // Root at ground plane (512, 950)
+    const root = new Bone('root', null, 0, this.rootX, this.rootY, 0);
+    this.bones.set('root', root);
+
+    // Hips / Pelvis sits at (512, 530)
+    const hips = new Bone('hips', root, 60, 0, -420, 0);
+    this.bones.set('hips', hips);
+
+    // Chest / Upper Torso: child of hips, at (512, 350) -> localY = -180
+    const chest = new Bone('chest', hips, 140, 0, -180, 0);
+    this.bones.set('chest', chest);
+
+    // Neck: child of chest, at (512, 315) -> localY = -35
+    const neck = new Bone('neck', chest, 35, 0, -35, 0);
+    this.bones.set('neck', neck);
+
+    // Head: child of neck, at (512, 280) -> localY = -35
+    const head = new Bone('head', neck, 114, 0, -35, 0);
+    this.bones.set('head', head);
+
+    // Clavicles & Arms (+Y is DOWN)
+    // Left Shoulder attaches seamlessly to chest scye at (60, 15)
+    const lClavicle = new Bone('leftClavicle', chest, 35, 30, 10, 0.08);
+    this.bones.set('leftClavicle', lClavicle);
+
+    const lShoulder = new Bone('leftShoulder', chest, 140, 60, 15, 0.10);
+    this.bones.set('leftShoulder', lShoulder);
+
+    const lElbow = new Bone('leftElbow', lShoulder, 130, 0, 140, 0.04);
+    this.bones.set('leftElbow', lElbow);
+
+    const lWrist = new Bone('leftWrist', lElbow, 68, 0, 130, -0.02);
+    this.bones.set('leftWrist', lWrist);
+
+    // Right Shoulder attaches to right chest scye at (-60, 15)
+    const rClavicle = new Bone('rightClavicle', chest, 35, -30, 10, -0.08);
+    this.bones.set('rightClavicle', rClavicle);
+
+    const rShoulder = new Bone('rightShoulder', chest, 140, -60, 15, -0.10);
+    this.bones.set('rightShoulder', rShoulder);
+
+    const rElbow = new Bone('rightElbow', rShoulder, 130, 0, 140, -0.04);
+    this.bones.set('rightElbow', rElbow);
+
+    const rWrist = new Bone('rightWrist', rElbow, 68, 0, 130, 0.02);
+    this.bones.set('rightWrist', rWrist);
+
+    // Legs (+Y is DOWN)
+    // Left Leg (viewer right)
+    const lHip = new Bone('leftHip', hips, 20, 28, 12, 0);
+    this.bones.set('leftHip', lHip);
+
+    const lThigh = new Bone('leftThigh', lHip, 195, 0, 10, 0.04);
+    this.bones.set('leftThigh', lThigh);
+
+    const lKnee = new Bone('leftKnee', lThigh, 180, 0, 195, -0.02);
+    this.bones.set('leftKnee', lKnee);
+
+    const lAnkle = new Bone('leftAnkle', lKnee, 45, 0, 180, -0.02);
+    this.bones.set('leftAnkle', lAnkle);
+
+    // Right Leg (viewer left)
+    const rHip = new Bone('rightHip', hips, 20, -28, 12, 0);
+    this.bones.set('rightHip', rHip);
+
+    const rThigh = new Bone('rightThigh', rHip, 195, 0, 10, -0.04);
+    this.bones.set('rightThigh', rThigh);
+
+    const rKnee = new Bone('rightKnee', rThigh, 180, 0, 195, 0.02);
+    this.bones.set('rightKnee', rKnee);
+
+    const rAnkle = new Bone('rightAnkle', rKnee, 45, 0, 180, 0.02);
+    this.bones.set('rightAnkle', rAnkle);
+  }
+
+  getBone(name) {
+    return this.bones.get(name) || null;
+  }
+
+  setBoneRotation(name, radians) {
+    const bone = this.bones.get(name);
+    if (bone) {
+      bone.localRotation = radians;
+    }
+  }
+
+  update() {
+    const root = this.bones.get('root');
+    if (root) {
+      root.localX = this.rootX;
+      root.localY = this.rootY;
+      root.updateTransforms();
+    }
+  }
+
+  applyNeutralStandingPose() {
+    this.setBoneRotation('hips', 0);
+    this.setBoneRotation('chest', 0);
+    this.setBoneRotation('neck', 0);
+    this.setBoneRotation('head', 0);
+
+    // Natural arm posture with slight clearance at waist
+    this.setBoneRotation('leftShoulder', 0.10);
+    this.setBoneRotation('leftElbow', 0.04);
+    this.setBoneRotation('leftWrist', -0.02);
+
+    this.setBoneRotation('rightShoulder', -0.10);
+    this.setBoneRotation('rightElbow', -0.04);
+    this.setBoneRotation('rightWrist', 0.02);
+
+    // Sturdy grounded stance
+    this.setBoneRotation('leftThigh', 0.04);
+    this.setBoneRotation('leftKnee', -0.02);
+    this.setBoneRotation('leftAnkle', -0.02);
+
+    this.setBoneRotation('rightThigh', -0.04);
+    this.setBoneRotation('rightKnee', 0.02);
+    this.setBoneRotation('rightAnkle', 0.02);
+
+    this.update();
+  }
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { AthleticRigV2, Bone, Mat2D };
+}
+
+
+/**
+ * Narrivo Character Engine v2 — Lighting & Shading Model (shading.js)
+ * Direction 3: Hybrid Dimensional Illustration
+ *
+ * Implements warm key light (45°), cool environmental rim lighting,
+ * and ambient occlusion channels. Supports dynamic runtime adjustments.
+ */
+
+class LightingController {
+  constructor() {
+    this.keyLightAngle = Math.PI * 0.25; // 45° from top-left
+    this.keyLightIntensity = 1.0;
+    this.keyColor = '#FFF1DC';
+
+    this.rimLightIntensity = 0.85;
+    this.rimColor = '#A5E3FF'; // Cool cyan environmental rim
+
+    this.aoIntensity = 0.95;
+    this.aoColor = '#1C1412'; // Rich deep warm dark
+
+    // Master Palette definition matching approved model sheet
+    this.palette = {
+      skin: {
+        base: '#DF9F7E',
+        highlight: '#F7D2BD',
+        shadow: '#9E5D42',
+        sss: '#C45A3C',
+        stubble: 'rgba(50, 35, 30, 0.25)',
+        lips: '#B86F62',
+        eyes: {
+          sclera: '#ECE8E5',
+          scleraShadow: '#C4BCB6',
+          irisOuter: '#452A18',
+          irisInner: '#945C33',
+          pupil: '#160E08',
+          specular: '#FFFFFF'
+        }
+      },
+      hair: {
+        base: '#1C1715',
+        shadow: '#0F0C0B',
+        highlight: '#48352C',
+        rim: '#7EA2B8'
+      },
+      leather: {
+        base: '#523624',
+        highlight: '#7C5338',
+        shadow: '#311E13',
+        crease: '#1C1009',
+        sheen: 'rgba(255, 230, 200, 0.12)'
+      },
+      fleece: {
+        base: '#EFE7DA',
+        shadow: '#BCAFA0',
+        crevice: '#8A7B6B',
+        highlight: '#FFFDF9'
+      },
+      shirt: {
+        base: '#7D7974',
+        highlight: '#A39F98',
+        shadow: '#504C48',
+        crease: '#363330'
+      },
+      pants: {
+        base: '#4E5844',
+        highlight: '#6C7A60',
+        shadow: '#333D2D',
+        crease: '#22291E',
+        pocketShade: '#2A3324'
+      },
+      boots: {
+        base: '#3A2518',
+        highlight: '#5E3E2A',
+        shadow: '#22150D',
+        crease: '#140C07',
+        sole: '#1A1614',
+        eyelet: '#B89047',
+        laces: '#2B1A10'
+      },
+      hardware: {
+        brass: '#CFA44C',
+        brassHighlight: '#F3D27E',
+        brassShadow: '#846222',
+        webbing: '#2E2D27',
+        webbingHighlight: '#48463D'
+      },
+      ink: '#1D1716' // Tinted line art ink color
+    };
+  }
+
+  setLightingParameters({ keyAngle, keyIntensity, rimIntensity, rimColor, aoIntensity }) {
+    if (keyAngle !== undefined) this.keyLightAngle = keyAngle;
+    if (keyIntensity !== undefined) this.keyLightIntensity = keyIntensity;
+    if (rimIntensity !== undefined) this.rimLightIntensity = rimIntensity;
+    if (rimColor !== undefined) this.rimColor = rimColor;
+    if (aoIntensity !== undefined) this.aoIntensity = aoIntensity;
+  }
+
+  /**
+   * Helper to create a directional linear gradient across a bounding box
+   */
+  createLinearGradient(ctx, x1, y1, x2, y2, colorStops) {
+    const grad = ctx.createLinearGradient(x1, y1, x2, y2);
+    for (const [stop, color] of colorStops) {
+      grad.addColorStop(stop, color);
+    }
+    return grad;
+  }
+
+  /**
+   * Helper to create a radial highlight or ambient shadow
+   */
+  createRadialGradient(ctx, x1, y1, r1, x2, y2, r2, colorStops) {
+    const grad = ctx.createRadialGradient(x1, y1, r1, x2, y2, r2);
+    for (const [stop, color] of colorStops) {
+      grad.addColorStop(stop, color);
+    }
+    return grad;
+  }
+
+  /**
+   * Applies an ambient occlusion crease line with soft blurred drop
+   */
+  drawCrease(ctx, pathFn, strokeColor = this.palette.ink, lineWidth = 2, alpha = 0.85) {
+    ctx.save();
+    ctx.globalAlpha *= alpha * this.aoIntensity;
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    pathFn(ctx);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  /**
+   * Applies a directional rim light edge
+   */
+  drawRimGlint(ctx, pathFn, lineWidth = 2.5, alpha = 0.75) {
+    ctx.save();
+    ctx.globalAlpha *= alpha * this.rimLightIntensity;
+    ctx.strokeStyle = this.rimColor;
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    pathFn(ctx);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { LightingController };
+}
+
+
+/**
+ * Narrivo Character Engine v2 — Head & Hair Component (parts/head.js)
+ * Direction 3: Hybrid Dimensional Illustration
+ *
+ * Implements planar head structure, sculpted jawline, ears with cartilage,
+ * stubble texture, and volumetric swept/wavy hair matching approved model sheet.
+ */
+
+class HeadRenderer {
+  constructor(lighting) {
+    this.lighting = lighting;
+  }
+
+  /**
+   * Draw the neck column connecting chest to head
+   */
+  drawNeck(ctx) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    // Neck gradient (warm key on left, cast shadow from jaw)
+    const neckGrad = ctx.createLinearGradient(-30, 28, 30, 105);
+    neckGrad.addColorStop(0, p.skin.highlight);
+    neckGrad.addColorStop(0.35, p.skin.base);
+    neckGrad.addColorStop(0.85, p.skin.shadow);
+    neckGrad.addColorStop(1.0, p.skin.shadow);
+
+    ctx.fillStyle = neckGrad;
+    ctx.beginPath();
+    ctx.moveTo(-22, 28);
+    ctx.quadraticCurveTo(-26, 62, -34, 105);
+    ctx.lineTo(34, 105);
+    ctx.quadraticCurveTo(26, 62, 22, 28);
+    ctx.closePath();
+    ctx.fill();
+
+    // Lateral neck contours only (no horizontal bottom cut)
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(-22, 28);
+    ctx.quadraticCurveTo(-26, 62, -34, 105);
+    ctx.moveTo(22, 28);
+    ctx.quadraticCurveTo(26, 62, 34, 105);
+    ctx.stroke();
+
+    // Sternocleidomastoid muscle & clavicle pit shadow
+    ctx.strokeStyle = p.skin.shadow;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(-10, 46);
+    ctx.quadraticCurveTo(-7, 68, -3, 92);
+    ctx.moveTo(10, 50);
+    ctx.quadraticCurveTo(8, 70, 4, 92);
+    ctx.stroke();
+
+    // Soft jaw cast shadow across top of neck
+    const jawShadow = ctx.createLinearGradient(0, 42, 0, 70);
+    jawShadow.addColorStop(0, 'rgba(158, 93, 66, 0.75)');
+    jawShadow.addColorStop(0.5, 'rgba(196, 90, 60, 0.35)');
+    jawShadow.addColorStop(1.0, 'transparent');
+    ctx.fillStyle = jawShadow;
+    ctx.beginPath();
+    ctx.moveTo(-24, 45);
+    ctx.quadraticCurveTo(0, 62, 24, 45);
+    ctx.lineTo(26, 68);
+    ctx.quadraticCurveTo(0, 76, -26, 68);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  /**
+   * Draw the base head mesh (jawline, cheekbones, chin, ears)
+   */
+  drawHeadBase(ctx) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    // Planar head silhouette (tapering to sculpted chin)
+    const headGrad = ctx.createLinearGradient(-45, -50, 45, 50);
+    headGrad.addColorStop(0.0, p.skin.highlight);
+    headGrad.addColorStop(0.4, p.skin.base);
+    headGrad.addColorStop(0.8, p.skin.shadow);
+    headGrad.addColorStop(1.0, p.skin.shadow);
+
+    ctx.fillStyle = headGrad;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 2.0;
+
+    ctx.beginPath();
+    // Start at top forehead center
+    ctx.moveTo(0, -56);
+    // Forehead right temple
+    ctx.bezierCurveTo(28, -56, 42, -45, 42, -24);
+    // Right zygomatic cheekbone
+    ctx.bezierCurveTo(44, -10, 43, 6, 39, 20);
+    // Right mandibular angle & jawline
+    ctx.bezierCurveTo(35, 34, 24, 46, 12, 54);
+    // Chin with subtle flat cleft
+    ctx.bezierCurveTo(6, 57, -6, 57, -12, 54);
+    // Left jawline
+    ctx.bezierCurveTo(-24, 46, -35, 34, -39, 20);
+    // Left cheekbone
+    ctx.bezierCurveTo(-43, 6, -44, -10, -42, -24);
+    // Left temple back to top
+    ctx.bezierCurveTo(-42, -45, -28, -56, 0, -56);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Cheekbone shading plane (subtle planar facet)
+    const cheekGrad = ctx.createLinearGradient(15, -5, 38, 22);
+    cheekGrad.addColorStop(0, 'rgba(158, 93, 66, 0)');
+    cheekGrad.addColorStop(1, 'rgba(158, 93, 66, 0.45)');
+    ctx.fillStyle = cheekGrad;
+    ctx.beginPath();
+    ctx.moveTo(22, 0);
+    ctx.quadraticCurveTo(36, 10, 37, 24);
+    ctx.quadraticCurveTo(28, 36, 16, 42);
+    ctx.quadraticCurveTo(26, 22, 22, 0);
+    ctx.closePath();
+    ctx.fill();
+
+    // Chin cleft & highlight plane
+    ctx.fillStyle = p.skin.highlight;
+    ctx.beginPath();
+    ctx.ellipse(0, 48, 6, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = p.skin.shadow;
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.moveTo(0, 49);
+    ctx.lineTo(0, 53);
+    ctx.stroke();
+
+    // Masculine 5-o'clock stubble texture wash along jaw & chin
+    ctx.fillStyle = p.skin.stubble;
+    ctx.beginPath();
+    ctx.moveTo(-32, 22);
+    ctx.quadraticCurveTo(-18, 38, 0, 40);
+    ctx.quadraticCurveTo(18, 38, 32, 22);
+    ctx.quadraticCurveTo(36, 35, 12, 53);
+    ctx.quadraticCurveTo(0, 56, -12, 53);
+    ctx.quadraticCurveTo(-36, 35, -32, 22);
+    ctx.closePath();
+    ctx.fill();
+
+    // Ears
+    this.drawEars(ctx);
+
+    // Rim lighting along the right jaw edge
+    this.lighting.drawRimGlint(ctx, (c) => {
+      c.moveTo(38, 10);
+      c.bezierCurveTo(36, 30, 26, 46, 12, 54);
+    }, 2.2, 0.85);
+
+    ctx.restore();
+  }
+
+  /**
+   * Detailed anatomical ears with helix, antihelix, concha, and lobule
+   */
+  drawEars(ctx) {
+    const p = this.lighting.palette;
+
+    // Left Ear (viewer left, in key light)
+    ctx.save();
+    ctx.fillStyle = p.skin.base;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(-41, -18);
+    ctx.bezierCurveTo(-50, -18, -52, -2, -49, 12);
+    ctx.bezierCurveTo(-47, 20, -42, 22, -39, 18);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Left Concha cavity shadow
+    ctx.strokeStyle = p.skin.shadow;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(-44, -10);
+    ctx.bezierCurveTo(-48, -4, -47, 4, -43, 8);
+    ctx.stroke();
+
+    // Right Ear (viewer right, shaded side + rim)
+    ctx.fillStyle = p.skin.shadow;
+    ctx.strokeStyle = p.ink;
+    ctx.beginPath();
+    ctx.moveTo(41, -18);
+    ctx.bezierCurveTo(50, -18, 52, -2, 49, 12);
+    ctx.bezierCurveTo(47, 20, 42, 22, 39, 18);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Right Concha cavity shadow
+    ctx.strokeStyle = p.skin.sss;
+    ctx.beginPath();
+    ctx.moveTo(44, -10);
+    ctx.bezierCurveTo(48, -4, 47, 4, 43, 8);
+    ctx.stroke();
+
+    // Rim glint on right ear
+    this.lighting.drawRimGlint(ctx, (c) => {
+      c.moveTo(48, -12);
+      c.bezierCurveTo(52, -2, 51, 8, 48, 14);
+    }, 2.0, 0.9);
+
+    ctx.restore();
+  }
+
+  /**
+   * Draw volumetric swept hair locks (Back layer behind head)
+   */
+  drawBackHair(ctx) {
+    const p = this.lighting.palette;
+    ctx.save();
+    ctx.fillStyle = p.hair.shadow;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 2.0;
+
+    // Flared wavy back hair clumping around neck & nape
+    ctx.beginPath();
+    ctx.moveTo(-44, -30);
+    ctx.bezierCurveTo(-56, -15, -58, 12, -44, 28);
+    ctx.bezierCurveTo(-40, 22, -42, 10, -40, 0);
+    ctx.bezierCurveTo(-42, -12, -42, -22, -42, -28);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(44, -30);
+    ctx.bezierCurveTo(56, -15, 58, 12, 44, 28);
+    ctx.bezierCurveTo(40, 22, 42, 10, 40, 0);
+    ctx.bezierCurveTo(42, -12, 42, -22, 42, -28);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  /**
+   * Draw front crown, voluminous swept waves, and individual tousled lock highlights
+   */
+  drawFrontHair(ctx) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    // 1. Base Volumetric Crown Hair Mass
+    const crownGrad = ctx.createLinearGradient(-55, -85, 55, -20);
+    crownGrad.addColorStop(0.0, p.hair.highlight);
+    crownGrad.addColorStop(0.35, p.hair.base);
+    crownGrad.addColorStop(0.85, p.hair.shadow);
+
+    ctx.fillStyle = crownGrad;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 2.2;
+
+    ctx.beginPath();
+    // Crown base outline with natural wavy volume peaks
+    ctx.moveTo(-44, -32);
+    ctx.bezierCurveTo(-56, -55, -46, -75, -22, -82);
+    ctx.bezierCurveTo(-6, -88, 18, -88, 38, -76);
+    ctx.bezierCurveTo(52, -65, 54, -45, 46, -26);
+    ctx.bezierCurveTo(44, -18, 40, -12, 38, -22);
+    // Swept forehead fringe line with dynamic lock points
+    ctx.bezierCurveTo(28, -32, 16, -34, 6, -38);
+    ctx.bezierCurveTo(-4, -42, -14, -38, -26, -32);
+    ctx.bezierCurveTo(-34, -28, -38, -22, -44, -32);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // 2. Dynamic Tousled Wavy Locks (Matching reference portrait)
+    // Primary front sweep lock (swooping from left to right)
+    ctx.fillStyle = p.hair.base;
+    ctx.beginPath();
+    ctx.moveTo(-20, -82);
+    ctx.bezierCurveTo(-2, -92, 22, -84, 30, -68);
+    ctx.bezierCurveTo(36, -54, 28, -46, 22, -50);
+    ctx.bezierCurveTo(14, -58, 2, -68, -14, -66);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Forehead curving flick lock
+    ctx.fillStyle = p.hair.highlight;
+    ctx.beginPath();
+    ctx.moveTo(-28, -62);
+    ctx.bezierCurveTo(-16, -66, -2, -56, 3, -42);
+    ctx.bezierCurveTo(5, -34, -2, -30, -8, -36);
+    ctx.bezierCurveTo(-16, -44, -22, -52, -28, -62);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Secondary wavy forelock on left temple
+    ctx.fillStyle = p.hair.base;
+    ctx.beginPath();
+    ctx.moveTo(-38, -50);
+    ctx.bezierCurveTo(-46, -56, -48, -42, -42, -32);
+    ctx.bezierCurveTo(-38, -28, -38, -38, -38, -50);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Crest wave on top
+    ctx.fillStyle = p.hair.highlight;
+    ctx.beginPath();
+    ctx.moveTo(-8, -84);
+    ctx.bezierCurveTo(4, -94, 18, -88, 14, -78);
+    ctx.bezierCurveTo(8, -82, 0, -82, -8, -84);
+    ctx.closePath();
+    ctx.fill();
+
+    // Anisotropic highlight sheen across crown
+    ctx.strokeStyle = p.hair.highlight;
+    ctx.lineWidth = 2.4;
+    ctx.beginPath();
+    ctx.moveTo(-24, -76);
+    ctx.quadraticCurveTo(4, -84, 26, -70);
+    ctx.moveTo(-30, -66);
+    ctx.quadraticCurveTo(-8, -74, 16, -64);
+    ctx.stroke();
+
+    // Fine hair strands
+    ctx.strokeStyle = 'rgba(255, 230, 200, 0.35)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(-18, -78); ctx.quadraticCurveTo(0, -84, 18, -74);
+    ctx.moveTo(-12, -68); ctx.quadraticCurveTo(4, -72, 14, -58);
+    ctx.stroke();
+
+    // Cool Rim lighting on right hair edge
+    this.lighting.drawRimGlint(ctx, (c) => {
+      c.moveTo(28, -80);
+      c.bezierCurveTo(46, -70, 52, -48, 46, -28);
+    }, 2.6, 0.95);
+
+    ctx.restore();
+  }
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { HeadRenderer };
+}
+
+
+/**
+ * Narrivo Character Engine v2 — Facial Features Component (parts/face.js)
+ * Direction 3: Hybrid Dimensional Illustration
+ *
+ * Implements high-fidelity eyes, hazel/amber irises with specular highlights,
+ * eyelid creases, sculpted nose with cast shadow, lips, and expressive brows.
+ */
+
+class FaceRenderer {
+  constructor(lighting) {
+    this.lighting = lighting;
+  }
+
+  draw(ctx, expression = 'neutral', gazeX = 0, gazeY = 0) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    // 1. Eyebrows
+    this.drawEyebrows(ctx, expression);
+
+    // 2. Eyes (Left and Right)
+    this.drawEye(ctx, -18, -12, 1, gazeX, gazeY, expression); // viewer left
+    this.drawEye(ctx, 18, -12, -1, gazeX, gazeY, expression);  // viewer right
+
+    // 3. Sculpted Nose & Underside Cast Shadow
+    this.drawNose(ctx);
+
+    // 4. Lips & Mouth
+    this.drawMouth(ctx, expression);
+
+    ctx.restore();
+  }
+
+  drawEyebrows(ctx, expression) {
+    const p = this.lighting.palette;
+    ctx.save();
+    ctx.fillStyle = p.hair.base;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 1.0;
+
+    // Left Eyebrow (viewer left, key-lit)
+    ctx.beginPath();
+    ctx.moveTo(-5, -24);
+    ctx.quadraticCurveTo(-18, -29, -32, -20);
+    ctx.quadraticCurveTo(-20, -25, -5, -21);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Right Eyebrow (viewer right)
+    ctx.beginPath();
+    ctx.moveTo(5, -24);
+    ctx.quadraticCurveTo(18, -29, 32, -20);
+    ctx.quadraticCurveTo(20, -25, 5, -21);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Textured hair strokes on brows
+    ctx.strokeStyle = p.hair.highlight;
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.moveTo(-7, -23); ctx.lineTo(-12, -26);
+    ctx.moveTo(-16, -25); ctx.lineTo(-21, -27);
+    ctx.moveTo(-24, -24); ctx.lineTo(-29, -23);
+    ctx.moveTo(7, -23); ctx.lineTo(12, -26);
+    ctx.moveTo(16, -25); ctx.lineTo(21, -27);
+    ctx.moveTo(24, -24); ctx.lineTo(29, -23);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  drawEye(ctx, cx, cy, side, gazeX, gazeY, expression) {
+    const p = this.lighting.palette;
+    const eyeW = 10.5;
+    const eyeH = 5.8;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+
+    // Upper eyelid crease line (supratarsal fold)
+    ctx.strokeStyle = p.skin.shadow;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(-eyeW * 1.05, -eyeH * 1.35);
+    ctx.quadraticCurveTo(0, -eyeH * 1.75, eyeW * 1.05, -eyeH * 1.1);
+    ctx.stroke();
+
+    // Eye outline path (Almond shape)
+    ctx.beginPath();
+    ctx.moveTo(-eyeW, 0);
+    ctx.bezierCurveTo(-eyeW * 0.45, -eyeH * 1.25, eyeW * 0.45, -eyeH * 1.25, eyeW, 0);
+    ctx.bezierCurveTo(eyeW * 0.45, eyeH * 0.95, -eyeW * 0.45, eyeH * 0.95, -eyeW, 0);
+    ctx.closePath();
+
+    // Sclera gradient (subtle top shadow)
+    const scleraGrad = ctx.createLinearGradient(0, -eyeH, 0, eyeH);
+    scleraGrad.addColorStop(0, p.skin.eyes.scleraShadow);
+    scleraGrad.addColorStop(0.35, p.skin.eyes.sclera);
+    scleraGrad.addColorStop(1, p.skin.eyes.sclera);
+    ctx.fillStyle = scleraGrad;
+    ctx.fill();
+
+    // Clip to eye aperture for Iris and Pupil
+    ctx.clip();
+
+    // Iris (Hazel/amber gradient)
+    const irisR = 4.4;
+    const irisX = (gazeX || 0) * 1.5;
+    const irisY = (gazeY || 0) * 0.8;
+
+    const irisGrad = ctx.createRadialGradient(irisX - 0.8, irisY - 0.8, 0.5, irisX, irisY, irisR);
+    irisGrad.addColorStop(0.0, p.skin.eyes.irisInner);
+    irisGrad.addColorStop(0.65, p.skin.eyes.irisInner);
+    irisGrad.addColorStop(0.95, p.skin.eyes.irisOuter);
+    irisGrad.addColorStop(1.0, '#120B06');
+
+    ctx.fillStyle = irisGrad;
+    ctx.beginPath();
+    ctx.arc(irisX, irisY, irisR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Pupil
+    ctx.fillStyle = p.skin.eyes.pupil;
+    ctx.beginPath();
+    ctx.arc(irisX, irisY, 1.9, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Specular Highlight Glint (matching 45° key light)
+    ctx.fillStyle = p.skin.eyes.specular;
+    ctx.beginPath();
+    ctx.arc(irisX - 1.5, irisY - 1.5, 1.0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Secondary subtle lower bounce glint
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+    ctx.beginPath();
+    ctx.arc(irisX + 1.2, irisY + 1.2, 0.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Upper lid drop shadow over eyeball
+    const dropShadow = ctx.createLinearGradient(0, -eyeH, 0, -eyeH * 0.1);
+    dropShadow.addColorStop(0, 'rgba(35, 20, 16, 0.7)');
+    dropShadow.addColorStop(1, 'transparent');
+    ctx.fillStyle = dropShadow;
+    ctx.fillRect(-eyeW, -eyeH, eyeW * 2, eyeH * 1.5);
+
+    ctx.restore();
+
+    // Crisp upper lash line
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 2.0;
+    ctx.beginPath();
+    ctx.moveTo(-eyeW * 1.1, 0);
+    ctx.bezierCurveTo(-eyeW * 0.45, -eyeH * 1.3, eyeW * 0.45, -eyeH * 1.3, eyeW * 1.05, -0.2);
+    ctx.stroke();
+
+    // Subtle lower lash definition
+    ctx.strokeStyle = p.skin.shadow;
+    ctx.lineWidth = 1.0;
+    ctx.beginPath();
+    ctx.moveTo(-eyeW * 0.8, 0.8);
+    ctx.quadraticCurveTo(0, eyeH * 0.95, eyeW * 0.8, 0.5);
+    ctx.stroke();
+
+    // Medial canthus (tear duct)
+    ctx.fillStyle = p.skin.sss;
+    ctx.beginPath();
+    ctx.arc(side === 1 ? eyeW : -eyeW, 0, 0.9, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  drawNose(ctx) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    // Nose bridge highlight
+    ctx.strokeStyle = p.skin.highlight;
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(-0.5, -12);
+    ctx.lineTo(-0.5, 9);
+    ctx.stroke();
+
+    // Shaded side of bridge (viewer right)
+    ctx.strokeStyle = p.skin.shadow;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(1.2, -8);
+    ctx.lineTo(2.0, 9);
+    ctx.stroke();
+
+    // Nose tip rounded plane
+    ctx.fillStyle = p.skin.highlight;
+    ctx.beginPath();
+    ctx.ellipse(0, 11, 3.2, 2.2, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Underside nostril cast shadow
+    const noseShadow = ctx.createLinearGradient(0, 11, 0, 17);
+    noseShadow.addColorStop(0, p.skin.shadow);
+    noseShadow.addColorStop(0.5, p.skin.sss);
+    noseShadow.addColorStop(1, 'transparent');
+
+    ctx.fillStyle = noseShadow;
+    ctx.beginPath();
+    ctx.moveTo(-7, 12);
+    ctx.quadraticCurveTo(0, 10, 7, 12);
+    ctx.quadraticCurveTo(0, 17, -7, 12);
+    ctx.fill();
+
+    // Nostril wings & holes
+    ctx.fillStyle = p.ink;
+    ctx.beginPath();
+    ctx.ellipse(-3.8, 12.8, 1.2, 0.7, -0.2, 0, Math.PI * 2);
+    ctx.ellipse(3.8, 12.8, 1.2, 0.7, 0.2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Nostril outer curves
+    ctx.strokeStyle = p.skin.shadow;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(-5.2, 12, 1.8, Math.PI * 0.7, Math.PI * 1.6);
+    ctx.moveTo(5.2, 12);
+    ctx.arc(5.2, 12, 1.8, -Math.PI * 0.6, Math.PI * 0.3);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  drawMouth(ctx, expression) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    // Philtrum indentation
+    ctx.strokeStyle = p.skin.shadow;
+    ctx.lineWidth = 1.1;
+    ctx.beginPath();
+    ctx.moveTo(-1.4, 15); ctx.lineTo(-1.0, 22);
+    ctx.moveTo(1.4, 15); ctx.lineTo(1.0, 22);
+    ctx.stroke();
+
+    // Upper Lip (Cupid's bow with warm tone)
+    ctx.fillStyle = p.skin.lips;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.moveTo(-11, 24);
+    ctx.quadraticCurveTo(-5, 22, -2, 23);
+    ctx.lineTo(0, 24);
+    ctx.lineTo(2, 23);
+    ctx.quadraticCurveTo(5, 22, 11, 24);
+    ctx.quadraticCurveTo(5, 25, 0, 25.5);
+    ctx.quadraticCurveTo(-5, 25, -11, 24);
+    ctx.closePath();
+    ctx.fill();
+
+    // Lip parting line
+    ctx.beginPath();
+    ctx.moveTo(-12, 24.2);
+    ctx.quadraticCurveTo(-4, 25.2, 0, 25.5);
+    ctx.quadraticCurveTo(4, 25.2, 12, 24.2);
+    ctx.stroke();
+
+    // Lower Lip fullness & highlight
+    const lowerLipGrad = ctx.createLinearGradient(0, 25.5, 0, 31);
+    lowerLipGrad.addColorStop(0, p.skin.lips);
+    lowerLipGrad.addColorStop(0.4, p.skin.highlight);
+    lowerLipGrad.addColorStop(1, p.skin.base);
+
+    ctx.fillStyle = lowerLipGrad;
+    ctx.beginPath();
+    ctx.moveTo(-9, 25);
+    ctx.quadraticCurveTo(0, 31, 9, 25);
+    ctx.quadraticCurveTo(0, 26, -9, 25);
+    ctx.closePath();
+    ctx.fill();
+
+    // Under-lip mental fold shadow
+    ctx.strokeStyle = p.skin.shadow;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(-6, 33);
+    ctx.quadraticCurveTo(0, 35, 6, 33);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { FaceRenderer };
+}
+
+
+/**
+ * Narrivo Character Engine v2 — Torso & Jacket Component (parts/torso.js)
+ * Direction 3: Hybrid Dimensional Illustration
+ *
+ * Implements distressed leather flight bomber jacket, plush shearling fleece
+ * collar, henley undershirt, and tactical chest harness with brass hardware.
+ */
+
+class TorsoRenderer {
+  constructor(lighting) {
+    this.lighting = lighting;
+  }
+
+  /**
+   * Rear fleece collar backing (rendered behind neck)
+   */
+  drawBackCollar(ctx) {
+    const p = this.lighting.palette;
+    ctx.save();
+    ctx.fillStyle = p.fleece.shadow;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 1.8;
+
+    // Upright rear collar curve wrapping around back of neck
+    ctx.beginPath();
+    ctx.moveTo(-36, -10);
+    ctx.bezierCurveTo(-38, -32, 38, -32, 36, -10);
+    ctx.quadraticCurveTo(0, -6, -36, -10);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Soft fleece crevice shading
+    ctx.fillStyle = p.fleece.crevice;
+    ctx.beginPath();
+    ctx.moveTo(-28, -12);
+    ctx.bezierCurveTo(-26, -24, 26, -24, 28, -12);
+    ctx.quadraticCurveTo(0, -8, -28, -12);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  /**
+   * Main Torso body (Undershirt, Leather Jacket, Webbing Harness, Front Fleece Lapels)
+   */
+  drawTorso(ctx) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    // 1. Henley Undershirt Base
+    this.drawHenleyShirt(ctx);
+
+    // 2. Leather Flight Bomber Jacket Body
+    this.drawLeatherJacketBody(ctx);
+
+    // 3. Tactical Chest Harness & Webbing
+    this.drawTacticalHarness(ctx);
+
+    // 4. Front Shearling Fleece Lapels
+    this.drawFrontFleeceLapels(ctx);
+
+    ctx.restore();
+  }
+
+  drawHenleyShirt(ctx) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    // V-neck throat opening
+    const shirtGrad = ctx.createLinearGradient(-25, 0, 25, 60);
+    shirtGrad.addColorStop(0, p.shirt.highlight);
+    shirtGrad.addColorStop(0.5, p.shirt.base);
+    shirtGrad.addColorStop(1, p.shirt.shadow);
+
+    ctx.fillStyle = shirtGrad;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 1.8;
+
+    ctx.beginPath();
+    ctx.moveTo(-24, 0);
+    ctx.lineTo(24, 0);
+    ctx.lineTo(18, 55);
+    ctx.lineTo(-18, 55);
+    ctx.closePath();
+    ctx.fill();
+
+    // Curved collar neckline
+    ctx.strokeStyle = p.shirt.crease;
+    ctx.lineWidth = 2.0;
+    ctx.beginPath();
+    ctx.moveTo(-18, 2);
+    ctx.quadraticCurveTo(0, 16, 18, 2);
+    ctx.stroke();
+
+    // Henley center placket
+    ctx.strokeStyle = p.shirt.shadow;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(-3, 14); ctx.lineTo(-3, 48);
+    ctx.moveTo(3, 14); ctx.lineTo(3, 48);
+    ctx.stroke();
+
+    // Placket buttons
+    ctx.fillStyle = '#D6CEBE';
+    for (const y of [22, 32, 42]) {
+      ctx.beginPath();
+      ctx.arc(0, y, 1.8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  drawLeatherJacketBody(ctx) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    // Master Leather Torso Gradient (45° warm key light on left, shadow on right)
+    const jacketGrad = ctx.createLinearGradient(-65, 0, 65, 140);
+    jacketGrad.addColorStop(0.0, p.leather.highlight);
+    jacketGrad.addColorStop(0.35, p.leather.base);
+    jacketGrad.addColorStop(0.85, p.leather.shadow);
+    jacketGrad.addColorStop(1.0, p.leather.crease);
+
+    ctx.fillStyle = jacketGrad;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 2.2;
+
+    // Outer Jacket Torso Contour (Broad shoulders tapering to waist)
+    ctx.beginPath();
+    // Left shoulder scye
+    ctx.moveTo(-62, 10);
+    ctx.bezierCurveTo(-66, 35, -58, 65, -52, 95);
+    // Left waist ribbing
+    ctx.lineTo(-44, 138);
+    // Bottom waist hem
+    ctx.quadraticCurveTo(0, 144, 44, 138);
+    // Right waist ribbing
+    ctx.lineTo(52, 95);
+    // Right shoulder scye
+    ctx.bezierCurveTo(58, 65, 66, 35, 62, 10);
+    // Neckline opening
+    ctx.quadraticCurveTo(34, 12, 18, 2);
+    ctx.quadraticCurveTo(0, 8, -18, 2);
+    ctx.quadraticCurveTo(-34, 12, -62, 10);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Subtle leather sheen overlay across chest pectorals
+    const sheenGrad = ctx.createRadialGradient(-20, 35, 5, -20, 35, 45);
+    sheenGrad.addColorStop(0, p.leather.sheen);
+    sheenGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = sheenGrad;
+    ctx.fillRect(-62, 10, 124, 130);
+
+    // Front Antique Brass Center Zipper & Wind Flap
+    ctx.strokeStyle = p.leather.crease;
+    ctx.lineWidth = 3.0;
+    ctx.beginPath();
+    ctx.moveTo(0, 48);
+    ctx.lineTo(0, 140);
+    ctx.stroke();
+
+    ctx.strokeStyle = p.hardware.brass;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(-0.5, 52);
+    ctx.lineTo(-0.5, 140);
+    ctx.stroke();
+
+    // Topstitching seam lines along chest and side panels
+    ctx.strokeStyle = 'rgba(28, 16, 11, 0.45)';
+    ctx.lineWidth = 1.2;
+    ctx.setLineDash([3, 2]);
+    ctx.beginPath();
+    ctx.moveTo(-50, 45); ctx.lineTo(-12, 50);
+    ctx.moveTo(50, 45); ctx.lineTo(12, 50);
+    ctx.moveTo(-36, 52); ctx.lineTo(-32, 135);
+    ctx.moveTo(36, 52); ctx.lineTo(32, 135);
+    ctx.stroke();
+    ctx.setLineDash([]); // reset
+
+    // Waist Ribbed Elastic Trim
+    const ribGrad = ctx.createLinearGradient(0, 126, 0, 142);
+    ribGrad.addColorStop(0, p.leather.shadow);
+    ribGrad.addColorStop(1, p.leather.crease);
+    ctx.fillStyle = ribGrad;
+    ctx.beginPath();
+    ctx.moveTo(-45, 128);
+    ctx.quadraticCurveTo(0, 134, 45, 128);
+    ctx.lineTo(44, 140);
+    ctx.quadraticCurveTo(0, 146, -44, 140);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Ribbed vertical seam ridges
+    ctx.strokeStyle = 'rgba(255, 230, 200, 0.15)';
+    ctx.lineWidth = 1.0;
+    for (let rx = -38; rx <= 38; rx += 6) {
+      ctx.beginPath();
+      ctx.moveTo(rx, 130);
+      ctx.lineTo(rx, 142);
+      ctx.stroke();
+    }
+
+    // Directional Rim Glint on right jacket edge
+    this.lighting.drawRimGlint(ctx, (c) => {
+      c.moveTo(61, 20);
+      c.bezierCurveTo(65, 50, 56, 85, 51, 105);
+      c.lineTo(44, 138);
+    }, 2.4, 0.85);
+
+    ctx.restore();
+  }
+
+  drawTacticalHarness(ctx) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    // Tactical Webbing Straps (Crossing clavicles & chest)
+    ctx.strokeStyle = p.hardware.webbing;
+    ctx.lineWidth = 5.0;
+    ctx.lineCap = 'butt';
+
+    // Left strap (over shoulder down toward belt)
+    ctx.beginPath();
+    ctx.moveTo(-32, 15);
+    ctx.lineTo(-24, 130);
+    ctx.stroke();
+
+    // Right strap
+    ctx.beginPath();
+    ctx.moveTo(32, 15);
+    ctx.lineTo(24, 130);
+    ctx.stroke();
+
+    // Horizontal Sternum Cross-Strap
+    ctx.beginPath();
+    ctx.moveTo(-28, 48);
+    ctx.lineTo(28, 48);
+    ctx.stroke();
+
+    // Webbing edge stitching highlights
+    ctx.strokeStyle = p.hardware.webbingHighlight;
+    ctx.lineWidth = 1.0;
+    ctx.beginPath();
+    ctx.moveTo(-34, 15); ctx.lineTo(-26, 130);
+    ctx.moveTo(30, 15); ctx.lineTo(22, 130);
+    ctx.moveTo(-28, 46); ctx.lineTo(28, 46);
+    ctx.stroke();
+
+    // Antique Brass D-Rings & Connectors
+    this.drawHarnessRing(ctx, -28, 48);
+    this.drawHarnessRing(ctx, 28, 48);
+
+    ctx.restore();
+  }
+
+  drawHarnessRing(ctx, cx, cy) {
+    const p = this.lighting.palette;
+    ctx.save();
+    ctx.translate(cx, cy);
+
+    // Cast shadow
+    ctx.fillStyle = 'rgba(20, 10, 5, 0.55)';
+    ctx.beginPath();
+    ctx.arc(1.5, 1.5, 5.0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Brass outer ring
+    ctx.strokeStyle = p.hardware.brass;
+    ctx.lineWidth = 2.4;
+    ctx.beginPath();
+    ctx.arc(0, 0, 4.5, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Brass specular glint
+    ctx.strokeStyle = p.hardware.brassHighlight;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(-0.8, -0.8, 4.2, Math.PI * 0.9, Math.PI * 1.6);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  drawFrontFleeceLapels(ctx) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    // Left Lapel (viewer left, in key light)
+    const leftFleeceGrad = ctx.createLinearGradient(-50, 0, -10, 40);
+    leftFleeceGrad.addColorStop(0, p.fleece.highlight);
+    leftFleeceGrad.addColorStop(0.6, p.fleece.base);
+    leftFleeceGrad.addColorStop(1, p.fleece.shadow);
+
+    ctx.fillStyle = leftFleeceGrad;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 1.8;
+
+    ctx.beginPath();
+    ctx.moveTo(-16, 2);
+    // Curved outer edge with organic wool bumps
+    ctx.bezierCurveTo(-26, 1, -44, 4, -54, 15);
+    ctx.bezierCurveTo(-58, 22, -54, 34, -46, 42);
+    ctx.bezierCurveTo(-38, 48, -26, 46, -14, 38);
+    ctx.quadraticCurveTo(-10, 22, -14, 8);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Right Lapel (viewer right, shaded + rim)
+    const rightFleeceGrad = ctx.createLinearGradient(10, 0, 50, 40);
+    rightFleeceGrad.addColorStop(0, p.fleece.base);
+    rightFleeceGrad.addColorStop(0.7, p.fleece.shadow);
+    rightFleeceGrad.addColorStop(1, p.fleece.crevice);
+
+    ctx.fillStyle = rightFleeceGrad;
+    ctx.beginPath();
+    ctx.moveTo(16, 2);
+    ctx.bezierCurveTo(26, 1, 44, 4, 54, 15);
+    ctx.bezierCurveTo(58, 22, 54, 34, 46, 42);
+    ctx.bezierCurveTo(38, 48, 26, 46, 14, 38);
+    ctx.quadraticCurveTo(10, 22, 14, 8);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Wool fleece surface texture tufts
+    ctx.strokeStyle = p.fleece.crevice;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    // Left tufts
+    ctx.arc(-34, 20, 2.5, 0, Math.PI);
+    ctx.arc(-42, 28, 2.2, 0, Math.PI);
+    ctx.arc(-26, 32, 2.4, 0, Math.PI);
+    // Right tufts
+    ctx.arc(34, 20, 2.5, 0, Math.PI);
+    ctx.arc(42, 28, 2.2, 0, Math.PI);
+    ctx.arc(26, 32, 2.4, 0, Math.PI);
+    ctx.stroke();
+
+    // Rim highlight on right fleece edge
+    this.lighting.drawRimGlint(ctx, (c) => {
+      c.moveTo(48, 16);
+      c.bezierCurveTo(56, 24, 52, 36, 44, 42);
+    }, 2.2, 0.9);
+
+    ctx.restore();
+  }
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { TorsoRenderer };
+}
+
+
+/**
+ * Narrivo Character Engine v2 — Limbs Component (parts/limbs.js)
+ * Direction 3: Hybrid Dimensional Illustration
+ *
+ * Implements anatomical leather jacket sleeves (upper arm, forearm)
+ * and military olive cargo trousers (thighs with cargo pockets, shins with blousing).
+ */
+
+class LimbsRenderer {
+  constructor(lighting) {
+    this.lighting = lighting;
+  }
+
+  /**
+   * Upper Arm (Leather flight jacket sleeve from shoulder to elbow)
+   */
+  drawUpperArm(ctx, side = 1, length = 138) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    const isKeyLit = side === -1; // viewer left
+    const armGrad = ctx.createLinearGradient(-18, 0, 18, length);
+    if (isKeyLit) {
+      armGrad.addColorStop(0, p.leather.highlight);
+      armGrad.addColorStop(0.45, p.leather.base);
+      armGrad.addColorStop(1, p.leather.shadow);
+    } else {
+      armGrad.addColorStop(0, p.leather.base);
+      armGrad.addColorStop(0.7, p.leather.shadow);
+      armGrad.addColorStop(1, p.leather.crease);
+    }
+
+    ctx.fillStyle = armGrad;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 2.0;
+
+    // Curved sleeve silhouette (fuller at deltoid, tapering to elbow)
+    ctx.beginPath();
+    ctx.moveTo(-16, 0); // inner shoulder
+    ctx.quadraticCurveTo(-18, length * 0.45, -13, length); // inner arm
+    ctx.lineTo(13, length); // elbow joint
+    ctx.bezierCurveTo(22, length * 0.7, 24, length * 0.25, 18, 0); // outer deltoid/bicep
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Shoulder Scye seam cap
+    ctx.strokeStyle = p.leather.crease;
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(-16, 2);
+    ctx.quadraticCurveTo(0, -6, 18, 2);
+    ctx.stroke();
+
+    // Elbow horizontal drag folds / creases
+    ctx.strokeStyle = p.leather.crease;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(-10, length - 18);
+    ctx.quadraticCurveTo(0, length - 12, 10, length - 16);
+    ctx.moveTo(-8, length - 8);
+    ctx.quadraticCurveTo(0, length - 4, 9, length - 7);
+    ctx.stroke();
+
+    // Rim lighting on outer edge if shadow side
+    if (!isKeyLit) {
+      this.lighting.drawRimGlint(ctx, (c) => {
+        c.moveTo(18, 5);
+        c.bezierCurveTo(24, length * 0.3, 21, length * 0.7, 13, length - 5);
+      }, 2.2, 0.85);
+    }
+
+    ctx.restore();
+  }
+
+  /**
+   * Forearm (Lower sleeve tapering to wrist cuff)
+   */
+  drawForearm(ctx, side = 1, length = 126) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    const isKeyLit = side === -1;
+    const sleeveGrad = ctx.createLinearGradient(-15, 0, 15, length);
+    if (isKeyLit) {
+      sleeveGrad.addColorStop(0, p.leather.highlight);
+      sleeveGrad.addColorStop(0.4, p.leather.base);
+      sleeveGrad.addColorStop(1, p.leather.shadow);
+    } else {
+      sleeveGrad.addColorStop(0, p.leather.base);
+      sleeveGrad.addColorStop(0.7, p.leather.shadow);
+      sleeveGrad.addColorStop(1, p.leather.crease);
+    }
+
+    ctx.fillStyle = sleeveGrad;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 2.0;
+
+    // Forearm sleeve contour
+    ctx.beginPath();
+    ctx.moveTo(-13, 0);
+    ctx.bezierCurveTo(-14, length * 0.4, -12, length * 0.85, -10, length - 14);
+    ctx.lineTo(-9, length); // wrist inner
+    ctx.lineTo(9, length);  // wrist outer
+    ctx.lineTo(10, length - 14);
+    ctx.bezierCurveTo(15, length * 0.85, 17, length * 0.4, 13, 0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Leather wrist storm cuff & strap
+    ctx.fillStyle = p.leather.crease;
+    ctx.beginPath();
+    ctx.rect(-10, length - 14, 20, 14);
+    ctx.fill();
+    ctx.stroke();
+
+    // Cuff button/stud
+    ctx.fillStyle = p.hardware.brass;
+    ctx.beginPath();
+    ctx.arc(isKeyLit ? -3 : 3, length - 7, 2.0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Rim glint on outer forearm edge
+    if (!isKeyLit) {
+      this.lighting.drawRimGlint(ctx, (c) => {
+        c.moveTo(13, 10);
+        c.bezierCurveTo(17, length * 0.45, 15, length * 0.8, 10, length - 5);
+      }, 2.0, 0.85);
+    }
+
+    ctx.restore();
+  }
+
+  /**
+   * Thigh (Military cargo pants from hip to knee with lateral pocket)
+   */
+  drawThigh(ctx, side = 1, length = 192) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    const isKeyLit = side === -1;
+    const pantsGrad = ctx.createLinearGradient(-26, 0, 26, length);
+    if (isKeyLit) {
+      pantsGrad.addColorStop(0, p.pants.highlight);
+      pantsGrad.addColorStop(0.4, p.pants.base);
+      pantsGrad.addColorStop(1, p.pants.shadow);
+    } else {
+      pantsGrad.addColorStop(0, p.pants.base);
+      pantsGrad.addColorStop(0.65, p.pants.shadow);
+      pantsGrad.addColorStop(1, p.pants.crease);
+    }
+
+    ctx.fillStyle = pantsGrad;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 2.0;
+
+    // Muscular thigh contour with natural fabric drape
+    ctx.beginPath();
+    ctx.moveTo(-22, 0); // inner groin
+    ctx.quadraticCurveTo(-18, length * 0.5, -16, length); // inner knee
+    ctx.lineTo(16, length); // outer knee
+    ctx.bezierCurveTo(28, length * 0.65, 30, length * 0.3, 24, 0); // outer hip
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Lateral Pleated Cargo Pocket (on outer thigh)
+    this.drawCargoPocket(ctx, side, length * 0.35, length * 0.38);
+
+    // Horizontal fabric tension folds (creases above knee)
+    ctx.strokeStyle = p.pants.crease;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(-12, length - 32);
+    ctx.quadraticCurveTo(0, length - 26, 12, length - 30);
+    ctx.moveTo(-14, length - 16);
+    ctx.quadraticCurveTo(0, length - 10, 13, length - 15);
+    ctx.stroke();
+
+    // Knee patch seam outline
+    ctx.strokeStyle = 'rgba(34, 41, 30, 0.5)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(-14, length - 28);
+    ctx.lineTo(14, length - 28);
+    ctx.lineTo(15, length);
+    ctx.lineTo(-15, length);
+    ctx.closePath();
+    ctx.stroke();
+
+    // Rim glint on outer thigh
+    if (!isKeyLit) {
+      this.lighting.drawRimGlint(ctx, (c) => {
+        c.moveTo(25, 10);
+        c.bezierCurveTo(30, length * 0.35, 26, length * 0.7, 16, length - 5);
+      }, 2.4, 0.85);
+    }
+
+    ctx.restore();
+  }
+
+  drawCargoPocket(ctx, side, startY, height) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    const outerX = side === 1 ? 14 : -14;
+    const width = 16;
+    const px = outerX + (side === 1 ? 0 : -width);
+
+    // Pocket cast shadow
+    ctx.fillStyle = 'rgba(20, 26, 16, 0.45)';
+    ctx.fillRect(px + 1, startY + 2, width, height);
+
+    // Pocket bellows body
+    ctx.fillStyle = p.pants.base;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.rect(px, startY, width, height);
+    ctx.fill();
+    ctx.stroke();
+
+    // Central expansion pleat
+    ctx.strokeStyle = p.pants.crease;
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.moveTo(px + width * 0.5, startY + 8);
+    ctx.lineTo(px + width * 0.5, startY + height - 2);
+    ctx.stroke();
+
+    // Pocket Flap
+    ctx.fillStyle = p.pants.shadow;
+    ctx.beginPath();
+    ctx.moveTo(px - 1, startY - 1);
+    ctx.lineTo(px + width + 1, startY - 1);
+    ctx.lineTo(px + width + 1, startY + 10);
+    ctx.lineTo(px + width * 0.5, startY + 13);
+    ctx.lineTo(px - 1, startY + 10);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Flap button
+    ctx.fillStyle = '#2A3022';
+    ctx.beginPath();
+    ctx.arc(px + width * 0.5, startY + 9, 1.6, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  /**
+   * Shin (Lower cargo trousers from knee to boot blousing)
+   */
+  drawShin(ctx, side = 1, length = 185) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    const isKeyLit = side === -1;
+    const shinGrad = ctx.createLinearGradient(-20, 0, 20, length);
+    if (isKeyLit) {
+      shinGrad.addColorStop(0, p.pants.highlight);
+      shinGrad.addColorStop(0.4, p.pants.base);
+      shinGrad.addColorStop(1, p.pants.shadow);
+    } else {
+      shinGrad.addColorStop(0, p.pants.base);
+      shinGrad.addColorStop(0.7, p.pants.shadow);
+      shinGrad.addColorStop(1, p.pants.crease);
+    }
+
+    ctx.fillStyle = shinGrad;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 2.0;
+
+    // Shin contour tapering into ankle blousing
+    ctx.beginPath();
+    ctx.moveTo(-16, 0); // inner knee
+    ctx.quadraticCurveTo(-14, length * 0.45, -17, length - 12); // calf into blousing
+    // Ankle gathered blousing puffs
+    ctx.bezierCurveTo(-18, length, -10, length + 4, -4, length);
+    ctx.bezierCurveTo(2, length + 4, 12, length + 4, 16, length);
+    ctx.quadraticCurveTo(18, length * 0.45, 16, 0); // outer calf
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Ankle fabric gathers & tuck folds (blousing into combat boot collar)
+    ctx.strokeStyle = p.pants.crease;
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(-14, length - 18);
+    ctx.quadraticCurveTo(0, length - 12, 14, length - 16);
+    ctx.moveTo(-12, length - 8);
+    ctx.quadraticCurveTo(0, length - 4, 12, length - 7);
+    ctx.stroke();
+
+    // Rim glint on outer calf
+    if (!isKeyLit) {
+      this.lighting.drawRimGlint(ctx, (c) => {
+        c.moveTo(16, 8);
+        c.bezierCurveTo(20, length * 0.45, 19, length * 0.8, 15, length - 4);
+      }, 2.2, 0.85);
+    }
+
+    ctx.restore();
+  }
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { LimbsRenderer };
+}
+
+
+/**
+ * Narrivo Character Engine v2 — Hands Component (parts/hands.js)
+ * Direction 3: Hybrid Dimensional Illustration
+ *
+ * Implements anatomical hands with articulated fingers, knuckles,
+ * thenar muscle volume, and skin shading.
+ */
+
+class HandsRenderer {
+  constructor(lighting) {
+    this.lighting = lighting;
+  }
+
+  /**
+   * Draw relaxed neutral standing hand (palm facing slightly inward/backward)
+   */
+  drawHand(ctx, side = 1, length = 68) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    const isKeyLit = side === -1;
+    const handGrad = ctx.createLinearGradient(-10, 0, 10, length);
+    if (isKeyLit) {
+      handGrad.addColorStop(0, p.skin.highlight);
+      handGrad.addColorStop(0.5, p.skin.base);
+      handGrad.addColorStop(1, p.skin.shadow);
+    } else {
+      handGrad.addColorStop(0, p.skin.base);
+      handGrad.addColorStop(0.7, p.skin.shadow);
+      handGrad.addColorStop(1, p.skin.shadow);
+    }
+
+    ctx.fillStyle = handGrad;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 1.6;
+
+    // Wrist joint anchor
+    ctx.beginPath();
+    ctx.moveTo(-9, 0);
+
+    // Lateral thumb side (Thenar eminence)
+    if (side === -1) {
+      // Viewer left hand: thumb on inside (right)
+      ctx.lineTo(-9, 16);
+      // Pinky / hypothenar edge
+      ctx.bezierCurveTo(-11, 28, -12, 42, -9, 56); // Pinky tip
+      ctx.lineTo(-7, 56);
+      ctx.lineTo(-6, 61); // Ring tip
+      ctx.lineTo(-4, 61);
+      ctx.lineTo(-3, 65); // Middle tip (longest)
+      ctx.lineTo(-1, 65);
+      ctx.lineTo(0, 60);  // Index tip
+      ctx.lineTo(2, 58);
+      // Thumb branching outward
+      ctx.bezierCurveTo(6, 44, 9, 32, 8, 20);
+      ctx.bezierCurveTo(7, 10, 4, 4, 9, 0);
+    } else {
+      // Viewer right hand: thumb on inside (left)
+      ctx.bezierCurveTo(-4, 4, -7, 10, -8, 20);
+      ctx.bezierCurveTo(-9, 32, -6, 44, -2, 58); // Thumb
+      ctx.lineTo(0, 60);  // Index tip
+      ctx.lineTo(1, 65);  // Middle tip
+      ctx.lineTo(3, 65);
+      ctx.lineTo(4, 61);  // Ring tip
+      ctx.lineTo(6, 61);
+      ctx.lineTo(7, 56);  // Pinky tip
+      ctx.lineTo(9, 56);
+      ctx.bezierCurveTo(12, 42, 11, 28, 9, 16);
+      ctx.lineTo(9, 0);
+    }
+
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Finger separation creases & knuckle accents
+    ctx.strokeStyle = p.skin.shadow;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    if (side === -1) {
+      // Finger crease splits
+      ctx.moveTo(-5, 40); ctx.lineTo(-5, 54);
+      ctx.moveTo(-2, 38); ctx.lineTo(-2, 58);
+      ctx.moveTo(1, 40);  ctx.lineTo(1, 54);
+      // Knuckle tendon lines
+      ctx.moveTo(-6, 22); ctx.lineTo(-6, 32);
+      ctx.moveTo(-2, 20); ctx.lineTo(-2, 30);
+      ctx.moveTo(2, 22);  ctx.lineTo(2, 32);
+    } else {
+      // Finger crease splits
+      ctx.moveTo(-1, 40); ctx.lineTo(-1, 54);
+      ctx.moveTo(2, 38);  ctx.lineTo(2, 58);
+      ctx.moveTo(5, 40);  ctx.lineTo(5, 54);
+      // Knuckle tendon lines
+      ctx.moveTo(-2, 22); ctx.lineTo(-2, 32);
+      ctx.moveTo(2, 20);  ctx.lineTo(2, 30);
+      ctx.moveTo(6, 22);  ctx.lineTo(6, 32);
+    }
+    ctx.stroke();
+
+    // Subtle nail bed highlights
+    ctx.fillStyle = p.skin.highlight;
+    if (side === -1) {
+      ctx.fillRect(-8.5, 52, 2, 3);
+      ctx.fillRect(-5.5, 57, 2, 3);
+      ctx.fillRect(-2.5, 61, 2, 3);
+    } else {
+      ctx.fillRect(6.5, 52, 2, 3);
+      ctx.fillRect(3.5, 57, 2, 3);
+      ctx.fillRect(0.5, 61, 2, 3);
+    }
+
+    // Rim glint on outer hand edge
+    if (!isKeyLit) {
+      this.lighting.drawRimGlint(ctx, (c) => {
+        c.moveTo(9, 6);
+        c.bezierCurveTo(12, 26, 11, 44, 8, 54);
+      }, 1.8, 0.85);
+    }
+
+    ctx.restore();
+  }
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { HandsRenderer };
+}
+
+
+/**
+ * Narrivo Character Engine v2 — Combat Boots Component (parts/boots.js)
+ * Direction 3: Hybrid Dimensional Illustration
+ *
+ * Implements heavy-duty lace-up combat boots with lugged rubber soles,
+ * reinforced toe caps, brass eyelets, and leather shading in front stance.
+ */
+
+class BootsRenderer {
+  constructor(lighting) {
+    this.lighting = lighting;
+  }
+
+  /**
+   * Draw Combat Boot in grounded front/three-quarter stance
+   */
+  drawBoot(ctx, side = 1, length = 45) {
+    const p = this.lighting.palette;
+    ctx.save();
+
+    const isKeyLit = side === -1;
+    const flare = side * 3.5; // slight natural toe flare outward
+
+    const bootGrad = ctx.createLinearGradient(-16, 0, 16, length);
+    if (isKeyLit) {
+      bootGrad.addColorStop(0, p.boots.highlight);
+      bootGrad.addColorStop(0.4, p.boots.base);
+      bootGrad.addColorStop(1, p.boots.shadow);
+    } else {
+      bootGrad.addColorStop(0, p.boots.base);
+      bootGrad.addColorStop(0.7, p.boots.shadow);
+      bootGrad.addColorStop(1, p.boots.crease);
+    }
+
+    ctx.fillStyle = bootGrad;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 2.0;
+
+    // Boot Shaft & Foot Silhouette
+    ctx.beginPath();
+    ctx.moveTo(-14, 0); // Inner collar
+    ctx.lineTo(-14, 18); // Inner ankle
+    ctx.bezierCurveTo(-16, 28, -17 + flare * 0.5, 38, -16 + flare * 0.5, 46); // Inner ball of foot
+    ctx.lineTo(-15 + flare, 46); // Inner toe
+    ctx.quadraticCurveTo(0 + flare * 1.5, 48, 15 + flare, 46); // Rounded toe front
+    ctx.bezierCurveTo(17 + flare * 0.5, 38, 16, 28, 14, 18); // Outer ankle
+    ctx.lineTo(14, 0); // Outer collar
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Heavy Lugged Rubber Sole & Tread Block
+    ctx.fillStyle = p.boots.sole;
+    ctx.strokeStyle = p.ink;
+    ctx.lineWidth = 1.8;
+
+    ctx.beginPath();
+    ctx.moveTo(-16 + flare * 0.5, 44);
+    ctx.quadraticCurveTo(0 + flare * 1.2, 47, 16 + flare * 0.5, 44);
+    ctx.lineTo(17 + flare * 0.5, 52);
+    ctx.quadraticCurveTo(0 + flare * 1.2, 55, -17 + flare * 0.5, 52);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Lug tread notches on bottom sole
+    ctx.strokeStyle = '#0B0908';
+    ctx.lineWidth = 2.0;
+    for (let lx = -13; lx <= 13; lx += 4) {
+      ctx.beginPath();
+      ctx.moveTo(lx + flare * 0.6, 51);
+      ctx.lineTo(lx + flare * 0.6, 54);
+      ctx.stroke();
+    }
+
+    // Reinforced Toe Cap
+    ctx.fillStyle = isKeyLit ? p.boots.highlight : p.boots.base;
+    ctx.beginPath();
+    ctx.moveTo(-13 + flare * 0.8, 38);
+    ctx.quadraticCurveTo(0 + flare * 1.2, 35, 13 + flare * 0.8, 38);
+    ctx.lineTo(15 + flare, 45);
+    ctx.quadraticCurveTo(0 + flare * 1.2, 47, -15 + flare, 45);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Toe specular highlight
+    ctx.strokeStyle = 'rgba(255, 230, 200, 0.4)';
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.ellipse(0 + flare * 1.2, 41, 6, 2.2, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Criss-Cross Boot Laces & Brass Eyelets
+    ctx.fillStyle = p.boots.eyelet;
+    ctx.strokeStyle = p.boots.laces;
+    ctx.lineWidth = 1.5;
+
+    const eyeletY = [6, 12, 18, 24, 30];
+    for (let i = 0; i < eyeletY.length; i++) {
+      const ey = eyeletY[i];
+      const span = 4.5 + i * 0.4;
+      // Eyelets
+      ctx.beginPath();
+      ctx.arc(-span, ey, 1.2, 0, Math.PI * 2);
+      ctx.arc(span, ey, 1.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Criss-cross
+      if (i < eyeletY.length - 1) {
+        const nextEy = eyeletY[i + 1];
+        const nextSpan = 4.5 + (i + 1) * 0.4;
+        ctx.beginPath();
+        ctx.moveTo(-span, ey); ctx.lineTo(nextSpan, nextEy);
+        ctx.moveTo(span, ey);  ctx.lineTo(-nextSpan, nextEy);
+        ctx.stroke();
+      }
+    }
+
+    // Leather Ankle Strap with Brass Buckle
+    ctx.fillStyle = p.boots.crease;
+    ctx.fillRect(-14, 18, 28, 4);
+    ctx.strokeRect(-14, 18, 28, 4);
+
+    ctx.fillStyle = p.hardware.brass;
+    ctx.fillRect(isKeyLit ? -14 : 9, 17, 5, 6);
+
+    // Rim glint along outer edge
+    if (!isKeyLit) {
+      this.lighting.drawRimGlint(ctx, (c) => {
+        c.moveTo(14, 2);
+        c.lineTo(15, 26);
+      }, 2.0, 0.85);
+    }
+
+    ctx.restore();
+  }
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { BootsRenderer };
+}
+
+
+    // --- CONTROLLER & RENDER HARNESS ---
+    const canvas = document.getElementById('charCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const rig = new AthleticRigV2();
+    const lighting = new LightingController();
+
+    const head = new HeadRenderer(lighting);
+    const face = new FaceRenderer(lighting);
+    const torso = new TorsoRenderer(lighting);
+    const limbs = new LimbsRenderer(lighting);
+    const hands = new HandsRenderer(lighting);
+    const boots = new BootsRenderer(lighting);
+
+    const visibility = {
+      shadow: true,
+      head: true,
+      hair: true,
+      face: true,
+      torso: true,
+      fleece: true,
+      harness: true,
+      arms: true,
+      hands: true,
+      pants: true,
+      boots: true
+    };
+
+    let currentView = 'full';
+
+    function applyBone(boneName) {
+      const bone = rig.getBone(boneName);
+      if (!bone) return;
+      const m = bone.worldMatrix;
+      ctx.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+    }
+
+    function renderScene() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+
+      // Camera View Transforms
+      if (currentView === 'face') {
+        // Zoom 2.6x centered on head (512, 280)
+        ctx.translate(canvas.width * 0.5, canvas.height * 0.5);
+        ctx.scale(2.6, 2.6);
+        ctx.translate(-512, -280);
+      } else if (currentView === 'exploded') {
+        // Exploded view offsets
+      }
+
+      // 0. Drop Shadow
+      if (visibility.shadow) {
+        const root = rig.getBone('root');
+        const rx = root ? root.localX : 512;
+        const ry = root ? root.localY : 950;
+        const shadowGrad = ctx.createRadialGradient(rx, ry, 15, rx, ry, 160);
+        shadowGrad.addColorStop(0.0, 'rgba(12, 8, 6, 0.75)');
+        shadowGrad.addColorStop(0.35, 'rgba(12, 8, 6, 0.45)');
+        shadowGrad.addColorStop(1.0, 'transparent');
+        ctx.fillStyle = shadowGrad;
+        ctx.beginPath();
+        ctx.ellipse(rx, ry + 10, 150, 32, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 1. Back hair & collar
+      if (visibility.hair) {
+        ctx.save(); applyBone('head');
+        if (currentView === 'exploded') ctx.translate(-60, 0);
+        head.drawBackHair(ctx); ctx.restore();
+      }
+      if (visibility.fleece) {
+        ctx.save(); applyBone('chest'); torso.drawBackCollar(ctx); ctx.restore();
+      }
+
+      // 2. Legs & Boots
+      if (visibility.pants) {
+        ctx.save(); applyBone('leftThigh');
+        if (currentView === 'exploded') ctx.translate(35, 0);
+        limbs.drawThigh(ctx, 1, 195); ctx.restore();
+
+        ctx.save(); applyBone('leftKnee');
+        if (currentView === 'exploded') ctx.translate(35, 0);
+        limbs.drawShin(ctx, 1, 180); ctx.restore();
+
+        ctx.save(); applyBone('rightThigh');
+        if (currentView === 'exploded') ctx.translate(-35, 0);
+        limbs.drawThigh(ctx, -1, 195); ctx.restore();
+
+        ctx.save(); applyBone('rightKnee');
+        if (currentView === 'exploded') ctx.translate(-35, 0);
+        limbs.drawShin(ctx, -1, 180); ctx.restore();
+      }
+
+      if (visibility.boots) {
+        ctx.save(); applyBone('leftAnkle');
+        if (currentView === 'exploded') ctx.translate(45, 10);
+        boots.drawBoot(ctx, 1, 45); ctx.restore();
+
+        ctx.save(); applyBone('rightAnkle');
+        if (currentView === 'exploded') ctx.translate(-45, 10);
+        boots.drawBoot(ctx, -1, 45); ctx.restore();
+      }
+
+      // 3. Torso
+      if (visibility.torso) {
+        ctx.save(); applyBone('chest');
+        if (currentView === 'exploded') ctx.translate(0, -25);
+        torso.drawTorso(ctx); ctx.restore();
+      }
+
+      // 4. Arms & Hands
+      if (visibility.arms) {
+        ctx.save(); applyBone('leftShoulder');
+        if (currentView === 'exploded') ctx.translate(45, 0);
+        limbs.drawUpperArm(ctx, 1, 140); ctx.restore();
+
+        ctx.save(); applyBone('leftElbow');
+        if (currentView === 'exploded') ctx.translate(55, 0);
+        limbs.drawForearm(ctx, 1, 130); ctx.restore();
+
+        ctx.save(); applyBone('rightShoulder');
+        if (currentView === 'exploded') ctx.translate(-45, 0);
+        limbs.drawUpperArm(ctx, -1, 140); ctx.restore();
+
+        ctx.save(); applyBone('rightElbow');
+        if (currentView === 'exploded') ctx.translate(-55, 0);
+        limbs.drawForearm(ctx, -1, 130); ctx.restore();
+      }
+
+      if (visibility.hands) {
+        ctx.save(); applyBone('leftWrist');
+        if (currentView === 'exploded') ctx.translate(65, 0);
+        hands.drawHand(ctx, 1, 68); ctx.restore();
+
+        ctx.save(); applyBone('rightWrist');
+        if (currentView === 'exploded') ctx.translate(-65, 0);
+        hands.drawHand(ctx, -1, 68); ctx.restore();
+      }
+
+      // 5. Head Assembly (Neck, Planar Jaw, Ears, Face, Front Hair)
+      ctx.save(); applyBone('head');
+      if (currentView === 'exploded') ctx.translate(0, -60);
+      if (visibility.head) { head.drawNeck(ctx); head.drawHeadBase(ctx); }
+      if (visibility.face) { face.draw(ctx); }
+      if (visibility.hair) { head.drawFrontHair(ctx); }
+      ctx.restore();
+
+      ctx.restore();
+    }
+
+    // Initialize UI Controls
+    const togglesContainer = document.getElementById('togglesContainer');
+    const componentLabels = {
+      head: 'Head & Neck Mesh',
+      hair: 'Volumetric Swept Hair',
+      face: 'Facial Features (Eyes, Nose, Lips)',
+      torso: 'Leather Bomber Jacket Body',
+      fleece: 'Shearling Fleece Collar',
+      harness: 'Tactical Chest Harness',
+      arms: 'Sleeves & Limbs',
+      hands: 'Articulated Hands',
+      pants: 'Military Cargo Trousers',
+      boots: 'Combat Field Boots',
+      shadow: 'Ground Contact Shadow'
+    };
+
+    for (const [key, label] of Object.entries(componentLabels)) {
+      const item = document.createElement('div');
+      item.className = 'toggle-item';
+      item.innerHTML = `
+        <label>
+          <input type="checkbox" id="toggle_${key}" checked>
+          <span>${label}</span>
+        </label>
+      `;
+      togglesContainer.appendChild(item);
+      item.querySelector('input').addEventListener('change', (e) => {
+        visibility[key] = e.target.checked;
+        renderScene();
+      });
+    }
+
+    let allOn = true;
+    document.getElementById('toggleAllBtn').addEventListener('click', () => {
+      allOn = !allOn;
+      for (const key of Object.keys(visibility)) {
+        visibility[key] = allOn;
+        const cb = document.getElementById(`toggle_${key}`);
+        if (cb) cb.checked = allOn;
+      }
+      document.getElementById('toggleAllBtn').textContent = allOn ? 'All Off' : 'All On';
+      renderScene();
+    });
+
+    const viewButtons = {
+      full: document.getElementById('viewFullBtn'),
+      face: document.getElementById('viewFaceBtn'),
+      exploded: document.getElementById('viewExplodedBtn')
+    };
+
+    function setView(view) {
+      currentView = view;
+      for (const [k, btn] of Object.entries(viewButtons)) {
+        btn.classList.toggle('active', k === view);
+      }
+      renderScene();
+    }
+    viewButtons.full.addEventListener('click', () => setView('full'));
+    viewButtons.face.addEventListener('click', () => setView('face'));
+    viewButtons.exploded.addEventListener('click', () => setView('exploded'));
+
+    // Lighting Slider Handlers
+    document.getElementById('keyAngle').addEventListener('input', (e) => {
+      const deg = parseInt(e.target.value);
+      lighting.keyLightAngle = deg * Math.PI / 180;
+      document.getElementById('keyAngleVal').textContent = `${deg}°`;
+      renderScene();
+    });
+
+    document.getElementById('keyIntensity').addEventListener('input', (e) => {
+      lighting.keyLightIntensity = parseFloat(e.target.value);
+      document.getElementById('keyIntensityVal').textContent = lighting.keyLightIntensity.toFixed(2);
+      renderScene();
+    });
+
+    document.getElementById('rimIntensity').addEventListener('input', (e) => {
+      lighting.rimLightIntensity = parseFloat(e.target.value);
+      document.getElementById('rimIntensityVal').textContent = lighting.rimLightIntensity.toFixed(2);
+      renderScene();
+    });
+
+    document.getElementById('rimColorSelect').addEventListener('change', (e) => {
+      lighting.rimColor = e.target.value;
+      renderScene();
+    });
+
+    document.getElementById('aoIntensity').addEventListener('input', (e) => {
+      lighting.aoIntensity = parseFloat(e.target.value);
+      document.getElementById('aoIntensityVal').textContent = lighting.aoIntensity.toFixed(2);
+      renderScene();
+    });
+
+    document.getElementById('resetLightingBtn').addEventListener('click', () => {
+      lighting.keyLightAngle = 45 * Math.PI / 180;
+      lighting.keyLightIntensity = 1.0;
+      lighting.rimLightIntensity = 0.85;
+      lighting.rimColor = '#A5E3FF';
+      lighting.aoIntensity = 0.95;
+      document.getElementById('keyAngle').value = 45;
+      document.getElementById('keyAngleVal').textContent = '45° (Top-Left)';
+      document.getElementById('keyIntensity').value = 1.0;
+      document.getElementById('keyIntensityVal').textContent = '1.0';
+      document.getElementById('rimIntensity').value = 0.85;
+      document.getElementById('rimIntensityVal').textContent = '0.85';
+      document.getElementById('rimColorSelect').value = '#A5E3FF';
+      document.getElementById('aoIntensity').value = 0.95;
+      document.getElementById('aoIntensityVal').textContent = '0.95';
+      renderScene();
+    });
+
+    // Initial render
+    renderScene();
+  </script>
+</body>
+</html>

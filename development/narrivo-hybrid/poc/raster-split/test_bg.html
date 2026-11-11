@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<body>
+<canvas id='c'></canvas>
+<script>
+async function test() {
+  const img = new Image();
+  img.src = 'source/00_master_full_body.jpg';
+  await new Promise(r => img.onload = r);
+  const w = img.width, h = img.height;
+  const cvs = document.getElementById('c');
+  cvs.width = w; cvs.height = h;
+  const ctx = cvs.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+  const raw = ctx.getImageData(0, 0, w, h).data;
+  const bgR = raw[40], bgG = raw[41], bgB = raw[42];
+
+  const visited = new Uint8Array(w * h);
+  const isBg = new Uint8Array(w * h);
+  const queue = new Int32Array(w * h);
+  let qHead = 0, qTail = 0;
+
+  function isGrey(idx) {
+    const r = raw[idx], g = raw[idx + 1], b = raw[idx + 2];
+    const sat = Math.max(r, g, b) - Math.min(r, g, b);
+    const dist = Math.hypot(r - bgR, g - bgG, b - bgB);
+    return sat < 14 && dist < 36;
+  }
+
+  function pushBg(x, y) {
+    if (x < 0 || x >= w || y < 0 || y >= h) return;
+    const p = y * w + x;
+    if (visited[p]) return;
+    visited[p] = 1;
+    if (isGrey(p * 4)) {
+      isBg[p] = 1;
+      queue[qTail++] = p;
+    }
+  }
+
+  for (let x = 0; x < w; x++) { pushBg(x, 0); pushBg(x, h - 1); }
+  for (let y = 0; y < h; y++) { pushBg(0, y); pushBg(w - 1, y); }
+  while (qHead < qTail) {
+    const p = queue[qHead++];
+    const x = p % w, y = (p - x) / w;
+    pushBg(x - 1, y); pushBg(x + 1, y); pushBg(x, y - 1); pushBg(x, y + 1);
+  }
+
+  let unreachedGrey = 0;
+  let unreachedGreyClusters = [];
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const p = y * w + x;
+      if (!isBg[p] && isGrey(p * 4)) {
+        unreachedGrey++;
+        if (unreachedGreyClusters.length < 50) {
+          unreachedGreyClusters.push({x, y, r: raw[p*4], g: raw[p*4+1], b: raw[p*4+2]});
+        }
+      }
+    }
+  }
+
+  const result = {
+    bgR, bgG, bgB,
+    unreachedGrey,
+    sample: unreachedGreyClusters.slice(0, 30)
+  };
+
+  const pre = document.createElement('pre');
+  pre.id = 'res';
+  pre.textContent = JSON.stringify(result, null, 2);
+  document.body.appendChild(pre);
+}
+test();
+</script>
+</body>
+</html>

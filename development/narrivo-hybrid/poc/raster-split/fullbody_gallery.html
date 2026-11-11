@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Commander Vance — Full-Body Component Gallery (19 Components / 12 Groups)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d0f14;
+    color: #e8ecf4;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    padding: 20px 24px;
+    width: 1920px;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #262b38;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 19px; font-weight: 700; color: #fff; }
+  .subtitle { font-size: 11.5px; color: #9aa4b8; margin-top: 2px; }
+  .badge {
+    background: #142e24;
+    border: 1px solid #28a745;
+    color: #75f096;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .comp-card {
+    background: #151922;
+    border: 1px solid #262c3a;
+    border-radius: 6px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  .comp-head {
+    border-bottom: 1px solid #202634;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+    font-size: 11.5px;
+  }
+  .comp-meta { font-size: 9.5px; color: #8c96ab; margin-top: 1px; }
+  .comp-views {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    height: 115px;
+  }
+  .vbox {
+    position: relative;
+    border-radius: 4px;
+    border: 1px solid #2c3344;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 14px;
+  }
+  .vbox.checker {
+    background-color: #555963;
+    background-image:
+      linear-gradient(45deg, #434750 25%, transparent 25%),
+      linear-gradient(-45deg, #434750 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #434750 75%),
+      linear-gradient(-45deg, transparent 75%, #434750 75%);
+    background-size: 12px 12px;
+  }
+  .vbox.dark { background: #10131a; }
+  .vbox img {
+    max-width: 100%;
+    max-height: 100px;
+    object-fit: contain;
+  }
+  .vtag {
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    background: rgba(10,12,18,0.85);
+    color: #cbd5e1;
+    font-size: 8px;
+    font-weight: 700;
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+  .comp-foot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #9aa4b8;
+    margin-top: 6px;
+    border-top: 1px solid #202634;
+    padding-top: 4px;
+  }
+  .green { color: #5ef08a; }
+  .pink { color: #ff7be5; }
+</style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>COMMANDER VANCE — FULL-BODY COMPONENT GALLERY (19 INDEPENDENT LAYERS / 12 GROUPS)</h1>
+      <div class="subtitle">Directly segmented from approved Full-Body Master Artwork (768×1376). Origin maps mark reconstructed hidden overlap pixels in striped magenta/cyan with green boundary contour.</div>
+    </div>
+    <div class="badge">100.0% MASTER ARTWORK PRESERVED</div>
+  </header>
+  <div class="grid">
+    
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>01. Back Hair & Nape</strong> (z=0)</div>
+      <div class="comp-meta"><code>01_back_hair.png</code> | 183×129 px | Pivot: (384, 155)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/01_back_hair.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/01_back_hair.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/01_back_hair_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">126 px</strong></span>
+      <span>Hidden: <strong class="pink">17,410 px (99.28%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>04. Neck Column</strong> (z=1)</div>
+      <div class="comp-meta"><code>04_neck.png</code> | 137×159 px | Pivot: (384, 255)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/04_neck.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/04_neck.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/04_neck_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">5,826 px</strong></span>
+      <span>Hidden: <strong class="pink">13,360 px (69.63%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>12L. Left Combat Boot</strong> (z=2)</div>
+      <div class="comp-meta"><code>12_boot_left.png</code> | 164×252 px | Pivot: (345, 1125)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/12_boot_left.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/12_boot_left.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/12_boot_left_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">20,785 px</strong></span>
+      <span>Hidden: <strong class="pink">1,187 px (5.4%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>12R. Right Combat Boot</strong> (z=3)</div>
+      <div class="comp-meta"><code>12_boot_right.png</code> | 153×253 px | Pivot: (423, 1125)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/12_boot_right.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/12_boot_right.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/12_boot_right_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">19,617 px</strong></span>
+      <span>Hidden: <strong class="pink">535 px (2.65%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>11L. Left Lower Leg</strong> (z=4)</div>
+      <div class="comp-meta"><code>11_lower_leg_left.png</code> | 137×221 px | Pivot: (344, 944)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/11_lower_leg_left.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/11_lower_leg_left.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/11_lower_leg_left_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">20,306 px</strong></span>
+      <span>Hidden: <strong class="pink">1,752 px (7.94%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>11R. Right Lower Leg</strong> (z=5)</div>
+      <div class="comp-meta"><code>11_lower_leg_right.png</code> | 144×218 px | Pivot: (424, 944)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/11_lower_leg_right.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/11_lower_leg_right.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/11_lower_leg_right_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">20,028 px</strong></span>
+      <span>Hidden: <strong class="pink">1,331 px (6.23%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>10L. Left Upper Leg</strong> (z=6)</div>
+      <div class="comp-meta"><code>10_upper_leg_left.png</code> | 168×299 px | Pivot: (348, 685)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/10_upper_leg_left.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/10_upper_leg_left.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/10_upper_leg_left_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">34,537 px</strong></span>
+      <span>Hidden: <strong class="pink">4,160 px (10.75%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>10R. Right Upper Leg</strong> (z=7)</div>
+      <div class="comp-meta"><code>10_upper_leg_right.png</code> | 178×299 px | Pivot: (420, 685)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/10_upper_leg_right.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/10_upper_leg_right.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/10_upper_leg_right_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">35,539 px</strong></span>
+      <span>Hidden: <strong class="pink">4,061 px (10.26%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>09. Pelvis & Belt</strong> (z=8)</div>
+      <div class="comp-meta"><code>09_pelvis_belt.png</code> | 276×84 px | Pivot: (384, 655)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/09_pelvis_belt.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/09_pelvis_belt.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/09_pelvis_belt_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">13,178 px</strong></span>
+      <span>Hidden: <strong class="pink">6,464 px (32.91%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>09L. Left Hand</strong> (z=9)</div>
+      <div class="comp-meta"><code>09_hand_left.png</code> | 100×216 px | Pivot: (215, 654)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/09_hand_left.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/09_hand_left.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/09_hand_left_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">11,626 px</strong></span>
+      <span>Hidden: <strong class="pink">935 px (7.44%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>09R. Right Hand</strong> (z=10)</div>
+      <div class="comp-meta"><code>09_hand_right.png</code> | 97×215 px | Pivot: (553, 654)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/09_hand_right.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/09_hand_right.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/09_hand_right_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">11,546 px</strong></span>
+      <span>Hidden: <strong class="pink">773 px (6.27%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>08L. Left Forearm</strong> (z=11)</div>
+      <div class="comp-meta"><code>08_forearm_left.png</code> | 115×179 px | Pivot: (214, 506)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/08_forearm_left.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/08_forearm_left.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/08_forearm_left_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">13,462 px</strong></span>
+      <span>Hidden: <strong class="pink">1,403 px (9.44%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>08R. Right Forearm</strong> (z=12)</div>
+      <div class="comp-meta"><code>08_forearm_right.png</code> | 119×179 px | Pivot: (554, 506)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/08_forearm_right.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/08_forearm_right.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/08_forearm_right_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">13,524 px</strong></span>
+      <span>Hidden: <strong class="pink">1,387 px (9.3%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>06. Jacket Torso & Harness</strong> (z=13)</div>
+      <div class="comp-meta"><code>06_jacket_torso.png</code> | 309×495 px | Pivot: (384, 450)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/06_jacket_torso.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/06_jacket_torso.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/06_jacket_torso_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">93,504 px</strong></span>
+      <span>Hidden: <strong class="pink">15,501 px (14.22%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>07L. Left Upper Arm</strong> (z=14)</div>
+      <div class="comp-meta"><code>07_upper_arm_left.png</code> | 121×232 px | Pivot: (264, 260)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/07_upper_arm_left.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/07_upper_arm_left.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/07_upper_arm_left_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">17,020 px</strong></span>
+      <span>Hidden: <strong class="pink">0 px (0%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>07R. Right Upper Arm</strong> (z=15)</div>
+      <div class="comp-meta"><code>07_upper_arm_right.png</code> | 127×233 px | Pivot: (504, 260)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/07_upper_arm_right.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/07_upper_arm_right.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/07_upper_arm_right_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">17,759 px</strong></span>
+      <span>Hidden: <strong class="pink">0 px (0%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>05L. Left Shearling Collar</strong> (z=16)</div>
+      <div class="comp-meta"><code>05_collar_left.png</code> | 61×108 px | Pivot: (312, 260)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/05_collar_left.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/05_collar_left.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/05_collar_left_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">2,132 px</strong></span>
+      <span>Hidden: <strong class="pink">210 px (8.97%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>05R. Right Shearling Collar</strong> (z=17)</div>
+      <div class="comp-meta"><code>05_collar_right.png</code> | 65×108 px | Pivot: (456, 260)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/05_collar_right.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/05_collar_right.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/05_collar_right_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">2,791 px</strong></span>
+      <span>Hidden: <strong class="pink">210 px (7%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>02. Head & Face Base</strong> (z=18)</div>
+      <div class="comp-meta"><code>02_head_face.png</code> | 156×130 px | Pivot: (384, 185)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/02_head_face.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/02_head_face.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/02_head_face_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">10,728 px</strong></span>
+      <span>Hidden: <strong class="pink">2,717 px (20.21%)</strong></span>
+    </div>
+  </div>
+
+
+  <div class="comp-card">
+    <div class="comp-head">
+      <div><strong>03. Front Hair & Swept Locks</strong> (z=19)</div>
+      <div class="comp-meta"><code>03_front_hair.png</code> | 201×124 px | Pivot: (384, 185)</div>
+    </div>
+    <div class="comp-views">
+      <div class="vbox checker"><span class="vtag">1. VISIBLE</span><img src="fullbody-seg/visible/03_front_hair.png" /></div>
+      <div class="vbox checker"><span class="vtag">2. WITH OVERLAP</span><img src="fullbody-seg/reconstructed/03_front_hair.png" /></div>
+      <div class="vbox dark"><span class="vtag">3. ORIGIN MAP</span><img src="fullbody-seg/origin_maps/03_front_hair_map.png" /></div>
+    </div>
+    <div class="comp-foot">
+      <span>Master: <strong class="green">10,657 px</strong></span>
+      <span>Hidden: <strong class="pink">0 px (0%)</strong></span>
+    </div>
+  </div>
+
+  </div>
+</body>
+</html>

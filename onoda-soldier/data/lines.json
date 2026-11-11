@@ -1,0 +1,91 @@
+{
+ "duration": 47.312,
+ "voice": "am_onyx",
+ "speed": 0.95,
+ "lines": [
+  {
+   "i": 0,
+   "text": "In 1945, World War Two ended.",
+   "start": 0.6,
+   "end": 3.511
+  },
+  {
+   "i": 1,
+   "text": "Nobody told Hiroo Onoda.",
+   "start": 3.931,
+   "end": 6.06
+  },
+  {
+   "i": 2,
+   "text": "He was a Japanese soldier posted to a small island in the Philippines.",
+   "start": 6.48,
+   "end": 10.807
+  },
+  {
+   "i": 3,
+   "text": "His orders were simple: never surrender.",
+   "start": 11.227,
+   "end": 13.623
+  },
+  {
+   "i": 4,
+   "text": "So when the war ended, he kept fighting.",
+   "start": 14.043,
+   "end": 16.371
+  },
+  {
+   "i": 5,
+   "text": "For twenty-nine years.",
+   "start": 16.791,
+   "end": 18.191
+  },
+  {
+   "i": 6,
+   "text": "He found leaflets dropped from planes saying the war was over.",
+   "start": 18.611,
+   "end": 22.031
+  },
+  {
+   "i": 7,
+   "text": "He thought they were propaganda.",
+   "start": 22.451,
+   "end": 24.282
+  },
+  {
+   "i": 8,
+   "text": "His family flew in a plane overhead, calling to him through a loudspeaker.",
+   "start": 24.702,
+   "end": 28.608
+  },
+  {
+   "i": 9,
+   "text": "He did not come out.",
+   "start": 29.028,
+   "end": 30.262
+  },
+  {
+   "i": 10,
+   "text": "It was not until 1974 that his former commanding officer flew to the island,",
+   "start": 30.682,
+   "end": 35.962
+  },
+  {
+   "i": 11,
+   "text": "stood in the jungle, and ordered him to stop.",
+   "start": 36.022,
+   "end": 38.207
+  },
+  {
+   "i": 12,
+   "text": "Onoda walked out of the trees, still in uniform, rifle in hand.",
+   "start": 38.627,
+   "end": 42.404
+  },
+  {
+   "i": 13,
+   "text": "He had been fighting alone for twenty-nine years.",
+   "start": 42.824,
+   "end": 45.412
+  }
+ ]
+}

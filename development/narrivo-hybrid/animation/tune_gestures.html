@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="background:#000;margin:0;">
+<canvas id="c" width="1080" height="1920"></canvas>
+<script>
+const deg = d => d * Math.PI / 180;
+
+const PIVOTS = {
+  pelvis:     { x: 384, y: 655 },
+  torso:      { x: 384, y: 450 },
+  neck:       { x: 384, y: 255 },
+  head:       { x: 384, y: 185 },
+  frontHair:  { x: 384, y: 185 },
+  backHair:   { x: 384, y: 155 },
+  collarL:    { x: 312, y: 260 },
+  collarR:    { x: 456, y: 260 },
+  shldL:      { x: 264, y: 260 },
+  shldR:      { x: 504, y: 260 },
+  elbL:       { x: 214, y: 506 },
+  elbR:       { x: 554, y: 506 },
+  wrtL:       { x: 215, y: 654 },
+  wrtR:       { x: 553, y: 654 },
+  hipL:       { x: 348, y: 685 },
+  hipR:       { x: 420, y: 685 },
+  kneeL:      { x: 344, y: 944 },
+  kneeR:      { x: 424, y: 944 },
+  bootL:      { x: 345, y: 1125 },
+  bootR:      { x: 423, y: 1125 }
+};
+
+function createDefaultPose() {
+  return {
+    pelvis:    { tx: 0, ty: 0, rot: 0, scaleX: 1, scaleY: 1 },
+    torso:     { tx: 0, ty: 0, rot: 0, scaleX: 1, scaleY: 1 },
+    neck:      { rot: 0 },
+    head:      { tx: 0, ty: 0, rot: 0 },
+    frontHair: { rot: 0 },
+    backHair:  { rot: 0 },
+    collarL:   { rot: 0 },
+    collarR:   { rot: 0 },
+    shldL:     { rot: 0, tx: 0, ty: 0 },
+    shldR:     { rot: 0, tx: 0, ty: 0 },
+    elbL:      { rot: 0, tx: 0, ty: 0 },
+    elbR:      { rot: 0, tx: 0, ty: 0 },
+    wrtL:      { rot: 0, tx: 0, ty: 0 },
+    wrtR:      { rot: 0, tx: 0, ty: 0 },
+    hipL:      { rot: 0, tx: 0, ty: 0 },
+    hipR:      { rot: 0, tx: 0, ty: 0 },
+    kneeL:     { rot: 0 },
+    kneeR:     { rot: 0 },
+    bootL:     { rot: 0 },
+    bootR:     { rot: 0 },
+    armsInFront: false
+  };
+}
+
+async function run() {
+  const manifest = {"sourceMaster":"source/00_master_full_body.jpg","dimensions":{"width":768,"height":1376},"totalMasterForegroundPixels":374691,"totalVisibleMasterPixelsInNeutral":374691,"components":[{"id":1,"zOrder":0,"key":"01_back_hair","title":"01. Back Hair & Nape","cropBox":{"x":294,"y":86,"width":183,"height":129},"pivotMaster":{"x":384,"y":155},"pivotLocal":{"x":90,"y":69},"visibleMasterPixels":126,"reconstructedHiddenPixels":17410,"reconstructedRatioPct":99.28},{"id":4,"zOrder":1,"key":"04_neck","title":"04. Neck Column","cropBox":{"x":316,"y":136,"width":137,"height":159},"pivotMaster":{"x":384,"y":255},"pivotLocal":{"x":68,"y":119},"visibleMasterPixels":5826,"reconstructedHiddenPixels":13360,"reconstructedRatioPct":69.63},{"id":19,"zOrder":2,"key":"12_boot_left","title":"12L. Left Combat Boot","cropBox":{"x":191,"y":1096,"width":164,"height":252},"pivotMaster":{"x":345,"y":1125},"pivotLocal":{"x":154,"y":29},"visibleMasterPixels":20785,"reconstructedHiddenPixels":1187,"reconstructedRatioPct":5.4},{"id":20,"zOrder":3,"key":"12_boot_right","title":"12R. Right Combat Boot","cropBox":{"x":439,"y":1096,"width":153,"height":253},"pivotMaster":{"x":423,"y":1125},"pivotLocal":{"x":-16,"y":29},"visibleMasterPixels":19617,"reconstructedHiddenPixels":535,"reconstructedRatioPct":2.65},{"id":17,"zOrder":4,"key":"11_lower_leg_left","title":"11L. Left Lower Leg","cropBox":{"x":231,"y":911,"width":137,"height":221},"pivotMaster":{"x":344,"y":944},"pivotLocal":{"x":113,"y":33},"visibleMasterPixels":20306,"reconstructedHiddenPixels":1752,"reconstructedRatioPct":7.94},{"id":18,"zOrder":5,"key":"11_lower_leg_right","title":"11R. Right Lower Leg","cropBox":{"x":415,"y":911,"width":144,"height":218},"pivotMaster":{"x":424,"y":944},"pivotLocal":{"x":9,"y":33},"visibleMasterPixels":20028,"reconstructedHiddenPixels":1331,"reconstructedRatioPct":6.23},{"id":15,"zOrder":6,"key":"10_upper_leg_left","title":"10L. Left Upper Leg","cropBox":{"x":232,"y":651,"width":168,"height":299},"pivotMaster":{"x":348,"y":685},"pivotLocal":{"x":116,"y":34},"visibleMasterPixels":34537,"reconstructedHiddenPixels":4160,"reconstructedRatioPct":10.75},{"id":16,"zOrder":7,"key":"10_upper_leg_right","title":"10R. Right Upper Leg","cropBox":{"x":371,"y":651,"width":178,"height":299},"pivotMaster":{"x":420,"y":685},"pivotLocal":{"x":49,"y":34},"visibleMasterPixels":35539,"reconstructedHiddenPixels":4061,"reconstructedRatioPct":10.26},{"id":14,"zOrder":8,"key":"09_pelvis_belt","title":"09. Pelvis & Belt","cropBox":{"x":249,"y":606,"width":276,"height":84},"pivotMaster":{"x":384,"y":655},"pivotLocal":{"x":135,"y":49},"visibleMasterPixels":13178,"reconstructedHiddenPixels":6464,"reconstructedRatioPct":32.91},{"id":12,"zOrder":9,"key":"09_hand_left","title":"09L. Left Hand","cropBox":{"x":139,"y":626,"width":100,"height":216},"pivotMaster":{"x":215,"y":654},"pivotLocal":{"x":76,"y":28},"visibleMasterPixels":11626,"reconstructedHiddenPixels":935,"reconstructedRatioPct":7.44},{"id":13,"zOrder":10,"key":"09_hand_right","title":"09R. Right Hand","cropBox":{"x":541,"y":626,"width":97,"height":215},"pivotMaster":{"x":553,"y":654},"pivotLocal":{"x":12,"y":28},"visibleMasterPixels":11546,"reconstructedHiddenPixels":773,"reconstructedRatioPct":6.27},{"id":10,"zOrder":11,"key":"08_forearm_left","title":"08L. Left Forearm","cropBox":{"x":140,"y":481,"width":115,"height":179},"pivotMaster":{"x":214,"y":506},"pivotLocal":{"x":74,"y":25},"visibleMasterPixels":13462,"reconstructedHiddenPixels":1403,"reconstructedRatioPct":9.44},{"id":11,"zOrder":12,"key":"08_forearm_right","title":"08R. Right Forearm","cropBox":{"x":516,"y":481,"width":119,"height":179},"pivotMaster":{"x":554,"y":506},"pivotLocal":{"x":38,"y":25},"visibleMasterPixels":13524,"reconstructedHiddenPixels":1387,"reconstructedRatioPct":9.3},{"id":7,"zOrder":13,"key":"06_jacket_torso","title":"06. Jacket Torso & Harness","cropBox":{"x":231,"y":146,"width":309,"height":495},"pivotMaster":{"x":384,"y":450},"pivotLocal":{"x":153,"y":304},"visibleMasterPixels":93504,"reconstructedHiddenPixels":15501,"reconstructedRatioPct":14.22},{"id":8,"zOrder":14,"key":"07_upper_arm_left","title":"07L. Left Upper Arm","cropBox":{"x":158,"y":280,"width":121,"height":232},"pivotMaster":{"x":264,"y":260},"pivotLocal":{"x":106,"y":-20},"visibleMasterPixels":17020,"reconstructedHiddenPixels":0,"reconstructedRatioPct":0},{"id":9,"zOrder":15,"key":"07_upper_arm_right","title":"07R. Right Upper Arm","cropBox":{"x":490,"y":279,"width":127,"height":233},"pivotMaster":{"x":504,"y":260},"pivotLocal":{"x":14,"y":-19},"visibleMasterPixels":17759,"reconstructedHiddenPixels":0,"reconstructedRatioPct":0},{"id":5,"zOrder":16,"key":"05_collar_left","title":"05L. Left Shearling Collar","cropBox":{"x":291,"y":166,"width":61,"height":108},"pivotMaster":{"x":312,"y":260},"pivotLocal":{"x":21,"y":94},"visibleMasterPixels":2132,"reconstructedHiddenPixels":210,"reconstructedRatioPct":8.97},{"id":6,"zOrder":17,"key":"05_collar_right","title":"05R. Right Shearling Collar","cropBox":{"x":417,"y":166,"width":65,"height":108},"pivotMaster":{"x":456,"y":260},"pivotLocal":{"x":39,"y":94},"visibleMasterPixels":2791,"reconstructedHiddenPixels":210,"reconstructedRatioPct":7},{"id":2,"zOrder":18,"key":"02_head_face","title":"02. Head & Face Base","cropBox":{"x":306,"y":78,"width":156,"height":130},"pivotMaster":{"x":384,"y":185},"pivotLocal":{"x":78,"y":107},"visibleMasterPixels":10728,"reconstructedHiddenPixels":2717,"reconstructedRatioPct":20.21},{"id":3,"zOrder":19,"key":"03_front_hair","title":"03. Front Hair & Swept Locks","cropBox":{"x":289,"y":26,"width":201,"height":124},"pivotMaster":{"x":384,"y":185},"pivotLocal":{"x":95,"y":159},"visibleMasterPixels":10657,"reconstructedHiddenPixels":0,"reconstructedRatioPct":0}],"validation":{"totalCanvasPixels":1056768,"exactMatchPixels":1056668,"nonZeroDiffPixels":100,"exactMatchPct":99.9905,"maxChannelDiff":2,"meanAbsChannelDiff":0.000041,"visibleArtworkPreservedFromMasterPct":100}};
+  const imageMap = {};
+  await Promise.all(manifest.components.map(c => new Promise(r => {
+    const img = new Image();
+    img.onload = () => r();
+    img.onerror = () => r();
+    img.src = '/comp/' + c.key + '.png';
+    if (img.complete) r();
+    imageMap[c.key] = img;
+  })));
+
+  const cvs = document.getElementById('c');
+  const ctx = cvs.getContext('2d');
+
+  function render(pose) {
+    ctx.clearRect(0, 0, 1080, 1920);
+    const grad = ctx.createRadialGradient(540, 768, 50, 540, 768, 1200);
+    grad.addColorStop(0, '#1c2230');
+    grad.addColorStop(1, '#0c0f16');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 1080, 1920);
+
+    ctx.save();
+    const scale = 1720 / 1323;
+    const dx = (1080 - 768 * scale) / 2;
+    const dy = 80 - 26 * scale;
+    ctx.translate(dx, dy);
+    ctx.scale(scale, scale);
+
+    const drawPart = (key, transformFn) => {
+      const c = manifest.components.find(x => x.key === key);
+      if (!c || !imageMap[key]) return;
+      ctx.save();
+      if (transformFn) transformFn(ctx);
+      ctx.drawImage(imageMap[key], c.cropBox.x, c.cropBox.y);
+      ctx.restore();
+    };
+
+    const P = PIVOTS;
+    const p = pose;
+
+    const applyPelvis = ctx => {
+      ctx.translate(P.pelvis.x + p.pelvis.tx, P.pelvis.y + p.pelvis.ty);
+      ctx.rotate(deg(p.pelvis.rot));
+      ctx.scale(p.pelvis.scaleX, p.pelvis.scaleY);
+      ctx.translate(-P.pelvis.x, -P.pelvis.y);
+    };
+
+    const applyTorso = ctx => {
+      applyPelvis(ctx);
+      ctx.translate(P.torso.x + p.torso.tx, P.torso.y + p.torso.ty);
+      ctx.rotate(deg(p.torso.rot));
+      ctx.scale(p.torso.scaleX, p.torso.scaleY);
+      ctx.translate(-P.torso.x, -P.torso.y);
+    };
+
+    const applyNeck = ctx => {
+      applyTorso(ctx);
+      ctx.translate(P.neck.x, P.neck.y);
+      ctx.rotate(deg(p.neck.rot));
+      ctx.translate(-P.neck.x, -P.neck.y);
+    };
+
+    const applyHead = ctx => {
+      applyNeck(ctx);
+      ctx.translate(P.head.x + p.head.tx, P.head.y + p.head.ty);
+      ctx.rotate(deg(p.head.rot));
+      ctx.translate(-P.head.x, -P.head.y);
+    };
+
+    const applyHipL = ctx => {
+      applyPelvis(ctx);
+      ctx.translate(P.hipL.x + p.hipL.tx, P.hipL.y + p.hipL.ty);
+      ctx.rotate(deg(p.hipL.rot));
+      ctx.translate(-P.hipL.x, -P.hipL.y);
+    };
+
+    const applyKneeL = ctx => {
+      applyHipL(ctx);
+      ctx.translate(P.kneeL.x, P.kneeL.y);
+      ctx.rotate(deg(p.kneeL.rot));
+      ctx.translate(-P.kneeL.x, -P.kneeL.y);
+    };
+
+    const applyBootL = ctx => {
+      applyKneeL(ctx);
+      ctx.translate(P.bootL.x, P.bootL.y);
+      ctx.rotate(deg(p.bootL.rot));
+      ctx.translate(-P.bootL.x, -P.bootL.y);
+    };
+
+    const applyHipR = ctx => {
+      applyPelvis(ctx);
+      ctx.translate(P.hipR.x + p.hipR.tx, P.hipR.y + p.hipR.ty);
+      ctx.rotate(deg(p.hipR.rot));
+      ctx.translate(-P.hipR.x, -P.hipR.y);
+    };
+
+    const applyKneeR = ctx => {
+      applyHipR(ctx);
+      ctx.translate(P.kneeR.x, P.kneeR.y);
+      ctx.rotate(deg(p.kneeR.rot));
+      ctx.translate(-P.kneeR.x, -P.kneeR.y);
+    };
+
+    const applyBootR = ctx => {
+      applyKneeR(ctx);
+      ctx.translate(P.bootR.x, P.bootR.y);
+      ctx.rotate(deg(p.bootR.rot));
+      ctx.translate(-P.bootR.x, -P.bootR.y);
+    };
+
+    const applyShldL = ctx => {
+      applyTorso(ctx);
+      ctx.translate(P.shldL.x + p.shldL.tx, P.shldL.y + p.shldL.ty);
+      ctx.rotate(deg(p.shldL.rot));
+      ctx.translate(-P.shldL.x, -P.shldL.y);
+    };
+
+    const applyElbL = ctx => {
+      applyShldL(ctx);
+      ctx.translate(P.elbL.x + (p.elbL.tx || 0), P.elbL.y + (p.elbL.ty || 0));
+      ctx.rotate(deg(p.elbL.rot));
+      ctx.translate(-P.elbL.x, -P.elbL.y);
+    };
+
+    const applyWrtL = ctx => {
+      applyElbL(ctx);
+      ctx.translate(P.wrtL.x + (p.wrtL.tx || 0), P.wrtL.y + (p.wrtL.ty || 0));
+      ctx.rotate(deg(p.wrtL.rot));
+      ctx.translate(-P.wrtL.x, -P.wrtL.y);
+    };
+
+    const applyShldR = ctx => {
+      applyTorso(ctx);
+      ctx.translate(P.shldR.x + p.shldR.tx, P.shldR.y + p.shldR.ty);
+      ctx.rotate(deg(p.shldR.rot));
+      ctx.translate(-P.shldR.x, -P.shldR.y);
+    };
+
+    const applyElbR = ctx => {
+      applyShldR(ctx);
+      ctx.translate(P.elbR.x + (p.elbR.tx || 0), P.elbR.y + (p.elbR.ty || 0));
+      ctx.rotate(deg(p.elbR.rot));
+      ctx.translate(-P.elbR.x, -P.elbR.y);
+    };
+
+    const applyWrtR = ctx => {
+      applyElbR(ctx);
+      ctx.translate(P.wrtR.x + (p.wrtR.tx || 0), P.wrtR.y + (p.wrtR.ty || 0));
+      ctx.rotate(deg(p.wrtR.rot));
+      ctx.translate(-P.wrtR.x, -P.wrtR.y);
+    };
+
+    drawPart('01_back_hair', applyHead);
+    drawPart('04_neck', applyNeck);
+    drawPart('12_boot_left', applyBootL);
+    drawPart('12_boot_right', applyBootR);
+    drawPart('11_lower_leg_left', applyKneeL);
+    drawPart('11_lower_leg_right', applyKneeR);
+    drawPart('10_upper_leg_left', applyHipL);
+    drawPart('10_upper_leg_right', applyHipR);
+    drawPart('09_pelvis_belt', applyPelvis);
+
+    if (!p.armsInFront) {
+      drawPart('09_hand_left', applyWrtL);
+      drawPart('09_hand_right', applyWrtR);
+      drawPart('08_forearm_left', applyElbL);
+      drawPart('08_forearm_right', applyElbR);
+    }
+
+    drawPart('06_jacket_torso', applyTorso);
+    drawPart('07_upper_arm_left', applyShldL);
+    drawPart('07_upper_arm_right', applyShldR);
+
+    if (p.armsInFront) {
+      drawPart('09_hand_right', applyWrtR);
+      drawPart('08_forearm_right', applyElbR);
+      drawPart('09_hand_left', applyWrtL);
+      drawPart('08_forearm_left', applyElbL);
+    }
+
+    drawPart('05_collar_left', applyTorso);
+    drawPart('05_collar_right', applyTorso);
+    drawPart('02_head_face', applyHead);
+    drawPart('03_front_hair', applyHead);
+
+    ctx.restore();
+  }
+
+  // Variations for Hands on Hips:
+  // Var A: Subtle waist anchor
+  const hipA = createDefaultPose();
+  hipA.shldL.rot = +2.0; hipA.shldR.rot = -2.0;
+  hipA.elbL.rot = -8.0;  hipA.elbR.rot = +8.0;
+  hipA.wrtL.tx = +14.0;  hipA.wrtR.tx = -14.0;
+  hipA.wrtL.ty = -18.0;  hipA.wrtR.ty = -18.0;
+  hipA.wrtL.rot = -8.0;  hipA.wrtR.rot = +8.0;
+  hipA.armsInFront = true;
+
+  // Var B: Slightly more flared elbows with wrist cupped at hips
+  const hipB = createDefaultPose();
+  hipB.shldL.rot = +3.0; hipB.shldR.rot = -3.0;
+  hipB.elbL.rot = -10.0; hipB.elbR.rot = +10.0;
+  hipB.wrtL.tx = +18.0;  hipB.wrtR.tx = -18.0;
+  hipB.wrtL.ty = -22.0;  hipB.wrtR.ty = -22.0;
+  hipB.wrtL.rot = -12.0; hipB.wrtR.rot = +12.0;
+  hipB.armsInFront = true;
+
+  // Variations for Arms Crossed:
+  const crossA = createDefaultPose();
+  crossA.shldL.rot = -3.5; crossA.shldR.rot = +3.5;
+  crossA.shldL.ty = -2.0;  crossA.shldR.ty = -2.0;
+  crossA.elbL.rot = -40.0; crossA.elbR.rot = +40.0;
+  crossA.elbL.tx = -2.0;   crossA.elbR.tx = +2.0;
+  crossA.elbL.ty = -2.0;   crossA.elbR.ty = -2.0;
+  crossA.wrtL.rot = -6.0;  crossA.wrtR.rot = +6.0;
+  crossA.armsInFront = true;
+
+  const crossB = createDefaultPose();
+  crossB.shldL.rot = -4.0; crossB.shldR.rot = +4.0;
+  crossB.shldL.ty = -2.0;  crossB.shldR.ty = -2.0;
+  crossB.elbL.rot = -32.0; crossB.elbR.rot = +32.0;
+  crossB.wrtL.tx = +10.0;  crossB.wrtR.tx = -10.0;
+  crossB.wrtL.ty = -10.0;  crossB.wrtR.ty = -10.0;
+  crossB.armsInFront = true;
+
+  // Variations for Pointing:
+  const pointA = createDefaultPose();
+  pointA.shldR.rot = -4.0; pointA.shldR.ty = -2.0;
+  pointA.elbR.rot  = -12.0; pointA.elbR.tx = -2.0;
+  pointA.wrtR.rot  = -6.0;
+  pointA.head.rot  = -2.5; pointA.neck.rot = -1.5;
+
+  const variations = [
+    { name: 'hip_var_A.jpg', pose: hipA },
+    { name: 'hip_var_B.jpg', pose: hipB },
+    { name: 'cross_var_A.jpg', pose: crossA },
+    { name: 'cross_var_B.jpg', pose: crossB },
+    { name: 'point_var_A.jpg', pose: pointA }
+  ];
+
+  for (const v of variations) {
+    render(v.pose);
+    await fetch('/save?name=' + v.name, {
+      method: 'POST',
+      body: cvs.toDataURL('image/jpeg', 0.92)
+    });
+  }
+
+  await fetch('/done', { method: 'POST' });
+}
+run();
+</script>
+</body>
+</html>

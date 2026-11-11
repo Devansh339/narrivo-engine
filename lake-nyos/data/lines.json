@@ -1,0 +1,79 @@
+{
+ "duration": 49.3,
+ "voice": "bm_george",
+ "speed": 1.18,
+ "lines": [
+  {
+   "i": 0,
+   "text": "A lake killed at least seventeen hundred people in a single night.",
+   "start": 0.18,
+   "end": 3.733
+  },
+  {
+   "i": 1,
+   "text": "And the killer was invisible.",
+   "start": 3.873,
+   "end": 5.665
+  },
+  {
+   "i": 2,
+   "text": "On August twenty-first, nineteen eighty-six, at Lake Nyos in Cameroon,",
+   "start": 5.845,
+   "end": 10.305
+  },
+  {
+   "i": 3,
+   "text": "a massive cloud of carbon dioxide suddenly burst from the deep crater lake.",
+   "start": 10.655,
+   "end": 15.006
+  },
+  {
+   "i": 4,
+   "text": "Heavier than air, an almost invisible carbon dioxide cloud spread through the valleys,",
+   "start": 15.166,
+   "end": 19.886
+  },
+  {
+   "i": 5,
+   "text": "flowing downhill, where high concentrations displaced oxygen and caused asphyxiation.",
+   "start": 20.256,
+   "end": 25.626
+  },
+  {
+   "i": 6,
+   "text": "For decades, volcanic gas from deep underground had seeped into the cold bottom water,",
+   "start": 25.806,
+   "end": 30.646
+  },
+  {
+   "i": 7,
+   "text": "trapped under immense pressure like a giant sealed bottle.",
+   "start": 31.026,
+   "end": 34.124
+  },
+  {
+   "i": 8,
+   "text": "Investigators found no lava, no ash, and no conventional volcanic eruption,",
+   "start": 34.304,
+   "end": 39.284
+  },
+  {
+   "i": 9,
+   "text": "and the exact trigger remained undetermined.",
+   "start": 39.694,
+   "end": 42.014
+  },
+  {
+   "i": 10,
+   "text": "Scientists called this rare phenomenon a limnic eruption:",
+   "start": 42.195,
+   "end": 45.508
+  },
+  {
+   "i": 11,
+   "text": "the night a quiet lake overturned and stole the air.",
+   "start": 45.648,
+   "end": 48.599
+  }
+ ]
+}

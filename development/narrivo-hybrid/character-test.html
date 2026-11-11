@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Narrivo Character Engine v1 — Rigging & Vector Test</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #111217;
+      color: #E2E4EB;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+    p {
+      color: #8C92A4;
+      font-size: 14px;
+    }
+    .badge {
+      display: inline-block;
+      background: #232733;
+      color: #4FD1E8;
+      border: 1px solid #363E52;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      max-width: 1500px;
+      width: 100%;
+      margin-bottom: 28px;
+    }
+    .card {
+      background: #191B22;
+      border: 1px solid #282C3A;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #B5BCCF;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .card-desc {
+      font-size: 11px;
+      color: #6C7284;
+      margin-top: 2px;
+      text-align: center;
+    }
+    canvas.preview {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 2;
+      background: #20232D;
+      border-radius: 8px;
+      border: 1px solid #2F3547;
+    }
+    .live-section {
+      background: #191B22;
+      border: 1px solid #282C3A;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 800px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .live-controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    button {
+      background: #282D3D;
+      color: #FFFFFF;
+      border: 1px solid #3E455E;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    button:hover {
+      background: #3B435C;
+      border-color: #555F80;
+    }
+    button.active {
+      background: #3B6FB6;
+      border-color: #5C95E6;
+    }
+    #liveCanvas {
+      width: 320px;
+      height: 640px;
+      background: #20232D;
+      border-radius: 8px;
+      border: 1px solid #2F3547;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">STAGE 1 VERIFICATION</div>
+    <h1>Narrivo Character Engine v1</h1>
+    <p>Hierarchical Skeletal Rig & Anatomical Vector Illustration Test Bench</p>
+  </header>
+
+  <!-- Multi-Pose Gallery: 5 Core Articulations -->
+  <div class="grid">
+    <div class="card">
+      <canvas id="cStand" class="preview" width="512" height="1024"></canvas>
+      <div class="card-title">1. Stationary</div>
+      <div class="card-desc">Neutral balance & natural arm hang</div>
+    </div>
+
+    <div class="card">
+      <canvas id="cCrossed" class="preview" width="512" height="1024"></canvas>
+      <div class="card-title">2. Arms Crossed</div>
+      <div class="card-desc">Deep elbow articulation & layering</div>
+    </div>
+
+    <div class="card">
+      <canvas id="cWalk" class="preview" width="512" height="1024"></canvas>
+      <div class="card-title">3. Walk Stride</div>
+      <div class="card-desc">Counter-arm swing & knee extension</div>
+    </div>
+
+    <div class="card">
+      <canvas id="cSit" class="preview" width="512" height="1024"></canvas>
+      <div class="card-title">4. Seated Pose</div>
+      <div class="card-desc">90° hip & knee fold, torso forward balance</div>
+    </div>
+
+    <div class="card">
+      <canvas id="cPoint" class="preview" width="512" height="1024"></canvas>
+      <div class="card-title">5. Pointing Gesture</div>
+      <div class="card-desc">Extended index finger & locked posture</div>
+    </div>
+  </div>
+
+  <!-- Interactive Continuous Motion Bench -->
+  <div class="live-section">
+    <h2 style="font-size: 16px; margin-bottom: 12px; color: #FFFFFF;">Live Animation & Kinematic Walk Cycle</h2>
+    <canvas id="liveCanvas" width="512" height="1024"></canvas>
+    <div class="live-controls">
+      <button id="btnWalk" class="active">Play Continuous Walk</button>
+      <button id="btnDebug">Toggle Skeletal Bones</button>
+      <button id="btnReset">Reset Neutral</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { NarrivoChar, POSES } from './src/character/index.js';
+
+    window.TEST_READY = false;
+
+    // Helper: draw ground line and soft contact shadow
+    function drawFloorGuide(ctx, y = 960) {
+      ctx.save();
+      // Floor line
+      ctx.strokeStyle = '#2B3040';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(40, y);
+      ctx.lineTo(472, y);
+      ctx.stroke();
+
+      // Soft contact shadow
+      ctx.fillStyle = 'rgba(12, 14, 20, 0.45)';
+      ctx.beginPath();
+      ctx.ellipse(256, y + 2, 75, 12, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 1. Render Static Pose 1: Stationary
+    {
+      const cv = document.getElementById('cStand');
+      const ctx = cv.getContext('2d');
+      drawFloorGuide(ctx);
+      const char = new NarrivoChar({ palette: { jacket: '#3D556E', pants: '#2B303A' } });
+      char.setPose(POSES.stand);
+      char.draw(ctx, 256, 960);
+    }
+
+    // 2. Render Static Pose 2: Arms Crossed
+    {
+      const cv = document.getElementById('cCrossed');
+      const ctx = cv.getContext('2d');
+      drawFloorGuide(ctx);
+      const char = new NarrivoChar({ palette: { jacket: '#4A5B42', pants: '#272F24' } }); // Olive uniform tone
+      char.setPose(POSES.armsCrossed);
+      char.draw(ctx, 256, 960);
+    }
+
+    // 3. Render Static Pose 3: Walk Stride
+    {
+      const cv = document.getElementById('cWalk');
+      const ctx = cv.getContext('2d');
+      drawFloorGuide(ctx);
+      const char = new NarrivoChar({ palette: { jacket: '#6E453D', pants: '#30221E' } }); // Earth tone
+      char.setPose(POSES.walk(1.2)); // Stride apex
+      char.draw(ctx, 256, 960);
+    }
+
+    // 4. Render Static Pose 4: Sitting Pose
+    {
+      const cv = document.getElementById('cSit');
+      const ctx = cv.getContext('2d');
+      // Draw benchmark bench line
+      ctx.save();
+      ctx.fillStyle = '#2A3042';
+      ctx.fillRect(180, 755, 150, 16);
+      ctx.fillStyle = '#222736';
+      ctx.fillRect(245, 771, 20, 190);
+      drawFloorGuide(ctx);
+      ctx.restore();
+
+      const char = new NarrivoChar({ palette: { jacket: '#334863', pants: '#1F2430' } });
+      char.setPose(POSES.sit);
+      char.draw(ctx, 256, 960);
+    }
+
+    // 5. Render Static Pose 5: Pointing Gesture
+    {
+      const cv = document.getElementById('cPoint');
+      const ctx = cv.getContext('2d');
+      drawFloorGuide(ctx);
+      const char = new NarrivoChar({ palette: { jacket: '#55426E', pants: '#282033' } });
+      char.setPose(POSES.point);
+      char.draw(ctx, 256, 960);
+    }
+
+    // 6. Live Interactive Continuous Walk & Skeletal Debug
+    const liveCv = document.getElementById('liveCanvas');
+    const liveCtx = liveCv.getContext('2d');
+    const liveChar = new NarrivoChar({
+      palette: {
+        jacket: '#3D556E',
+        pants: '#2B303A',
+        shirt: '#FFFFFF',
+        tie: '#B5372E',
+      }
+    });
+
+    let isWalking = true;
+    let showDebug = false;
+    let startTime = performance.now();
+
+    function renderLive(now) {
+      liveCtx.clearRect(0, 0, 512, 1024);
+      drawFloorGuide(liveCtx);
+
+      const t = (now - startTime) / 1000;
+
+      if (isWalking) {
+        liveChar.setPose(POSES.walk(t * 3.8));
+      }
+
+      liveChar.draw(liveCtx, 256, 960);
+
+      if (showDebug) {
+        liveCtx.save();
+        liveCtx.translate(256, 960);
+        liveCtx.translate(-256, -960);
+        liveChar.rig.debugDraw(liveCtx);
+        liveCtx.restore();
+      }
+
+      requestAnimationFrame(renderLive);
+    }
+
+    requestAnimationFrame(renderLive);
+
+    // Controls
+    const btnWalk = document.getElementById('btnWalk');
+    const btnDebug = document.getElementById('btnDebug');
+    const btnReset = document.getElementById('btnReset');
+
+    btnWalk.onclick = () => {
+      isWalking = !isWalking;
+      btnWalk.classList.toggle('active', isWalking);
+      btnWalk.textContent = isWalking ? 'Pause Walk' : 'Play Walk';
+    };
+
+    btnDebug.onclick = () => {
+      showDebug = !showDebug;
+      btnDebug.classList.toggle('active', showDebug);
+    };
+
+    btnReset.onclick = () => {
+      isWalking = false;
+      btnWalk.classList.remove('active');
+      btnWalk.textContent = 'Play Walk';
+      liveChar.setPose(POSES.stand);
+    };
+
+    window.TEST_READY = true;
+  </script>
+
+</body>
+</html>

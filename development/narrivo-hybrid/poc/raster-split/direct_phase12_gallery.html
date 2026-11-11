@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 1 & 2 — Direct Segmentation & Hidden-Area Reconstruction Gallery</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d0f14;
+    color: #e8ecf4;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    padding: 24px 32px;
+    width: 1920px;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #262b38;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+  }
+  h1 { font-size: 22px; font-weight: 700; color: #fff; }
+  .subtitle { font-size: 13px; color: #9aa4b8; margin-top: 4px; }
+  .badge {
+    background: #142e24;
+    border: 1px solid #28a745;
+    color: #75f096;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .comp-row {
+    background: #151922;
+    border: 1px solid #262c3a;
+    border-radius: 8px;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto 185px;
+    gap: 8px;
+  }
+  .comp-info {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid #222836;
+    padding-bottom: 6px;
+  }
+  .comp-title { font-size: 14px; font-weight: 700; color: #fff; }
+  .comp-key { font-size: 11px; color: #8c96ab; }
+  .comp-stats {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    color: #b0b8c9;
+  }
+  .comp-stats span { color: #758096; }
+  .green { color: #5ef08a; }
+  .pink { color: #ff7be5; }
+  .comp-box {
+    position: relative;
+    border-radius: 6px;
+    border: 1px solid #2b3242;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 18px 6px 6px 6px;
+  }
+  .comp-box.checker {
+    background-color: #555963;
+    background-image:
+      linear-gradient(45deg, #434750 25%, transparent 25%),
+      linear-gradient(-45deg, #434750 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #434750 75%),
+      linear-gradient(-45deg, transparent 75%, #434750 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  }
+  .comp-box.dark { background: #10131a; }
+  .box-tag {
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    font-size: 9px;
+    font-weight: 700;
+    color: #d0d8e8;
+    background: rgba(10,12,18,0.78);
+    padding: 2px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
+  }
+  .comp-box img {
+    max-width: 100%;
+    max-height: 155px;
+    object-fit: contain;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>PHASE 1 & 2 — DIRECT MASTER SEGMENTATION & HIDDEN-OVERLAP RECONSTRUCTION</h1>
+      <div class="subtitle">All 9 components extracted directly from approved Gate 1 Master Bust (00_master_bust.jpg). Green seam contour & striped magenta/cyan overlay distinguish reconstructed hidden pixels from untouched master pixels.</div>
+    </div>
+    <div class="badge">VISIBLE MASTER PIXELS PRESERVED: 100.0% (7,06,569 / 7,06,569 px)</div>
+  </header>
+  <div class="grid">
+    
+  <div class="comp-row">
+    <div class="comp-info">
+      <div class="comp-title">01. Back Hair & Nape Layer</div>
+      <div class="comp-key"><code>01_back_hair.png</code> (z=0)</div>
+      <div class="comp-stats">
+        <div><span>Crop Box:</span> <strong>358×293 px</strong> at (274, 234)</div>
+        <div><span>Joint Pivot:</span> <strong>(456, 460)</strong></div>
+        <div><span>Phase 1 Master Pixels:</span> <strong class="green">2,364 px</strong></div>
+        <div><span>Phase 2 Hidden Pixels:</span> <strong class="pink">60,608 px (96.25%)</strong></div>
+      </div>
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 1: DIRECT MASTER PIXELS ONLY</div>
+      <img src="direct-seg/visible/01_back_hair.png" />
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 2: WITH HIDDEN OVERLAP</div>
+      <img src="direct-seg/reconstructed/01_back_hair.png" />
+    </div>
+    <div class="comp-box dark">
+      <div class="box-tag">ORIGIN MAP (STRIPED = RECONSTRUCTED)</div>
+      <img src="direct-seg/origin_maps/01_back_hair_map.png" />
+    </div>
+  </div>
+
+
+  <div class="comp-row">
+    <div class="comp-info">
+      <div class="comp-title">04. Neck & Throat Column</div>
+      <div class="comp-key"><code>04_neck.png</code> (z=1)</div>
+      <div class="comp-stats">
+        <div><span>Crop Box:</span> <strong>323×396 px</strong> at (294, 439)</div>
+        <div><span>Joint Pivot:</span> <strong>(456, 735)</strong></div>
+        <div><span>Phase 1 Master Pixels:</span> <strong class="green">36,651 px</strong></div>
+        <div><span>Phase 2 Hidden Pixels:</span> <strong class="pink">35,584 px (49.26%)</strong></div>
+      </div>
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 1: DIRECT MASTER PIXELS ONLY</div>
+      <img src="direct-seg/visible/04_neck.png" />
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 2: WITH HIDDEN OVERLAP</div>
+      <img src="direct-seg/reconstructed/04_neck.png" />
+    </div>
+    <div class="comp-box dark">
+      <div class="box-tag">ORIGIN MAP (STRIPED = RECONSTRUCTED)</div>
+      <img src="direct-seg/origin_maps/04_neck_map.png" />
+    </div>
+  </div>
+
+
+  <div class="comp-row">
+    <div class="comp-info">
+      <div class="comp-title">07L. Left Shoulder & Upper Sleeve</div>
+      <div class="comp-key"><code>07_shoulder_left.png</code> (z=2)</div>
+      <div class="comp-stats">
+        <div><span>Crop Box:</span> <strong>259×611 px</strong> at (0, 589)</div>
+        <div><span>Joint Pivot:</span> <strong>(205, 685)</strong></div>
+        <div><span>Phase 1 Master Pixels:</span> <strong class="green">93,953 px</strong></div>
+        <div><span>Phase 2 Hidden Pixels:</span> <strong class="pink">26,341 px (21.9%)</strong></div>
+      </div>
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 1: DIRECT MASTER PIXELS ONLY</div>
+      <img src="direct-seg/visible/07_shoulder_left.png" />
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 2: WITH HIDDEN OVERLAP</div>
+      <img src="direct-seg/reconstructed/07_shoulder_left.png" />
+    </div>
+    <div class="comp-box dark">
+      <div class="box-tag">ORIGIN MAP (STRIPED = RECONSTRUCTED)</div>
+      <img src="direct-seg/origin_maps/07_shoulder_left_map.png" />
+    </div>
+  </div>
+
+
+  <div class="comp-row">
+    <div class="comp-info">
+      <div class="comp-title">07R. Right Shoulder & Upper Sleeve</div>
+      <div class="comp-key"><code>07_shoulder_right.png</code> (z=3)</div>
+      <div class="comp-stats">
+        <div><span>Crop Box:</span> <strong>244×611 px</strong> at (652, 589)</div>
+        <div><span>Joint Pivot:</span> <strong>(705, 685)</strong></div>
+        <div><span>Phase 1 Master Pixels:</span> <strong class="green">86,135 px</strong></div>
+        <div><span>Phase 2 Hidden Pixels:</span> <strong class="pink">24,281 px (21.99%)</strong></div>
+      </div>
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 1: DIRECT MASTER PIXELS ONLY</div>
+      <img src="direct-seg/visible/07_shoulder_right.png" />
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 2: WITH HIDDEN OVERLAP</div>
+      <img src="direct-seg/reconstructed/07_shoulder_right.png" />
+    </div>
+    <div class="comp-box dark">
+      <div class="box-tag">ORIGIN MAP (STRIPED = RECONSTRUCTED)</div>
+      <img src="direct-seg/origin_maps/07_shoulder_right_map.png" />
+    </div>
+  </div>
+
+
+  <div class="comp-row">
+    <div class="comp-info">
+      <div class="comp-title">06. Leather Jacket Torso & Henley</div>
+      <div class="comp-key"><code>06_jacket_torso.png</code> (z=4)</div>
+      <div class="comp-stats">
+        <div><span>Crop Box:</span> <strong>672×536 px</strong> at (120, 664)</div>
+        <div><span>Joint Pivot:</span> <strong>(456, 950)</strong></div>
+        <div><span>Phase 1 Master Pixels:</span> <strong class="green">2,45,481 px</strong></div>
+        <div><span>Phase 2 Hidden Pixels:</span> <strong class="pink">18,391 px (6.97%)</strong></div>
+      </div>
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 1: DIRECT MASTER PIXELS ONLY</div>
+      <img src="direct-seg/visible/06_jacket_torso.png" />
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 2: WITH HIDDEN OVERLAP</div>
+      <img src="direct-seg/reconstructed/06_jacket_torso.png" />
+    </div>
+    <div class="comp-box dark">
+      <div class="box-tag">ORIGIN MAP (STRIPED = RECONSTRUCTED)</div>
+      <img src="direct-seg/origin_maps/06_jacket_torso_map.png" />
+    </div>
+  </div>
+
+
+  <div class="comp-row">
+    <div class="comp-info">
+      <div class="comp-title">05L. Left Shearling Collar</div>
+      <div class="comp-key"><code>05_collar_left.png</code> (z=5)</div>
+      <div class="comp-stats">
+        <div><span>Crop Box:</span> <strong>217×323 px</strong> at (149, 484)</div>
+        <div><span>Joint Pivot:</span> <strong>(335, 725)</strong></div>
+        <div><span>Phase 1 Master Pixels:</span> <strong class="green">34,412 px</strong></div>
+        <div><span>Phase 2 Hidden Pixels:</span> <strong class="pink">1,023 px (2.89%)</strong></div>
+      </div>
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 1: DIRECT MASTER PIXELS ONLY</div>
+      <img src="direct-seg/visible/05_collar_left.png" />
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 2: WITH HIDDEN OVERLAP</div>
+      <img src="direct-seg/reconstructed/05_collar_left.png" />
+    </div>
+    <div class="comp-box dark">
+      <div class="box-tag">ORIGIN MAP (STRIPED = RECONSTRUCTED)</div>
+      <img src="direct-seg/origin_maps/05_collar_left_map.png" />
+    </div>
+  </div>
+
+
+  <div class="comp-row">
+    <div class="comp-info">
+      <div class="comp-title">05R. Right Shearling Collar</div>
+      <div class="comp-key"><code>05_collar_right.png</code> (z=6)</div>
+      <div class="comp-stats">
+        <div><span>Crop Box:</span> <strong>210×322 px</strong> at (538, 485)</div>
+        <div><span>Joint Pivot:</span> <strong>(565, 725)</strong></div>
+        <div><span>Phase 1 Master Pixels:</span> <strong class="green">32,206 px</strong></div>
+        <div><span>Phase 2 Hidden Pixels:</span> <strong class="pink">727 px (2.21%)</strong></div>
+      </div>
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 1: DIRECT MASTER PIXELS ONLY</div>
+      <img src="direct-seg/visible/05_collar_right.png" />
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 2: WITH HIDDEN OVERLAP</div>
+      <img src="direct-seg/reconstructed/05_collar_right.png" />
+    </div>
+    <div class="comp-box dark">
+      <div class="box-tag">ORIGIN MAP (STRIPED = RECONSTRUCTED)</div>
+      <img src="direct-seg/origin_maps/05_collar_right_map.png" />
+    </div>
+  </div>
+
+
+  <div class="comp-row">
+    <div class="comp-info">
+      <div class="comp-title">02. Head & Face Base</div>
+      <div class="comp-key"><code>02_head_face.png</code> (z=7)</div>
+      <div class="comp-stats">
+        <div><span>Crop Box:</span> <strong>375×581 px</strong> at (266, 44)</div>
+        <div><span>Joint Pivot:</span> <strong>(456, 545)</strong></div>
+        <div><span>Phase 1 Master Pixels:</span> <strong class="green">1,00,010 px</strong></div>
+        <div><span>Phase 2 Hidden Pixels:</span> <strong class="pink">17,464 px (14.87%)</strong></div>
+      </div>
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 1: DIRECT MASTER PIXELS ONLY</div>
+      <img src="direct-seg/visible/02_head_face.png" />
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 2: WITH HIDDEN OVERLAP</div>
+      <img src="direct-seg/reconstructed/02_head_face.png" />
+    </div>
+    <div class="comp-box dark">
+      <div class="box-tag">ORIGIN MAP (STRIPED = RECONSTRUCTED)</div>
+      <img src="direct-seg/origin_maps/02_head_face_map.png" />
+    </div>
+  </div>
+
+
+  <div class="comp-row">
+    <div class="comp-info">
+      <div class="comp-title">03. Front Hair & Swept Locks</div>
+      <div class="comp-key"><code>03_front_hair.png</code> (z=8)</div>
+      <div class="comp-stats">
+        <div><span>Crop Box:</span> <strong>470×372 px</strong> at (218, 24)</div>
+        <div><span>Joint Pivot:</span> <strong>(456, 545)</strong></div>
+        <div><span>Phase 1 Master Pixels:</span> <strong class="green">75,357 px</strong></div>
+        <div><span>Phase 2 Hidden Pixels:</span> <strong class="pink">0 px (0%)</strong></div>
+      </div>
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 1: DIRECT MASTER PIXELS ONLY</div>
+      <img src="direct-seg/visible/03_front_hair.png" />
+    </div>
+    <div class="comp-box checker">
+      <div class="box-tag">PHASE 2: WITH HIDDEN OVERLAP</div>
+      <img src="direct-seg/reconstructed/03_front_hair.png" />
+    </div>
+    <div class="comp-box dark">
+      <div class="box-tag">ORIGIN MAP (STRIPED = RECONSTRUCTED)</div>
+      <img src="direct-seg/origin_maps/03_front_hair_map.png" />
+    </div>
+  </div>
+
+  </div>
+</body>
+</html>

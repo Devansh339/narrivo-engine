@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Narrivo Character Engine v1 — Expressions & Facial Animation Test</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0E1015;
+      color: #E2E4EB;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 48px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+    p {
+      color: #8C92A4;
+      font-size: 14px;
+    }
+    .badge {
+      display: inline-block;
+      background: #1C2333;
+      color: #38BDF8;
+      border: 1px solid #29384D;
+      padding: 3px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #F8FAFC;
+      margin-bottom: 14px;
+      align-self: flex-start;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 16px;
+      background: #38BDF8;
+      border-radius: 2px;
+    }
+    .container {
+      max-width: 1400px;
+      width: 100%;
+      margin-bottom: 32px;
+    }
+
+    /* Grid for 10 Expressions */
+    .grid-10 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+    .card {
+      background: #161821;
+      border: 1px solid #232838;
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: #38BDF8;
+    }
+    .card canvas {
+      width: 100%;
+      aspect-ratio: 1 / 1.1;
+      background: #1D212D;
+      border-radius: 8px;
+      border: 1px solid #2A3042;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #E2E8F0;
+      margin-top: 8px;
+      text-transform: capitalize;
+    }
+    .card-desc {
+      font-size: 11px;
+      color: #717D96;
+      margin-top: 2px;
+      text-align: center;
+    }
+
+    /* Viseme Grid */
+    .grid-visemes {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+    }
+    .viseme-card {
+      background: #161821;
+      border: 1px solid #232838;
+      border-radius: 10px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .viseme-card canvas {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #1D212D;
+      border-radius: 6px;
+    }
+    .viseme-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #38BDF8;
+      margin-top: 6px;
+    }
+    .viseme-desc {
+      font-size: 10px;
+      color: #717D96;
+    }
+
+    /* Interactive Live Benchmark */
+    .interactive-row {
+      display: flex;
+      gap: 24px;
+      background: #161821;
+      border: 1px solid #232838;
+      border-radius: 14px;
+      padding: 24px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    #liveCanvas {
+      width: 320px;
+      height: 480px;
+      background: #1D212D;
+      border-radius: 10px;
+      border: 1px solid #2A3042;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .controls-panel {
+      flex: 1;
+      min-width: 300px;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    button {
+      background: #232838;
+      color: #E2E8F0;
+      border: 1px solid #363E56;
+      padding: 7px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    button:hover {
+      background: #313A52;
+      border-color: #4C5A7D;
+    }
+    button.active {
+      background: #0284C7;
+      border-color: #38BDF8;
+      color: #FFFFFF;
+    }
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: #94A3B8;
+    }
+    .slider-row label {
+      width: 90px;
+    }
+    input[type=range] {
+      flex: 1;
+      accent-color: #38BDF8;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #101F30;
+      border: 1px solid #1E3A5F;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #38BDF8;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">STAGE 2 VERIFIED</div>
+    <h1>Narrivo Character Engine v1 — Expressions & Facial System</h1>
+    <p>10 Distinct Emotion Presets · 6 Phonetic Visemes · Smooth S-Curve Interpolation</p>
+  </header>
+
+  <!-- 1. The 10 Core Expressions Gallery -->
+  <div class="container">
+    <div class="section-title">1. Core Expression Presets (Side-by-Side Comparison)</div>
+    <div class="grid-10" id="expressionGallery">
+      <!-- Generated via script -->
+    </div>
+  </div>
+
+  <!-- 2. Speech Viseme Mouth Shapes -->
+  <div class="container">
+    <div class="section-title">2. Speech Visemes (Articulated Mouth Shapes)</div>
+    <div class="grid-visemes" id="visemeGallery">
+      <!-- Generated via script -->
+    </div>
+  </div>
+
+  <!-- 3. Interactive Smooth Transition & Emotional Arc Benchmark -->
+  <div class="container">
+    <div class="section-title">3. Live Smooth Transitions, Gaze & Head Tilt Benchmark</div>
+    <div class="interactive-row">
+      <canvas id="liveCanvas" width="480" height="720"></canvas>
+      <div class="controls-panel">
+        <div>
+          <div style="font-size: 13px; font-weight: 700; color: #CBD5E1; margin-bottom: 8px;">Trigger Expression Transition:</div>
+          <div class="btn-group" id="emotionButtons"></div>
+        </div>
+
+        <div>
+          <div style="font-size: 13px; font-weight: 700; color: #CBD5E1; margin-bottom: 8px;">Test Speech Viseme:</div>
+          <div class="btn-group" id="visemeButtons"></div>
+        </div>
+
+        <div class="slider-row">
+          <label>Eye Gaze X:</label>
+          <input type="range" id="gazeXSlider" min="-1" max="1" step="0.05" value="0">
+        </div>
+
+        <div class="slider-row">
+          <label>Eye Gaze Y:</label>
+          <input type="range" id="gazeYSlider" min="-1" max="1" step="0.05" value="0">
+        </div>
+
+        <div class="slider-row">
+          <label>Head Tilt:</label>
+          <input type="range" id="headTiltSlider" min="-20" max="20" step="1" value="0">
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 6px;">
+          <button id="btnPlaySequence" class="active">Play Emotional Sequence</button>
+          <button id="btnResetLive">Reset Neutral</button>
+        </div>
+
+        <div class="status-pill" id="liveStatus">State: Confident (Static)</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { NarrivoChar, EXPRESSIONS, VISEMES } from './src/character/index.js';
+
+    window.TEST_READY = false;
+
+    // Helper: draw focused portrait frame (zoomed in on head & face)
+    function drawPortrait(canvas, char, faceState) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.save();
+      // Zoom into head area: character head is at (256, 320), crown at (256, 180)
+      ctx.translate(canvas.width / 2, canvas.height * 0.72);
+      ctx.scale(2.4, 2.4);
+      ctx.translate(-256, -340);
+
+      // Render character with custom face state
+      char.draw(ctx, 256, 960, 1);
+      ctx.restore();
+    }
+
+    // 1. Populate the 10 Expressions Gallery
+    const galleryEl = document.getElementById('expressionGallery');
+    const emotionList = [
+      { id: 'happy', desc: 'Warm smile, raised brows, blush' },
+      { id: 'sad', desc: 'Drooping brows, frown, tear glisten' },
+      { id: 'angry', desc: 'Furrowed V-brows, clenched grit teeth' },
+      { id: 'shocked', desc: 'Contracted pupils, dropped O-jaw' },
+      { id: 'worried', desc: 'Anxious wavy brows, sweat bead' },
+      { id: 'confident', desc: 'Smirk brows, direct gaze, grin' },
+      { id: 'confused', desc: 'Asymmetrical brow, cocked head' },
+      { id: 'smug', desc: 'Half-closed lids, side curl smirk' },
+      { id: 'crying', desc: 'Squeezed shut, streaming tears' },
+      { id: 'laughing', desc: 'Joyful crescents, open laugh' },
+    ];
+
+    emotionList.forEach((item) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const cv = document.createElement('canvas');
+      cv.width = 300;
+      cv.height = 330;
+      cv.id = 'cv_' + item.id;
+
+      const title = document.createElement('div');
+      title.className = 'card-title';
+      title.textContent = item.id;
+
+      const desc = document.createElement('div');
+      desc.className = 'card-desc';
+      desc.textContent = item.desc;
+
+      card.appendChild(cv);
+      card.appendChild(title);
+      card.appendChild(desc);
+      galleryEl.appendChild(card);
+
+      const char = new NarrivoChar({ expression: item.id });
+      char.setExpression(item.id);
+      drawPortrait(cv, char);
+    });
+
+    // 2. Populate Speech Visemes Gallery
+    const visemeEl = document.getElementById('visemeGallery');
+    const visemeData = [
+      { name: 'REST', desc: 'Closed neutral' },
+      { name: 'AA', desc: 'Wide open vowels' },
+      { name: 'OH', desc: 'Rounded pucker' },
+      { name: 'EE', desc: 'Horizontal stretch' },
+      { name: 'MBP', desc: 'Pressed lips' },
+      { name: 'FV', desc: 'Teeth on lip' },
+    ];
+
+    visemeData.forEach((v) => {
+      const card = document.createElement('div');
+      card.className = 'viseme-card';
+
+      const cv = document.createElement('canvas');
+      cv.width = 240;
+      cv.height = 240;
+      cv.id = 'cv_viseme_' + v.name;
+
+      const title = document.createElement('div');
+      title.className = 'viseme-title';
+      title.textContent = v.name;
+
+      const desc = document.createElement('div');
+      desc.className = 'viseme-desc';
+      desc.textContent = v.desc;
+
+      card.appendChild(cv);
+      card.appendChild(title);
+      card.appendChild(desc);
+      visemeEl.appendChild(card);
+
+      const char = new NarrivoChar({ expression: 'confident' });
+      char.setViseme(v.name, 1.0);
+      drawPortrait(cv, char);
+    });
+
+    // 3. Setup Interactive Live Transition Benchmark
+    const liveCanvas = document.getElementById('liveCanvas');
+    const liveCtx = liveCanvas.getContext('2d');
+    const liveChar = new NarrivoChar({ expression: 'confident' });
+    const liveStatus = document.getElementById('liveStatus');
+
+    const emotionBtnContainer = document.getElementById('emotionButtons');
+    Object.keys(EXPRESSIONS).forEach((name) => {
+      const b = document.createElement('button');
+      b.textContent = name;
+      b.onclick = () => {
+        isSequenceActive = false;
+        btnPlaySeq.classList.remove('active');
+        const now = performance.now() / 1000;
+        liveChar.transitionExpression(name, 0.45, now);
+        liveStatus.textContent = `Transitioning to: ${name} (0.45s)`;
+        updateActiveBtn(b);
+      };
+      emotionBtnContainer.appendChild(b);
+    });
+
+    function updateActiveBtn(activeBtn) {
+      emotionBtnContainer.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    const visemeBtnContainer = document.getElementById('visemeButtons');
+    Object.keys(VISEMES).forEach((vname) => {
+      const b = document.createElement('button');
+      b.textContent = vname;
+      b.onclick = () => {
+        liveChar.setViseme(vname, 1.0);
+        liveStatus.textContent = `Viseme Active: ${vname}`;
+      };
+      visemeBtnContainer.appendChild(b);
+    });
+
+    // Sliders
+    const gazeXSlider = document.getElementById('gazeXSlider');
+    const gazeYSlider = document.getElementById('gazeYSlider');
+    const headTiltSlider = document.getElementById('headTiltSlider');
+
+    gazeXSlider.oninput = () => liveChar.setGaze(+gazeXSlider.value, +gazeYSlider.value);
+    gazeYSlider.oninput = () => liveChar.setGaze(+gazeXSlider.value, +gazeYSlider.value);
+    headTiltSlider.oninput = () => liveChar.setHeadTilt(+headTiltSlider.value);
+
+    // Automated Sequence Playback
+    let isSequenceActive = true;
+    const btnPlaySeq = document.getElementById('btnPlaySequence');
+    const seqTimeline = [
+      { at: 0.0, expr: 'confident' },
+      { at: 1.8, expr: 'shocked' },
+      { at: 3.4, expr: 'worried' },
+      { at: 5.0, expr: 'angry' },
+      { at: 6.8, expr: 'crying' },
+      { at: 8.5, expr: 'sad' },
+      { at: 10.0, expr: 'confused' },
+      { at: 11.8, expr: 'smug' },
+      { at: 13.5, expr: 'happy' },
+      { at: 15.2, expr: 'laughing' },
+      { at: 17.5, expr: 'confident' },
+    ];
+    const seqDuration = 18.0;
+
+    btnPlaySeq.onclick = () => {
+      isSequenceActive = !isSequenceActive;
+      btnPlaySeq.classList.toggle('active', isSequenceActive);
+    };
+
+    document.getElementById('btnResetLive').onclick = () => {
+      isSequenceActive = false;
+      btnPlaySeq.classList.remove('active');
+      const now = performance.now() / 1000;
+      liveChar.transitionExpression('confident', 0.2, now);
+      liveChar.setViseme('REST');
+      liveChar.setGaze(0, 0);
+      liveChar.setHeadTilt(0);
+      gazeXSlider.value = 0;
+      gazeYSlider.value = 0;
+      headTiltSlider.value = 0;
+      liveStatus.textContent = 'Reset to Neutral';
+    };
+
+    let startT = performance.now();
+    let lastSeqStep = -1;
+
+    function renderLive(now) {
+      const t = (now - startT) / 1000;
+
+      // Handle emotional sequence if active
+      if (isSequenceActive) {
+        const loopT = t % seqDuration;
+        let stepIdx = seqTimeline.length - 1;
+        while (stepIdx > 0 && seqTimeline[stepIdx].at > loopT) stepIdx--;
+
+        if (stepIdx !== lastSeqStep) {
+          lastSeqStep = stepIdx;
+          const target = seqTimeline[stepIdx].expr;
+          liveChar.transitionExpression(target, 0.4, t);
+          liveStatus.textContent = `Sequence [${loopT.toFixed(1)}s]: Transitioning to ${target}`;
+        }
+      }
+
+      liveCtx.clearRect(0, 0, liveCanvas.width, liveCanvas.height);
+
+      liveCtx.save();
+      // Zoom into character portrait
+      liveCtx.translate(liveCanvas.width / 2, liveCanvas.height * 0.72);
+      liveCtx.scale(2.2, 2.2);
+      liveCtx.translate(-256, -340);
+
+      // Draw character passing film time t
+      liveChar.draw(liveCtx, 256, 960, 1, t);
+      liveCtx.restore();
+
+      requestAnimationFrame(renderLive);
+    }
+
+    requestAnimationFrame(renderLive);
+
+    window.TEST_READY = true;
+  </script>
+
+</body>
+</html>

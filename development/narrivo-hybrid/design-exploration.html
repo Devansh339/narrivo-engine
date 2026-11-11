@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Narrivo Character Engine — Visual Design Exploration</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0B0D12;
+      color: #E2E8F0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      padding: 32px 24px 64px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      text-align: center;
+      max-width: 900px;
+      margin-bottom: 36px;
+    }
+    .badge {
+      display: inline-block;
+      background: #1E293B;
+      color: #38BDF8;
+      border: 1px solid #334155;
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+    }
+    p.lead {
+      color: #94A3B8;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .character-brief {
+      background: #131722;
+      border: 1px solid #1E2638;
+      border-radius: 12px;
+      padding: 14px 20px;
+      margin-top: 16px;
+      font-size: 13px;
+      color: #CBD5E1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .character-brief strong {
+      color: #F8FAFC;
+    }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1440px;
+      width: 100%;
+      margin-bottom: 40px;
+    }
+    .style-column {
+      background: #12151E;
+      border: 1px solid #1F2533;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    .style-column.recommended {
+      border-color: #38BDF8;
+      box-shadow: 0 12px 40px rgba(56, 189, 248, 0.15);
+    }
+    .style-column.recommended::before {
+      content: 'RECOMMENDED FOR NARRIVO';
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #0284C7;
+      color: #FFFFFF;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .style-header {
+      margin-bottom: 16px;
+    }
+    .style-number {
+      font-size: 12px;
+      font-weight: 800;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .style-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin: 4px 0 6px;
+    }
+    .style-desc {
+      font-size: 12px;
+      color: #94A3B8;
+      line-height: 1.5;
+      min-height: 54px;
+    }
+    canvas.character-canvas {
+      width: 100%;
+      aspect-ratio: 512 / 1024;
+      background: #181C28;
+      border-radius: 12px;
+      border: 1px solid #232A3B;
+      margin-bottom: 16px;
+    }
+    .feature-list {
+      list-style: none;
+      font-size: 12px;
+      color: #CBD5E1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: #171B26;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .feature-list li strong {
+      color: #F1F5F9;
+    }
+    .icon {
+      color: #38BDF8;
+      font-weight: bold;
+    }
+    .critique-section {
+      max-width: 1440px;
+      width: 100%;
+      background: #12151E;
+      border: 1px solid #1F2533;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+    .critique-section h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .critique-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .critique-card {
+      background: #181C28;
+      border: 1px solid #262E40;
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .critique-card h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #F87171;
+      margin-bottom: 6px;
+    }
+    .critique-card p {
+      font-size: 12px;
+      color: #94A3B8;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">NARRIVO ARTISTIC DIRECTION</div>
+    <h1>Character Engine Visual Design Exploration</h1>
+    <p class="lead">Comparative aesthetic study across three distinct visual paradigms using the exact same character concept: <em>"The Aviator / Field Commander"</em>.</p>
+    <div class="character-brief">
+      <span><strong>Character Concept:</strong> Intrepid Explorer / Aviator</span>
+      <span>•</span>
+      <span><strong>Key Elements:</strong> Leather shearling jacket, high brass collar, utility holster, rugged field boots, sculpted jawline, styled parted hair</span>
+    </div>
+  </header>
+
+  <!-- 3-Way Comparative Visual Prototypes -->
+  <div class="comparison-grid">
+
+    <!-- Direction 1: Premium 2D Illustrated Animation -->
+    <div class="style-column">
+      <div class="style-header">
+        <div class="style-number">Direction 1</div>
+        <div class="style-title">Premium 2D Illustrated</div>
+        <div class="style-desc">Feature animation & graphic novel aesthetic. Dynamic variable-weight ink, bold stylized angular contours, cross-contour hatching, and graphic cel shadows.</div>
+      </div>
+      <canvas id="canvas2D" class="character-canvas" width="512" height="1024"></canvas>
+      <ul class="feature-list">
+        <li><span class="icon">✓</span> <span><strong>Inking:</strong> Calligraphic brush outlines with variable line weight tapering at joints.</span></li>
+        <li><span class="icon">✓</span> <span><strong>Shading:</strong> Crisp 2-tone graphic cel cuts with subtle screen-tone hatching accents.</span></li>
+        <li><span class="icon">✓</span> <span><strong>Anatomy:</strong> Sharp, stylized facial planes with sculpted graphic novel nose and jaw.</span></li>
+        <li><span class="icon">✓</span> <span><strong>Best For:</strong> High-energy storytime narratives and bold expressive caricatures.</span></li>
+      </ul>
+    </div>
+
+    <!-- Direction 2: Premium Stylized 3D -->
+    <div class="style-column">
+      <div class="style-header">
+        <div class="style-number">Direction 2</div>
+        <div class="style-title">Premium Stylized 3D</div>
+        <div class="style-desc">Modern feature film aesthetic (Pixar/Overwatch). Zero black outlines, soft ambient occlusion in deep creases, warm subsurface skin scatter, and polished specular highlights.</div>
+      </div>
+      <canvas id="canvas3D" class="character-canvas" width="512" height="1024"></canvas>
+      <ul class="feature-list">
+        <li><span class="icon">✓</span> <span><strong>Inking:</strong> Outline-free form defined purely by smooth lighting and tone gradients.</span></li>
+        <li><span class="icon">✓</span> <span><strong>Shading:</strong> Smooth cylindrical shading, subsurface scatter orange falloff, leather specular sheen.</span></li>
+        <li><span class="icon">✓</span> <span><strong>Anatomy:</strong> Sculpted, volumetric curves with soft cheek rounding and sculpted lips.</span></li>
+        <li><span class="icon">✓</span> <span><strong>Best For:</strong> High-budget cinematic shorts with realistic shallow-depth lighting.</span></li>
+      </ul>
+    </div>
+
+    <!-- Direction 3: Hybrid Dimensional Illustration -->
+    <div class="style-column recommended">
+      <div class="style-header">
+        <div class="style-number">Direction 3</div>
+        <div class="style-title">Hybrid Dimensional</div>
+        <div class="style-desc">The Narrivo sweet spot: Crisp illustrated vector linework infused with directional volumetric gradients, scene rim light glints, and ambient occlusion depth.</div>
+      </div>
+      <canvas id="canvasHybrid" class="character-canvas" width="512" height="1024"></canvas>
+      <ul class="feature-list">
+        <li><span class="icon">✓</span> <span><strong>Inking:</strong> Subtle tinted vector lines with softened ink that reacts to local lighting.</span></li>
+        <li><span class="icon">✓</span> <span><strong>Shading:</strong> Directional warm key light + cool ambient fill + glowing rim light edge.</span></li>
+        <li><span class="icon">✓</span> <span><strong>Integration:</strong> Blends seamlessly into 3D Three.js sets while keeping 2D expressive freedom.</span></li>
+        <li><span class="icon">✓</span> <span><strong>Best For:</strong> Narrivo Hybrid flagship productions (the optimal visual identity).</span></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Detailed Artistic Critique of Previous Stages -->
+  <div class="critique-section">
+    <h2>Artistic Breakdown of Stage 1 & 2 Weaknesses</h2>
+    <div class="critique-grid">
+      <div class="critique-card">
+        <h3>1. Uniform Vector Line Weight</h3>
+        <p>Stage 1 used a uniform 3.5px line across the entire body, creating a dated "Flash/ClipArt" impression. Natural animation artwork requires line modulation (thick in occlusions, thin on highlights).</p>
+      </div>
+      <div class="critique-card">
+        <h3>2. Flat Cel Blocks</h3>
+        <p>Every surface used a single unmodulated fill plus a flat shadow rectangle, ignoring form curvature, subsurface skin warming, and secondary ambient bounce.</p>
+      </div>
+      <div class="critique-card">
+        <h3>3. Boxy Torso & Pelvis</h3>
+        <p>The torso was constructed as a single trapezoid with minimal hip articulation, hiding natural athletic shoulder-to-waist taper and clothing drape tension.</p>
+      </div>
+      <div class="critique-card">
+        <h3>4. Geometric Facial Planes</h3>
+        <p>Facial elements were based on simple ellipses and arcs without sculpted philtrum, eyelid crease depth, or stylized jaw corner definition.</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    window.PROTOTYPES_READY = false;
+
+    // =========================================================================
+    // MASTER PALETTE (Same character across all 3 prototypes)
+    // =========================================================================
+    const CHAR = {
+      skinBase: '#E8AA85',
+      skinShadow: '#BF7D58',
+      skinSSS: '#E8664D',      // Subsurface scatter warmth
+      skinHighlight: '#FCE0D2',
+      hairDark: '#2B2421',
+      hairMid: '#473A34',
+      hairHi: '#6E5D55',
+      jacketBrown: '#4A3427',
+      jacketDark: '#2E1F16',
+      jacketHi: '#6E4F3D',
+      shearlingCollar: '#F4EADA',
+      shearlingShadow: '#D4C4AE',
+      pantsOlive: '#3E4738',
+      pantsDark: '#252C21',
+      pantsHi: '#56634E',
+      bootsLeather: '#211B17',
+      bootsDark: '#120F0D',
+      brassBuckle: '#D4AF37',
+      brassHi: '#FFF0A8',
+      inkColor: '#1A151C',
+    };
+
+    // Shared Floor Guide
+    function drawFloor(ctx) {
+      ctx.save();
+      ctx.strokeStyle = '#272F3E';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(30, 960);
+      ctx.lineTo(482, 960);
+      ctx.stroke();
+
+      // Soft contact shadow
+      const grad = ctx.createRadialGradient(256, 960, 10, 256, 960, 95);
+      grad.addColorStop(0, 'rgba(10, 12, 18, 0.65)');
+      grad.addColorStop(1, 'rgba(10, 12, 18, 0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.ellipse(256, 962, 95, 16, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // =========================================================================
+    // DIRECTION 1: PREMIUM 2D ILLUSTRATED ANIMATION
+    // Features: Calligraphic variable brush strokes, stylized graphic folds,
+    // angular graphic novel planes, screentone hatching.
+    // =========================================================================
+    function renderDirection1(canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, 512, 1024);
+      drawFloor(ctx);
+
+      ctx.save();
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // 1. Far Leg (Right)
+      ctx.fillStyle = CHAR.pantsDark;
+      ctx.beginPath();
+      ctx.moveTo(224, 600);
+      ctx.bezierCurveTo(210, 680, 204, 760, 214, 840);
+      ctx.lineTo(218, 930);
+      ctx.lineTo(240, 930);
+      ctx.bezierCurveTo(238, 840, 244, 760, 250, 600);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      // Far Boot
+      ctx.fillStyle = CHAR.bootsDark;
+      ctx.beginPath();
+      ctx.moveTo(212, 920);
+      ctx.lineTo(192, 956);
+      ctx.lineTo(244, 956);
+      ctx.lineTo(242, 920);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // 2. Near Leg (Left - 3/4 Forward Stance)
+      ctx.fillStyle = CHAR.pantsOlive;
+      ctx.beginPath();
+      ctx.moveTo(254, 595);
+      ctx.bezierCurveTo(278, 670, 286, 755, 276, 840);
+      ctx.lineTo(274, 926);
+      ctx.lineTo(312, 926);
+      ctx.bezierCurveTo(318, 840, 326, 750, 302, 595);
+      ctx.closePath();
+      ctx.fill();
+
+      // Graphic shadow split along leg
+      ctx.save();
+      ctx.clip();
+      ctx.fillStyle = CHAR.pantsDark;
+      ctx.beginPath();
+      ctx.moveTo(254, 595);
+      ctx.bezierCurveTo(272, 690, 276, 810, 274, 926);
+      ctx.lineTo(250, 926);
+      ctx.lineTo(240, 595);
+      ctx.closePath();
+      ctx.fill();
+
+      // Stylized knee crease lines
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.moveTo(280, 755); ctx.lineTo(298, 758);
+      ctx.moveTo(278, 770); ctx.lineTo(304, 774);
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 4.5;
+      ctx.stroke();
+
+      // Near Boot (Sculpted with laces and sole)
+      ctx.fillStyle = CHAR.bootsLeather;
+      ctx.beginPath();
+      ctx.moveTo(270, 920);
+      ctx.lineTo(254, 956);
+      ctx.lineTo(326, 956);
+      ctx.bezierCurveTo(330, 946, 324, 920, 314, 918);
+      ctx.closePath();
+      ctx.fill();
+      // Sole
+      ctx.fillStyle = CHAR.bootsDark;
+      ctx.fillRect(250, 950, 78, 8);
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 4;
+      ctx.stroke();
+      // Laces
+      ctx.strokeStyle = '#D4B89A';
+      ctx.lineWidth = 2.5;
+      for (let y = 926; y < 948; y += 6) {
+        ctx.beginPath(); ctx.moveTo(284, y); ctx.lineTo(298, y + 2); ctx.stroke();
+      }
+
+      // 3. Torso (Aviator Jacket with Shearling Collar)
+      // Heroic athletic V-taper
+      ctx.fillStyle = CHAR.jacketBrown;
+      ctx.beginPath();
+      ctx.moveTo(234, 595); // waist
+      ctx.bezierCurveTo(222, 500, 192, 430, 182, 380); // left shoulder
+      ctx.lineTo(242, 370); // collar center
+      ctx.lineTo(326, 385); // right shoulder
+      ctx.bezierCurveTo(318, 430, 290, 500, 278, 595); // right waist
+      ctx.closePath();
+      ctx.fill();
+
+      // Graphic shadow on left side
+      ctx.save();
+      ctx.clip();
+      ctx.fillStyle = CHAR.jacketDark;
+      ctx.beginPath();
+      ctx.moveTo(234, 595);
+      ctx.bezierCurveTo(230, 510, 224, 450, 238, 370);
+      ctx.lineTo(170, 370);
+      ctx.lineTo(170, 610);
+      ctx.closePath();
+      ctx.fill();
+
+      // Brass zipper track
+      ctx.strokeStyle = CHAR.brassBuckle;
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.moveTo(258, 385);
+      ctx.lineTo(258, 580);
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 4.5;
+      ctx.stroke();
+
+      // Utility Leather Webbing / Holster Strap
+      ctx.strokeStyle = '#2B1E17';
+      ctx.lineWidth = 14;
+      ctx.beginPath();
+      ctx.moveTo(194, 395);
+      ctx.lineTo(276, 560);
+      ctx.stroke();
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      // Brass harness ring
+      ctx.fillStyle = CHAR.brassBuckle;
+      ctx.beginPath();
+      ctx.arc(235, 478, 10, 0, Math.PI * 2);
+      ctx.fill(); ctx.stroke();
+
+      // Belt & Heavy Brass Buckle
+      ctx.fillStyle = '#211813';
+      ctx.fillRect(230, 574, 56, 18);
+      ctx.fillStyle = CHAR.brassBuckle;
+      ctx.fillRect(244, 571, 26, 24);
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(244, 571, 26, 24);
+
+      // Shearling Wool Collar (Plush graphic curves)
+      ctx.fillStyle = CHAR.shearlingCollar;
+      ctx.beginPath();
+      ctx.moveTo(242, 380);
+      ctx.bezierCurveTo(220, 360, 200, 368, 196, 395);
+      ctx.bezierCurveTo(210, 420, 235, 410, 246, 390);
+      ctx.bezierCurveTo(260, 410, 288, 420, 302, 395);
+      ctx.bezierCurveTo(298, 368, 275, 360, 256, 380);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      // 4. Arms
+      // Right Arm (Reaching forward casually)
+      ctx.fillStyle = CHAR.jacketBrown;
+      ctx.beginPath();
+      ctx.moveTo(326, 385);
+      ctx.bezierCurveTo(348, 430, 356, 480, 344, 530); // elbow
+      ctx.bezierCurveTo(336, 580, 322, 630, 318, 660); // wrist
+      ctx.lineTo(294, 650);
+      ctx.bezierCurveTo(304, 590, 318, 520, 304, 460);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 4.5;
+      ctx.stroke();
+
+      // Right Hand (Articulated knuckles & leather glove)
+      ctx.fillStyle = '#302219';
+      ctx.beginPath();
+      ctx.moveTo(318, 660);
+      ctx.lineTo(326, 705);
+      ctx.bezierCurveTo(324, 715, 310, 715, 304, 705);
+      ctx.lineTo(294, 650);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 3.5;
+      ctx.stroke();
+
+      // 5. Head & Stylized Facial Anatomy (Graphic Novel Character)
+      // Neck
+      ctx.fillStyle = CHAR.skinBase;
+      ctx.fillRect(238, 315, 32, 60);
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 4;
+      ctx.strokeRect(238, 315, 32, 60);
+
+      // Jaw and Cheek (Angular, sculpted heroic jawline)
+      ctx.fillStyle = CHAR.skinBase;
+      ctx.beginPath();
+      ctx.moveTo(254, 328); // Chin
+      ctx.lineTo(230, 296); // Left jaw corner
+      ctx.lineTo(228, 235); // Left cheek / temple
+      ctx.bezierCurveTo(230, 165, 282, 165, 286, 235); // Crown
+      ctx.lineTo(284, 296); // Right cheek / jaw
+      ctx.closePath();
+      ctx.fill();
+
+      // Crisp Graphic Shadow on jaw
+      ctx.save();
+      ctx.clip();
+      ctx.fillStyle = CHAR.skinShadow;
+      ctx.beginPath();
+      ctx.moveTo(254, 328);
+      ctx.lineTo(224, 290);
+      ctx.lineTo(224, 180);
+      ctx.lineTo(252, 180);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 4.5;
+      ctx.stroke();
+
+      // Hair (Volumetric graphic swept clumps)
+      ctx.fillStyle = CHAR.hairDark;
+      ctx.beginPath();
+      ctx.moveTo(226, 245);
+      ctx.bezierCurveTo(218, 175, 252, 145, 288, 150);
+      ctx.bezierCurveTo(302, 168, 296, 215, 290, 245);
+      ctx.bezierCurveTo(278, 205, 264, 210, 254, 215); // Hairline parted tuft
+      ctx.bezierCurveTo(242, 210, 234, 220, 226, 245);
+      ctx.closePath();
+      ctx.fill();
+      // Graphic highlight stroke on hair
+      ctx.strokeStyle = CHAR.hairHi;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.arc(264, 165, 24, Math.PI * 1.1, Math.PI * 1.8);
+      ctx.stroke();
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 4.5;
+      ctx.stroke();
+
+      // Facial Features (Expressive Graphic Eyes, Eyebrows, Nose, Mouth)
+      // Brows
+      ctx.strokeStyle = CHAR.hairDark;
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(234, 228); ctx.lineTo(248, 232); // Left brow
+      ctx.moveTo(260, 232); ctx.lineTo(276, 228); // Right brow
+      ctx.stroke();
+
+      // Eyes with crisp graphic upper lid
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.ellipse(242, 240, 5, 8, 0.1, 0, Math.PI * 2);
+      ctx.ellipse(268, 240, 5, 8, -0.1, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Iris & Specular
+      ctx.fillStyle = '#3E2A1E';
+      ctx.beginPath();
+      ctx.arc(243, 240, 4, 0, Math.PI * 2);
+      ctx.arc(269, 240, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.arc(244.5, 238.5, 1.5, 0, Math.PI * 2);
+      ctx.arc(270.5, 238.5, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Heavy upper lid line
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(236, 238); ctx.lineTo(248, 239);
+      ctx.moveTo(262, 239); ctx.lineTo(274, 238);
+      ctx.stroke();
+
+      // Sculpted Nose
+      ctx.strokeStyle = CHAR.inkColor;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(254, 234);
+      ctx.lineTo(252, 262);
+      ctx.lineTo(258, 262);
+      ctx.stroke();
+
+      // Confident mouth line
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.moveTo(244, 282);
+      ctx.quadraticCurveTo(254, 285, 266, 280);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    // =========================================================================
+    // DIRECTION 2: PREMIUM STYLIZED 3D
+    // Features: Zero black outlines, soft ambient occlusion, subsurface scatter
+    // warming along terminators, polished specular highlights, smooth cylindrical PBR feel.
+    // =========================================================================
+    function renderDirection2(canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, 512, 1024);
+      drawFloor(ctx);
+
+      ctx.save();
+
+      // 1. Far Leg (Cylindrical smooth gradient, soft occlusion)
+      const legRGrad = ctx.createLinearGradient(200, 700, 260, 700);
+      legRGrad.addColorStop(0, '#1E241B');
+      legRGrad.addColorStop(0.5, '#2D3528');
+      legRGrad.addColorStop(1, '#1A2017');
+      ctx.fillStyle = legRGrad;
+      ctx.beginPath();
+      ctx.moveTo(224, 600);
+      ctx.bezierCurveTo(210, 680, 204, 760, 214, 840);
+      ctx.lineTo(218, 930);
+      ctx.lineTo(240, 930);
+      ctx.bezierCurveTo(238, 840, 244, 760, 250, 600);
+      ctx.closePath();
+      ctx.fill();
+
+      // 2. Near Leg (Pants with warm ambient bounce & soft knee highlight)
+      const legLGrad = ctx.createLinearGradient(250, 750, 330, 750);
+      legLGrad.addColorStop(0, '#22291F'); // Deep ambient crease
+      legLGrad.addColorStop(0.35, '#3B4535');
+      legLGrad.addColorStop(0.7, '#4E5A47'); // Key light specular
+      legLGrad.addColorStop(1, '#2F372B'); // Rim falloff
+      ctx.fillStyle = legLGrad;
+      ctx.beginPath();
+      ctx.moveTo(254, 595);
+      ctx.bezierCurveTo(278, 670, 286, 755, 276, 840);
+      ctx.lineTo(274, 926);
+      ctx.lineTo(312, 926);
+      ctx.bezierCurveTo(318, 840, 326, 750, 302, 595);
+      ctx.closePath();
+      ctx.fill();
+
+      // Boot (3D Polished Leather with specular sheen, no outline)
+      const bootGrad = ctx.createLinearGradient(250, 935, 330, 935);
+      bootGrad.addColorStop(0, '#14100E');
+      bootGrad.addColorStop(0.4, '#382A22');
+      bootGrad.addColorStop(0.7, '#241B15');
+      bootGrad.addColorStop(1, '#0D0B0A');
+      ctx.fillStyle = bootGrad;
+      ctx.beginPath();
+      ctx.moveTo(270, 920);
+      ctx.lineTo(254, 956);
+      ctx.lineTo(326, 956);
+      ctx.bezierCurveTo(330, 946, 324, 920, 314, 918);
+      ctx.closePath();
+      ctx.fill();
+
+      // Boot highlight glint
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.beginPath();
+      ctx.ellipse(290, 936, 16, 5, 0.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 3. Torso (Sculpted Leather Aviator Jacket)
+      const jacketGrad = ctx.createLinearGradient(180, 480, 330, 480);
+      jacketGrad.addColorStop(0, '#261912'); // Dark shadow side
+      jacketGrad.addColorStop(0.35, '#452D1F');
+      jacketGrad.addColorStop(0.75, '#5F3E2C'); // Key light hit
+      jacketGrad.addColorStop(1, '#3B261A');
+      ctx.fillStyle = jacketGrad;
+      ctx.beginPath();
+      ctx.moveTo(234, 595);
+      ctx.bezierCurveTo(222, 500, 192, 430, 182, 380);
+      ctx.lineTo(242, 370);
+      ctx.lineTo(326, 385);
+      ctx.bezierCurveTo(318, 430, 290, 500, 278, 595);
+      ctx.closePath();
+      ctx.fill();
+
+      // Subsurface Warmth on leather crease
+      ctx.strokeStyle = 'rgba(215, 85, 45, 0.35)';
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(226, 490); ctx.lineTo(250, 540);
+      ctx.stroke();
+
+      // Shearling Wool Collar (Volumetric soft shaded puff)
+      const woolGrad = ctx.createRadialGradient(250, 385, 20, 250, 385, 80);
+      woolGrad.addColorStop(0, '#FFFFFF');
+      woolGrad.addColorStop(0.7, '#EDE1D0');
+      woolGrad.addColorStop(1, '#C8B8A0');
+      ctx.fillStyle = woolGrad;
+      ctx.beginPath();
+      ctx.moveTo(242, 380);
+      ctx.bezierCurveTo(220, 360, 200, 368, 196, 395);
+      ctx.bezierCurveTo(210, 420, 235, 410, 246, 390);
+      ctx.bezierCurveTo(260, 410, 288, 420, 302, 395);
+      ctx.bezierCurveTo(298, 368, 275, 360, 256, 380);
+      ctx.closePath();
+      ctx.fill();
+
+      // Brass buckle with specular glint
+      const brassGrad = ctx.createLinearGradient(244, 570, 270, 594);
+      brassGrad.addColorStop(0, '#9E7E24');
+      brassGrad.addColorStop(0.5, '#FCE881');
+      brassGrad.addColorStop(1, '#8C6C1B');
+      ctx.fillStyle = brassGrad;
+      ctx.fillRect(244, 571, 26, 24);
+
+      // 4. Arms
+      const armGrad = ctx.createLinearGradient(290, 500, 350, 500);
+      armGrad.addColorStop(0, '#2C1D15');
+      armGrad.addColorStop(0.6, '#553727');
+      armGrad.addColorStop(1, '#342117');
+      ctx.fillStyle = armGrad;
+      ctx.beginPath();
+      ctx.moveTo(326, 385);
+      ctx.bezierCurveTo(348, 430, 356, 480, 344, 530);
+      ctx.bezierCurveTo(336, 580, 322, 630, 318, 660);
+      ctx.lineTo(294, 650);
+      ctx.bezierCurveTo(304, 590, 318, 520, 304, 460);
+      ctx.closePath();
+      ctx.fill();
+
+      // 5. Head (Volumetric 3D Skin with SSS Terminator)
+      // Neck with ambient shadow
+      const neckGrad = ctx.createLinearGradient(238, 340, 270, 340);
+      neckGrad.addColorStop(0, '#965D3E');
+      neckGrad.addColorStop(0.7, '#D4926C');
+      neckGrad.addColorStop(1, '#AD6F4B');
+      ctx.fillStyle = neckGrad;
+      ctx.fillRect(238, 315, 32, 60);
+
+      // Head Base Contour (Sculpted PBR 3D Shading)
+      const headGrad = ctx.createLinearGradient(220, 250, 290, 250);
+      headGrad.addColorStop(0, '#A66846');  // Shadow side
+      headGrad.addColorStop(0.28, '#E0694B'); // Subsurface scatter glow
+      headGrad.addColorStop(0.7, '#F2B896');  // Key light diffuse
+      headGrad.addColorStop(1, '#D99875');  // Soft rim falloff
+      ctx.fillStyle = headGrad;
+      ctx.beginPath();
+      ctx.moveTo(254, 328);
+      ctx.lineTo(230, 296);
+      ctx.lineTo(228, 235);
+      ctx.bezierCurveTo(230, 165, 282, 165, 286, 235);
+      ctx.lineTo(284, 296);
+      ctx.closePath();
+      ctx.fill();
+
+      // Soft Ambient Occlusion under chin
+      ctx.fillStyle = 'rgba(70, 30, 20, 0.35)';
+      ctx.beginPath();
+      ctx.ellipse(254, 326, 26, 12, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Volumetric Hair with Soft Rim Light
+      const hairGrad = ctx.createLinearGradient(220, 180, 290, 180);
+      hairGrad.addColorStop(0, '#1F1A18');
+      hairGrad.addColorStop(0.55, '#382D28');
+      hairGrad.addColorStop(0.85, '#5C4A42'); // Specular highlight
+      hairGrad.addColorStop(1, '#2E2420');
+      ctx.fillStyle = hairGrad;
+      ctx.beginPath();
+      ctx.moveTo(226, 245);
+      ctx.bezierCurveTo(218, 175, 252, 145, 288, 150);
+      ctx.bezierCurveTo(302, 168, 296, 215, 290, 245);
+      ctx.bezierCurveTo(278, 205, 264, 210, 254, 215);
+      ctx.bezierCurveTo(242, 210, 234, 220, 226, 245);
+      ctx.closePath();
+      ctx.fill();
+
+      // Eyes (Sculpted realistic catchlight and depth)
+      ctx.fillStyle = '#EDE8E4';
+      ctx.beginPath();
+      ctx.ellipse(242, 240, 5.5, 8.5, 0.1, 0, Math.PI * 2);
+      ctx.ellipse(268, 240, 5.5, 8.5, -0.1, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#301F14';
+      ctx.beginPath();
+      ctx.arc(243, 240, 4, 0, Math.PI * 2);
+      ctx.arc(269, 240, 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Soft Specular
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.arc(244.5, 238.5, 1.8, 0, Math.PI * 2);
+      ctx.arc(270.5, 238.5, 1.8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Eyebrows (Soft gradient fibers)
+      ctx.strokeStyle = '#2B221C';
+      ctx.lineWidth = 4.5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(234, 228); ctx.lineTo(248, 232);
+      ctx.moveTo(260, 232); ctx.lineTo(276, 228);
+      ctx.stroke();
+
+      // Sculpted 3D Nose with ambient shadow
+      ctx.fillStyle = 'rgba(120, 60, 40, 0.4)';
+      ctx.beginPath();
+      ctx.ellipse(254, 262, 7, 3, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#FCE0D2';
+      ctx.beginPath();
+      ctx.ellipse(253, 252, 2, 8, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Sculpted Lip with soft highlight
+      ctx.strokeStyle = '#A85A48';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(244, 282);
+      ctx.quadraticCurveTo(254, 285, 266, 280);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    // =========================================================================
+    // DIRECTION 3: HYBRID DIMENSIONAL ILLUSTRATION (THE NARRIVO HYBRID IDEAL)
+    // Features: Clean expressive vector linework combined with directional 3D
+    // lighting gradients, glowing rim light edge, ambient occlusion, and texture depth.
+    // =========================================================================
+    function renderDirection3(canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, 512, 1024);
+      drawFloor(ctx);
+
+      ctx.save();
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      const rimColor = '#A5D8FF'; // 3D Cool Rim Light
+      const keyGlow = '#FFD4A8';  // 3D Warm Key Light
+
+      // 1. Far Leg (Right) with Cool Rim Light Edge
+      const legRGrad = ctx.createLinearGradient(200, 700, 260, 700);
+      legRGrad.addColorStop(0, '#1A2118');
+      legRGrad.addColorStop(0.85, '#293325');
+      legRGrad.addColorStop(1, '#4A5B42');
+      ctx.fillStyle = legRGrad;
+      ctx.beginPath();
+      ctx.moveTo(224, 600);
+      ctx.bezierCurveTo(210, 680, 204, 760, 214, 840);
+      ctx.lineTo(218, 930);
+      ctx.lineTo(240, 930);
+      ctx.bezierCurveTo(238, 840, 244, 760, 250, 600);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#161C14';
+      ctx.lineWidth = 3.5;
+      ctx.stroke();
+
+      // Far Boot
+      ctx.fillStyle = '#181412';
+      ctx.beginPath();
+      ctx.moveTo(212, 920);
+      ctx.lineTo(192, 956);
+      ctx.lineTo(244, 956);
+      ctx.lineTo(242, 920);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // 2. Near Leg (Directional Key Light + Soft Crease AO)
+      const legLGrad = ctx.createLinearGradient(250, 750, 330, 750);
+      legLGrad.addColorStop(0, '#1E251B');
+      legLGrad.addColorStop(0.3, '#323D2E');
+      legLGrad.addColorStop(0.75, '#4B5A45');
+      legLGrad.addColorStop(0.96, '#5C6D55');
+      legLGrad.addColorStop(1, rimColor); // 3D rim highlight!
+      ctx.fillStyle = legLGrad;
+      ctx.beginPath();
+      ctx.moveTo(254, 595);
+      ctx.bezierCurveTo(278, 670, 286, 755, 276, 840);
+      ctx.lineTo(274, 926);
+      ctx.lineTo(312, 926);
+      ctx.bezierCurveTo(318, 840, 326, 750, 302, 595);
+      ctx.closePath();
+      ctx.fill();
+
+      // Organic tension folds with variable line weight
+      ctx.strokeStyle = '#182015';
+      ctx.lineWidth = 3.2;
+      ctx.beginPath();
+      ctx.moveTo(278, 755); ctx.lineTo(300, 758);
+      ctx.moveTo(276, 770); ctx.lineTo(306, 774);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#141A12';
+      ctx.lineWidth = 3.8;
+      ctx.stroke();
+
+      // Near Boot (Sculpted with Rim Highlight on heel)
+      const bootGrad = ctx.createLinearGradient(250, 935, 330, 935);
+      bootGrad.addColorStop(0, '#120F0D');
+      bootGrad.addColorStop(0.5, '#2D221B');
+      bootGrad.addColorStop(0.95, '#3D2F26');
+      bootGrad.addColorStop(1, rimColor);
+      ctx.fillStyle = bootGrad;
+      ctx.beginPath();
+      ctx.moveTo(270, 920);
+      ctx.lineTo(254, 956);
+      ctx.lineTo(326, 956);
+      ctx.bezierCurveTo(330, 946, 324, 920, 314, 918);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#100D0B';
+      ctx.lineWidth = 3.5;
+      ctx.stroke();
+
+      // 3. Torso (Aviator Jacket with 3D Key/Rim Lighting Integration)
+      const jacketGrad = ctx.createLinearGradient(180, 480, 330, 480);
+      jacketGrad.addColorStop(0, '#281A12'); // Shadow
+      jacketGrad.addColorStop(0.3, '#3F2A1E');
+      jacketGrad.addColorStop(0.7, '#593B2B'); // Warm Key
+      jacketGrad.addColorStop(0.95, '#6E4935');
+      jacketGrad.addColorStop(1, rimColor);  // Cool Rim Glint!
+      ctx.fillStyle = jacketGrad;
+      ctx.beginPath();
+      ctx.moveTo(234, 595);
+      ctx.bezierCurveTo(222, 500, 192, 430, 182, 380);
+      ctx.lineTo(242, 370);
+      ctx.lineTo(326, 385);
+      ctx.bezierCurveTo(318, 430, 290, 500, 278, 595);
+      ctx.closePath();
+      ctx.fill();
+
+      // Subsurface Scatter Line along jacket crease
+      ctx.strokeStyle = 'rgba(230, 90, 40, 0.45)';
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(226, 480); ctx.lineTo(248, 550);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#1A120D';
+      ctx.lineWidth = 3.8;
+      ctx.stroke();
+
+      // Utility Webbing with Metallic Hardware
+      ctx.strokeStyle = '#241913';
+      ctx.lineWidth = 14;
+      ctx.beginPath();
+      ctx.moveTo(194, 395);
+      ctx.lineTo(276, 560);
+      ctx.stroke();
+      ctx.strokeStyle = '#120D0A';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      // Brass Ring with 3D Specular
+      ctx.fillStyle = CHAR.brassBuckle;
+      ctx.beginPath();
+      ctx.arc(235, 478, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = CHAR.brassHi;
+      ctx.beginPath();
+      ctx.arc(233, 475, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Brass Belt Buckle
+      ctx.fillStyle = CHAR.brassBuckle;
+      ctx.fillRect(244, 571, 26, 24);
+      ctx.strokeStyle = '#18120B';
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(244, 571, 26, 24);
+
+      // Shearling Wool Collar (Volumetric Wool with Rim Glint)
+      const woolGrad = ctx.createLinearGradient(200, 390, 300, 390);
+      woolGrad.addColorStop(0, '#D4C4B0');
+      woolGrad.addColorStop(0.5, '#F8EFE4');
+      woolGrad.addColorStop(0.92, '#FFFDF8');
+      woolGrad.addColorStop(1, rimColor);
+      ctx.fillStyle = woolGrad;
+      ctx.beginPath();
+      ctx.moveTo(242, 380);
+      ctx.bezierCurveTo(220, 360, 200, 368, 196, 395);
+      ctx.bezierCurveTo(210, 420, 235, 410, 246, 390);
+      ctx.bezierCurveTo(260, 410, 288, 420, 302, 395);
+      ctx.bezierCurveTo(298, 368, 275, 360, 256, 380);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#261F17';
+      ctx.lineWidth = 3.5;
+      ctx.stroke();
+
+      // 4. Arms
+      const armGrad = ctx.createLinearGradient(290, 500, 350, 500);
+      armGrad.addColorStop(0, '#2C1D15');
+      armGrad.addColorStop(0.65, '#563828');
+      armGrad.addColorStop(0.94, '#6B4733');
+      armGrad.addColorStop(1, rimColor);
+      ctx.fillStyle = armGrad;
+      ctx.beginPath();
+      ctx.moveTo(326, 385);
+      ctx.bezierCurveTo(348, 430, 356, 480, 344, 530);
+      ctx.bezierCurveTo(336, 580, 322, 630, 318, 660);
+      ctx.lineTo(294, 650);
+      ctx.bezierCurveTo(304, 590, 318, 520, 304, 460);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#18110D';
+      ctx.lineWidth = 3.6;
+      ctx.stroke();
+
+      // 5. Head (The Hybrid Masterpiece: Graphic Inking + 3D Volumetric Falloff)
+      // Neck
+      const neckGrad = ctx.createLinearGradient(238, 340, 270, 340);
+      neckGrad.addColorStop(0, '#A16545');
+      neckGrad.addColorStop(0.65, '#E29E78');
+      neckGrad.addColorStop(1, '#B87752');
+      ctx.fillStyle = neckGrad;
+      ctx.fillRect(238, 315, 32, 60);
+
+      // Jaw and Cheek (Angular heroic graphic novel shape + volumetric skin tone)
+      const headGrad = ctx.createLinearGradient(224, 250, 286, 250);
+      headGrad.addColorStop(0, '#A36544');
+      headGrad.addColorStop(0.25, '#DE6A48'); // Warm SSS terminator!
+      headGrad.addColorStop(0.75, '#F5B998'); // Soft warm key
+      headGrad.addColorStop(0.96, '#FFD8C2');
+      headGrad.addColorStop(1, rimColor);   // 3D Rim Glint on cheekbone!
+      ctx.fillStyle = headGrad;
+      ctx.beginPath();
+      ctx.moveTo(254, 328);
+      ctx.lineTo(230, 296);
+      ctx.lineTo(228, 235);
+      ctx.bezierCurveTo(230, 165, 282, 165, 286, 235);
+      ctx.lineTo(284, 296);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#22161A';
+      ctx.lineWidth = 3.8;
+      ctx.stroke();
+
+      // Volumetric Hair with Highlights and Rim
+      const hairGrad = ctx.createLinearGradient(220, 180, 290, 180);
+      hairGrad.addColorStop(0, '#1E1714');
+      hairGrad.addColorStop(0.5, '#382B24');
+      hairGrad.addColorStop(0.85, '#5C473C');
+      hairGrad.addColorStop(1, rimColor);
+      ctx.fillStyle = hairGrad;
+      ctx.beginPath();
+      ctx.moveTo(226, 245);
+      ctx.bezierCurveTo(218, 175, 252, 145, 288, 150);
+      ctx.bezierCurveTo(302, 168, 296, 215, 290, 245);
+      ctx.bezierCurveTo(278, 205, 264, 210, 254, 215);
+      ctx.bezierCurveTo(242, 210, 234, 220, 226, 245);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#140E0C';
+      ctx.lineWidth = 3.8;
+      ctx.stroke();
+
+      // Facial Features (Expressive Illustrated Eyes with 3D Depth)
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.ellipse(242, 240, 5.5, 8.5, 0.1, 0, Math.PI * 2);
+      ctx.ellipse(268, 240, 5.5, 8.5, -0.1, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#24161C';
+      ctx.lineWidth = 2.4;
+      ctx.stroke();
+
+      // Iris with rich amber-brown depth & dual catchlights
+      ctx.fillStyle = '#422819';
+      ctx.beginPath();
+      ctx.arc(243, 240, 4.2, 0, Math.PI * 2);
+      ctx.arc(269, 240, 4.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.arc(244.5, 238.5, 1.8, 0, Math.PI * 2);
+      ctx.arc(270.5, 238.5, 1.8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Upper eyelid graphic emphasis
+      ctx.strokeStyle = '#181014';
+      ctx.lineWidth = 3.8;
+      ctx.beginPath();
+      ctx.moveTo(236, 238); ctx.lineTo(248, 239);
+      ctx.moveTo(262, 239); ctx.lineTo(274, 238);
+      ctx.stroke();
+
+      // Eyebrows
+      ctx.strokeStyle = '#2B1E17';
+      ctx.lineWidth = 4.8;
+      ctx.beginPath();
+      ctx.moveTo(234, 228); ctx.lineTo(248, 232);
+      ctx.moveTo(260, 232); ctx.lineTo(276, 228);
+      ctx.stroke();
+
+      // Sculpted Nose
+      ctx.strokeStyle = '#854D32';
+      ctx.lineWidth = 2.8;
+      ctx.beginPath();
+      ctx.moveTo(254, 234);
+      ctx.lineTo(252, 262);
+      ctx.lineTo(258, 262);
+      ctx.stroke();
+
+      // Confident mouth line with subtle philtrum
+      ctx.strokeStyle = '#24151B';
+      ctx.lineWidth = 3.4;
+      ctx.beginPath();
+      ctx.moveTo(244, 282);
+      ctx.quadraticCurveTo(254, 285, 266, 280);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    // Render all three prototypes
+    renderDirection1(document.getElementById('canvas2D'));
+    renderDirection2(document.getElementById('canvas3D'));
+    renderDirection3(document.getElementById('canvasHybrid'));
+
+    window.PROTOTYPES_READY = true;
+  </script>
+
+</body>
+</html>

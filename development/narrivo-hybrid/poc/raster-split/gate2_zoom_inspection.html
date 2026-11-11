@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Gate 2 — High-Zoom Seam & Consistency Inspection</title>
+  <style>
+    body {
+      background: #0b0f19;
+      color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 24px 32px;
+    }
+    header {
+      border-bottom: 1px solid #232f4a;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    h1 { font-size: 20px; margin: 0 0 4px 0; }
+    p { font-size: 13px; color: #94a3b8; margin: 0; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .zoom-card {
+      background: #141b2d;
+      border: 1px solid #232f4a;
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .zoom-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .zoom-title span.tag {
+      color: #f87171;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .viewport {
+      height: 340px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      position: relative;
+      overflow: hidden;
+      background: #1a202e;
+    }
+    .viewport-label {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(11, 15, 25, 0.85);
+      color: #e2e8f0;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      z-index: 20;
+      border: 1px solid #334155;
+    }
+    .caption {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #cbd5e1;
+      line-height: 1.45;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Gate 2 Quality Control — High-Zoom Inspection (Hair, Neck, Collar, Shoulders)</h1>
+      <p>2.5× magnified comparison between the Approved Master Bust and the Assembled Generated Components at key anatomical junctions.</p>
+    </div>
+  </header>
+  <div class="grid">
+    <!-- Panel 1: Hair & Cranium -->
+    <div class="zoom-card">
+      <div class="zoom-title">
+        <span>A. Hair & Cranium Junction (2.5× Zoom)</span>
+        <span class="tag">Fail: Silhouette & Lighting Mismatch</span>
+      </div>
+      <div class="pair">
+        <div class="viewport">
+          <div class="viewport-label">Master Bust Reference</div>
+          <img src="source/00_master_bust.jpg" style="position:absolute; width: 700px; left: -140px; top: -40px;">
+        </div>
+        <div class="viewport">
+          <div class="viewport-label">Assembled Components</div>
+          <img src="processed/01_back_hair.png" style="position:absolute; width: 420px; left: 0px; top: 10px;">
+          <img src="processed/02_head_face_base.png" style="position:absolute; width: 310px; left: 55px; top: 80px;">
+          <img src="processed/03_front_hair.png" style="position:absolute; width: 385px; left: 18px; top: 0px;">
+        </div>
+      </div>
+      <div class="caption">
+        <strong>Findings:</strong> Exposed bald cranium gap on left temple; front hair bangs completely re-styled; detached sideburn tufts floating over cheeks; cyan rim light on face is on the opposite side from the hair's cyan rim light.
+      </div>
+    </div>
+
+    <!-- Panel 2: Neck & Jawline -->
+    <div class="zoom-card">
+      <div class="zoom-title">
+        <span>B. Neck & Jawline Junction (2.5× Zoom)</span>
+        <span class="tag">Fail: Perspective & Texture Drift</span>
+      </div>
+      <div class="pair">
+        <div class="viewport">
+          <div class="viewport-label">Master Bust Reference</div>
+          <img src="source/00_master_bust.jpg" style="position:absolute; width: 760px; left: -170px; top: -360px;">
+        </div>
+        <div class="viewport">
+          <div class="viewport-label">Assembled Components</div>
+          <img src="processed/05_jacket_torso.png" style="position:absolute; width: 620px; left: -100px; top: 120px;">
+          <img src="processed/04_neck.png" style="position:absolute; width: 280px; left: 70px; top: 45px;">
+          <img src="processed/02_head_face_base.png" style="position:absolute; width: 310px; left: 55px; top: -195px;">
+        </div>
+      </div>
+      <div class="caption">
+        <strong>Findings:</strong> The generated neck (<code>04_neck</code>) was drawn from a low worm's-eye angle with harsh anatomical cross-hatching and visible tracheal rings, conflicting with the smooth painterly shading of the Master Bust's throat.
+      </div>
+    </div>
+
+    <!-- Panel 3: Shearling Collar & Throat -->
+    <div class="zoom-card">
+      <div class="zoom-title">
+        <span>C. Shearling Collar & Henley Opening (2.5× Zoom)</span>
+        <span class="tag">Fail: Double Collar & Seam Gaps</span>
+      </div>
+      <div class="pair">
+        <div class="viewport">
+          <div class="viewport-label">Master Bust Reference</div>
+          <img src="source/00_master_bust.jpg" style="position:absolute; width: 700px; left: -140px; top: -420px;">
+        </div>
+        <div class="viewport">
+          <div class="viewport-label">Assembled Components</div>
+          <img src="processed/05_jacket_torso.png" style="position:absolute; width: 600px; left: -90px; top: 40px;">
+          <img src="processed/04_neck.png" style="position:absolute; width: 260px; left: 80px; top: -20px;">
+          <img src="processed/06_collar_left.png" style="position:absolute; width: 200px; left: -10px; top: -10px;">
+          <img src="processed/06_collar_right.png" style="position:absolute; width: 200px; left: 230px; top: -10px;">
+        </div>
+      </div>
+      <div class="caption">
+        <strong>Findings:</strong> Because <code>05_jacket_torso</code> invented an upright brown leather collar around the henley shirt, placing the separated shearling collar halves (<code>06_collar_left/right</code>) on top leaves the extra leather stand-up collar sticking out between them.
+      </div>
+    </div>
+
+    <!-- Panel 4: Shoulders & Upper Arms -->
+    <div class="zoom-card">
+      <div class="zoom-title">
+        <span>D. Shoulders, Harness & Upper Arms (2.5× Zoom)</span>
+        <span class="tag">Fail: Pauldron Ledges & Full-Arm Duplication</span>
+      </div>
+      <div class="pair">
+        <div class="viewport">
+          <div class="viewport-label">Master Bust Reference</div>
+          <img src="source/00_master_bust.jpg" style="position:absolute; width: 660px; left: -120px; top: -520px;">
+        </div>
+        <div class="viewport">
+          <div class="viewport-label">Assembled Components</div>
+          <img src="processed/07_upper_arm_left.png" style="position:absolute; width: 200px; left: -20px; top: 80px; transform: rotate(8deg);">
+          <img src="processed/07_upper_arm_right.png" style="position:absolute; width: 200px; left: 240px; top: 80px; transform: rotate(-8deg);">
+          <img src="processed/05_jacket_torso.png" style="position:absolute; width: 460px; left: -20px; top: 10px;">
+        </div>
+      </div>
+      <div class="caption">
+        <strong>Findings:</strong> Prompting for "rounded shoulder socket overlap caps" caused the generator to draw flared armor-like cap sleeves on <code>05_jacket_torso</code>, while <code>07_upper_arms</code> generated entire bent arms down to the wrist cuffs with no cyan rim light on the left shoulder.
+      </div>
+    </div>
+  </div>
+</body>
+</html>
