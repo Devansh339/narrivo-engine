@@ -60,6 +60,9 @@ puppeteer/
 **/calibrated_test/
 **/gesture_variations/
 **/fine_tune/
+**/corrected_poses/
+**/engine_12_panels/
+**/pose_tests/
 
 # Temporary Test & Build Outputs
 _selftest/

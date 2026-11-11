@@ -74,21 +74,21 @@ async function run() {
   function getSectionInfo(t) {
     if (t < 3.0) return { main: '1. IDLE ANIMATION', sub: 'Natural Respiration • Shoulder Shrug • Pelvic Sway' };
     if (t < 3.6) return { main: 'TRANSITION: IDLE ➔ WALK', sub: 'Cubic Hermite Crossfade (0.6s Blend, Zero Snapping)' };
-    if (t < 7.6) return { main: '2. WALKING CYCLE', sub: 'Frontal Bipedal Cadence • Zero Splay • Grounded Boot Contact' };
+    if (t < 7.6) return { main: '2. WALKING CYCLE', sub: 'Alternating Sagittal Strides • Clean Foot Lift • Grounded Stance' };
     if (t < 8.2) return { main: 'TRANSITION: WALK ➔ IDLE', sub: 'Deterministic Crossfade (0.6s Blend)' };
     if (t < 9.4) return { main: 'IDLE STANCE', sub: 'Resting Balance • Floor Clearance Verified' };
     if (t < 9.9) return { main: 'TRANSITION: IDLE ➔ POINTING', sub: 'Smooth Ease-In Ease-Out (0.5s Blend)' };
-    if (t < 11.6) return { main: '3. GESTURE: POINTING', sub: 'Forward Target Direction • Stable Armscye Seam' };
+    if (t < 11.6) return { main: '3. GESTURE: POINTING', sub: 'Forward Target Direction • Clear Pointing Hand' };
     if (t < 12.1) return { main: 'TRANSITION: POINTING ➔ WAVING', sub: 'Crossfade (0.5s Blend)' };
-    if (t < 13.8) return { main: '4. GESTURE: WAVING', sub: 'High Greeting Wave • 2.0 Hz Wrist Cycle • Safe Frame Bounds' };
+    if (t < 13.8) return { main: '4. GESTURE: WAVING', sub: 'High Greeting Wave • 2.5 Hz Repeated Wrist Cycle' };
     if (t < 14.3) return { main: 'TRANSITION: WAVING ➔ OPEN PALMS', sub: 'Crossfade (0.5s Blend)' };
-    if (t < 16.0) return { main: '5. GESTURE: OPEN PALMS', sub: 'Explanatory Posture • Bilateral Arm Articulation' };
+    if (t < 16.0) return { main: '5. GESTURE: OPEN PALMS', sub: 'Explanatory Posture • Open Hands & Supinated Forearms' };
     if (t < 16.5) return { main: 'TRANSITION: OPEN PALMS ➔ THINKING', sub: 'Crossfade (0.5s Blend)' };
     if (t < 18.2) return { main: '6. GESTURE: THINKING POSE', sub: 'Right Hand Reaches Chin/Jawline • Contemplative Tilt' };
     if (t < 18.7) return { main: 'TRANSITION: THINKING ➔ HANDS ON HIPS', sub: 'Crossfade (0.5s Blend)' };
-    if (t < 20.4) return { main: '7. GESTURE: HANDS ON HIPS', sub: 'Waistband Hip Rest • Flared Elbows • Grounded Stance' };
+    if (t < 20.4) return { main: '7. GESTURE: HANDS ON HIPS', sub: 'Waistband Rest • Outward Flared Elbows' };
     if (t < 20.9) return { main: 'TRANSITION: HANDS ON HIPS ➔ ARMS CROSSED', sub: 'Dynamic Z-Sort Crossfade (0.5s Blend)' };
-    return { main: '8. GESTURE: ARMS CROSSED', sub: 'Forearms Cross Over Chest Harness • Authoritative Stance' };
+    return { main: '8. GESTURE: ARMS CROSSED', sub: 'Forearms Folded Over Chest Harness • Authoritative Stance' };
   }
 
   for (let f = 0; f < TOTAL_FRAMES; f++) {
@@ -357,10 +357,10 @@ function generateContactSheet() {
 <body>
   <header>
     <div>
-      <h1>NARRIVO — COMMANDER VANCE VISUAL CORRECTION CONTACT SHEET</h1>
-      <div class="sub">Calibrated Kinematics: Grounded Walking Cycle, Seamless Shoulder Armscyes, 6 Distinct Expressive Gestures (1080×1920 Clean Viewport)</div>
+      <h1>NARRIVO — COMMANDER VANCE ANIMATION CORRECTION PASS</h1>
+      <div class="sub">12-Panel Visual Verification: Sagittal Walking Mechanics, Expressive Communicative Gestures, Zero Seam Gaps (1080×1920 Clean Viewport)</div>
     </div>
-    <div class="badge">VISUAL CORRECTION VALIDATED</div>
+    <div class="badge" style="background:#1e293b;border:1px solid #3b82f6;color:#93c5fd;">CORRECTION REVIEW (PENDING APPROVAL)</div>
   </header>
 
   <div class="grid">
@@ -368,7 +368,7 @@ function generateContactSheet() {
   </div>
 
   <div class="foot">
-    <strong>Correction Summary:</strong> Lateral leg splay eliminated via calibrated frontal hip range (±1.6°); horizontal ankle and knee slits eliminated with planar boot contact; rectangular shoulder gaps eliminated by keeping upper arm elevation anchored inside the shearling collar cap (±4.5° max); all six gestures verified for anatomical identity within 1080×1920 safe frame boundaries.
+    <strong>Correction Summary:</strong> Lateral leg splay eliminated via calibrated frontal hip range (±1.2°); sagittal knee lift (-9px) and boot lift (-14px) with grounded stance foot; horizontal ankle and knee slits eliminated; rectangular shoulder gaps eliminated by keeping upper arm elevation anchored inside the shearling collar cap (±4.5° max); all six gestures verified for communicative intent and anatomical connectivity within 1080×1920 safe frame boundaries.
   </div>
 </body>
 </html>`;
@@ -390,8 +390,48 @@ function generateContactSheet() {
   ]);
 
   console.log('Saved Corrected Contact Sheet to:', sheetPng);
+  const reviewDir = path.join(narrivoDir, '..', '..', 'collaboration', 'review');
+  if (!fs.existsSync(reviewDir)) fs.mkdirSync(reviewDir, { recursive: true });
   fs.copyFileSync(sheetPng, path.join(artifactDir, 'vance_corrected_contact_sheet.png'));
-  console.log('Copied Contact Sheet to artifact directory successfully!');
+  fs.copyFileSync(sheetPng, path.join(reviewDir, 'vance_annotated_contact_sheet.png'));
+
+  // Render Unannotated Contact Sheet
+  const unannotatedCards = cards.map(c => {
+    const fPath = path.join(cleanFramesDir, c.frame);
+    const b64 = fs.readFileSync(fPath).toString('base64');
+    return `
+      <div class="card" style="background:#111622;border:1px solid #1e2638;border-radius:8px;padding:8px;display:flex;justify-content:center;align-items:center;">
+        <div style="width:370px;height:658px;border-radius:6px;overflow:hidden;background:#07090e;">
+          <img src="data:image/jpeg;base64,${b64}" style="width:100%;height:100%;object-fit:contain;display:block;" />
+        </div>
+      </div>
+    `;
+  }).join('\n');
+
+  const unannotatedHtml = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #090c12; padding: 20px; width: 2400px; }
+  .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+</style></head>
+<body><div class="grid">${unannotatedCards}</div></body></html>`;
+
+  const unannotatedFile = path.join(rootDir, 'contact_sheet_unannotated.html');
+  fs.writeFileSync(unannotatedFile, unannotatedHtml);
+  const unannotatedPng = path.join(reviewDir, 'vance_unannotated_contact_sheet.png');
+
+  execFileSync(chromePath, [
+    '--headless=new',
+    '--disable-gpu',
+    '--no-sandbox',
+    '--allow-file-access-from-files',
+    '--window-size=2400,1400',
+    `--screenshot=${unannotatedPng}`,
+    `file:///${unannotatedFile.replace(/\\/g, '/')}`
+  ]);
+  fs.copyFileSync(unannotatedPng, path.join(artifactDir, 'vance_unannotated_contact_sheet.png'));
+  console.log('Copied Contact Sheets to artifact and review directories successfully!');
 
   setTimeout(() => {
     server.close();

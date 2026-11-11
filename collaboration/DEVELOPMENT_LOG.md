@@ -116,3 +116,28 @@ This log documents the actual completed milestones and development progression i
     - `vance_diagnostic_demo.mp4`: character + telemetry HUD, state counters, and section headers.
     - `vance_corrected_contact_sheet.png`: 12-panel annotated review contact sheet.
   - Verified clean MP4 frame-by-frame via ffmpeg extraction across the 23-second timeline.
+
+---
+
+### Milestone 10 — Commander Vance Animation Correction Pass
+- **Feedback Addressed:** ChatGPT review of the 23-second video indicated that while character artwork and rendering were approved, movement and gestures required more communicative clarity:
+  1. *Walking:* Previously looked like mere weight shifting; needed alternating leg strides, visible knee and foot lift, and grounded stance.
+  2. *Pointing:* Needed an assertive pointing arm toward target with clear pointing hand and head gaze directed at target.
+  3. *Waving:* Needed active repeated 2.5 Hz wrist wave oscillation beside the head.
+  4. *Open Palms:* Needed welcoming/explanatory posture with open palms and supinated forearms.
+  5. *Thinking:* Preserved contemplative hand-to-chin gesture with subtle head tilt.
+  6. *Hands on Hips:* Both hands visibly resting against the waistband/hips with outward flared elbows and clean sleeve cuff overlap (`drawArmsMode: 'hands_on_hips'`).
+  7. *Arms Crossed:* Unmistakable crossed-arm pose folded across tactical chest harness with clean layered forearms (`drawArmsMode: 'arms_crossed'`).
+- **Kinematic Discoveries & Rig Implementation (`engine.js`):**
+  - *Frontal Walking Kinematics:* 2D coronal knee rotation tears horizontal notches because 2D knees cannot bend sideways in a frontal view. Developed sagittal perspective kinematics:
+    - Vertical pelvic bob (-4.5px) and lateral weight transfer (±2.8px, ±1.5°).
+    - Stance foot firmly grounded on canvas floor (`boot.ty = 0`) with zero floating.
+    - Swing leg lifts thigh (`hip.ty = -5px`, `scaleY = 0.97`), raises knee (`knee.ty = -9px`), and cleanly lifts boot off ground (`boot.ty = -14px`).
+    - Opposing arm swing (±5.5°) with forearm flexion on forward swing.
+  - *Layer Sorting & Armscye Preservation:*
+    - Updated `VanceRenderer.render` to dynamically re-order arm layers based on pose mode: upper arm sleeve cuffs cap forearm elbows, eliminating raw border exposures.
+- **Deliverables & Verification:**
+  - `development/narrivo-hybrid/animation/engine.js` updated with full kinematic calibrations and draw orders.
+  - 12-panel unannotated (`vance_unannotated_contact_sheet.png`) and annotated (`vance_annotated_contact_sheet.png`) contact sheets rendered directly from `engine.js`.
+  - Full 690-frame 23-second clean (`vance_clean_character_demo.mp4`) and diagnostic (`vance_diagnostic_demo.mp4`) videos re-rendered.
+  - Milestone status remains **PENDING APPROVAL** awaiting final reviewer evaluation.

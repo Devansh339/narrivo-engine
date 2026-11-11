@@ -69,13 +69,14 @@
       elbR:      { rot: 0, tx: 0, ty: 0 },
       wrtL:      { rot: 0, tx: 0, ty: 0 },
       wrtR:      { rot: 0, tx: 0, ty: 0 },
-      hipL:      { rot: 0, tx: 0, ty: 0 },
-      hipR:      { rot: 0, tx: 0, ty: 0 },
-      kneeL:     { rot: 0 },
-      kneeR:     { rot: 0 },
-      bootL:     { rot: 0 },
-      bootR:     { rot: 0 },
-      armsInFront: false
+      hipL:      { rot: 0, tx: 0, ty: 0, scaleX: 1, scaleY: 1 },
+      hipR:      { rot: 0, tx: 0, ty: 0, scaleX: 1, scaleY: 1 },
+      kneeL:     { rot: 0, tx: 0, ty: 0 },
+      kneeR:     { rot: 0, tx: 0, ty: 0 },
+      bootL:     { rot: 0, tx: 0, ty: 0 },
+      bootR:     { rot: 0, tx: 0, ty: 0 },
+      armsInFront: false,
+      drawArmsMode: 'default'
     };
   }
 
@@ -94,17 +95,18 @@
       }
     }
 
-    ['pelvis', 'torso', 'head', 'shldL', 'shldR', 'elbL', 'elbR', 'wrtL', 'wrtR', 'hipL', 'hipR'].forEach(j => {
+    ['pelvis', 'torso', 'head', 'shldL', 'shldR', 'elbL', 'elbR', 'wrtL', 'wrtR', 'hipL', 'hipR', 'kneeL', 'kneeR', 'bootL', 'bootR'].forEach(j => {
       ['tx', 'ty', 'rot', 'scaleX', 'scaleY'].forEach(k => {
         if (pA[j] && pB[j]) blendProp(pA[j], pB[j], out[j], k);
       });
     });
 
-    ['neck', 'frontHair', 'backHair', 'collarL', 'collarR', 'kneeL', 'kneeR', 'bootL', 'bootR'].forEach(j => {
+    ['neck', 'frontHair', 'backHair', 'collarL', 'collarR'].forEach(j => {
       if (pA[j] && pB[j]) blendProp(pA[j], pB[j], out[j], 'rot');
     });
 
     out.armsInFront = s > 0.5 ? pB.armsInFront : pA.armsInFront;
+    out.drawArmsMode = s > 0.5 ? (pB.drawArmsMode || 'default') : (pA.drawArmsMode || 'default');
     return out;
   }
 
@@ -154,11 +156,12 @@
 
   /**
    * TASK 2 — WALKING CYCLE (Calibrated Frontal Locomotion)
-   * Frontal bipedal locomotion preserving 100% seam integrity:
-   * - Eliminates lateral leg splay (hip rotation strictly +/- 1.6 deg)
-   * - Eliminates knee/ankle cutout slits (hip vertical ty=0, knee flexion -2.5 deg max)
-   * - Grounded foot contact with boots fully in-canvas
-   * - Natural opposing arm swing (+/- 3.8 deg) with seamless shoulder armscye
+   * Alternating bipedal stepping in frontal perspective:
+   * - Alternating leg movement with visible controlled knee and boot lift
+   * - Grounded stance foot (boot.ty = 0) with zero horizontal notch tearing
+   * - Pelvic vertical bob (ty: -4.5px) and lateral weight transfer (tx: +/-2.8px, rot: +/-1.5 deg)
+   * - Torso and head counter-stabilization
+   * - Natural opposing arm swing (+/-5.5 deg) with forearm cadence and seamless shoulder armscye
    */
   function evaluateWalk(timeSec) {
     const p = createDefaultPose();
@@ -168,46 +171,54 @@
     const phiL = phase * 2 * Math.PI;
     const phiR = phiL + Math.PI;
 
-    // Pelvic Cadence: subtle vertical bob & lateral weight transfer
+    // Pelvic Cadence: vertical bob (2 bobs per full cycle) & lateral weight transfer
     const bob = Math.sin(phase * 4 * Math.PI - Math.PI / 2) * 0.5 + 0.5;
-    p.pelvis.ty  = -2.5 * bob;
+    p.pelvis.ty  = -4.5 * bob;
     const lateral = Math.sin(phiL);
-    p.pelvis.tx  = lateral * 1.6;
-    p.pelvis.rot = lateral * 0.65;
+    p.pelvis.tx  = lateral * 2.8;
+    p.pelvis.rot = lateral * 1.5;
 
     // Torso Counter-Rotation & Balance
     p.torso.rot  = -p.pelvis.rot * 0.65;
-    p.torso.ty   = p.pelvis.ty * 0.25;
+    p.torso.ty   = p.pelvis.ty * 0.35;
 
     // Head Stabilization
     p.head.rot   = -p.torso.rot * 0.75;
     p.neck.rot   = -p.torso.rot * 0.35;
 
-    // Frontal Hip Strides (subtle coronal angle, no wide splay)
-    p.hipL.rot   = Math.sin(phiL) * 1.6;
-    p.hipR.rot   = Math.sin(phiR) * 1.6;
-
-    // Knee Flexion during recovery swing (subtle, strictly within 26px knee overlap buffer)
+    // Alternating Leg Strides (Sagittal Perspective Kinematics):
+    // Swing phase for Left: when sin(phiL) < 0
     const swingL = Math.max(0, -Math.sin(phiL));
+    // Swing phase for Right: when sin(phiR) < 0
     const swingR = Math.max(0, -Math.sin(phiR));
-    p.kneeL.rot  = -(swingL * 2.5);
-    p.kneeR.rot  = -(swingR * 2.5);
 
-    // Boots stay grounded and planar (zero horizontal slit tearing)
-    p.bootL.rot  = 0;
-    p.bootR.rot  = 0;
+    // Left Leg:
+    p.hipL.ty     = -5.0 * swingL;
+    p.hipL.scaleY = 1.0 - 0.03 * swingL;
+    p.hipL.rot    = Math.sin(phiL) * 1.2;
+    p.kneeL.ty    = -9.0 * swingL;
+    p.bootL.ty    = -14.0 * swingL; // Clean foot lift off ground
 
-    // Opposing Arm Swing (Left arm swings counter to left leg stride)
-    p.shldL.rot  = -Math.sin(phiL) * 3.8;
-    p.shldR.rot  = -Math.sin(phiR) * 3.8;
+    // Right Leg:
+    p.hipR.ty     = -5.0 * swingR;
+    p.hipR.scaleY = 1.0 - 0.03 * swingR;
+    p.hipR.rot    = Math.sin(phiR) * 1.2;
+    p.kneeR.ty    = -9.0 * swingR;
+    p.bootR.ty    = -14.0 * swingR; // Clean foot lift off ground
 
-    const armFwdL = Math.max(0, -Math.sin(phiL));
-    const armFwdR = Math.max(0, -Math.sin(phiR));
-    p.elbL.rot   = armFwdL * 4.5;
-    p.elbR.rot   = -armFwdR * 4.5;
+    // Opposing Arm Swing:
+    p.shldL.rot   = -Math.sin(phiL) * 5.5;
+    p.shldL.ty    = -Math.abs(Math.sin(phiL)) * 1.0;
+    p.shldR.rot   = -Math.sin(phiR) * 5.5;
+    p.shldR.ty    = -Math.abs(Math.sin(phiR)) * 1.0;
 
-    p.wrtL.rot   = -Math.cos(phiL) * 1.2;
-    p.wrtR.rot   = -Math.cos(phiR) * 1.2;
+    const fwdL = Math.max(0, -Math.sin(phiL));
+    const fwdR = Math.max(0, -Math.sin(phiR));
+    p.elbL.rot    = fwdL * 10.0;
+    p.elbR.rot    = -fwdR * 10.0;
+
+    p.wrtL.rot    = -Math.cos(phiL) * 2.0;
+    p.wrtR.rot    = -Math.cos(phiR) * 2.0;
 
     return p;
   }
@@ -223,48 +234,57 @@
     switch (gestureName) {
       case 'pointing':
         // Assertive forward directional pointing:
-        // Right shoulder raises slightly (-4.0 deg, ty: -2px) staying connected to torso:
-        p.shldR.rot = -4.0;
-        p.shldR.ty  = -2.0;
-        p.elbR.rot  = -12.0;
-        p.elbR.tx   = -2.0;
-        p.wrtR.rot  = -6.0;
-        p.head.rot  = -2.5;
-        p.neck.rot  = -1.5;
-        p.shldL.rot = +0.8;
+        // Right arm extends forward/outward toward target with clear pointing hand
+        p.shldR.rot = -4.5;
+        p.shldR.ty  = -1.5;
+        p.elbR.rot  = -24.0;
+        p.elbR.tx   = -1.0;
+        p.wrtR.rot  = -34.0;
+        p.head.rot  = -3.2; // Gaze directed at target
+        p.neck.rot  = -1.6;
+        p.shldL.rot = +1.0;
+        p.armsInFront = true;
+        p.drawArmsMode = 'default';
         break;
 
       case 'waving':
-        // High greeting wave beside head within safe frame boundaries:
-        // Right upper arm raises moderately (-5.0 deg, ty: -2.5px), anchored at collar:
-        p.shldR.rot = -5.0;
-        p.shldR.ty  = -2.5;
-        // Forearm flexes upward beside head (-140 deg):
-        p.elbR.rot  = -140.0;
+        // High greeting wave beside head with active repeated hand/wrist movement:
+        p.shldR.rot = -4.5;
+        p.shldR.ty  = -2.0;
+        p.elbR.rot  = -132.0;
         p.elbR.tx   = -10.0;
         p.elbR.ty   = -8.0;
-        // Oscillating 2.0 Hz wrist wave:
-        p.wrtR.rot  = Math.sin(timeSec * 4.0 * Math.PI) * 12.0;
-        p.head.rot  = +2.2;
+        // Repeated 2.5 Hz wrist wave oscillation
+        p.wrtR.rot  = -24.0 + Math.sin(timeSec * 5.0 * Math.PI) * 14.0;
+        p.head.rot  = +2.5;
         p.neck.rot  = +1.2;
         p.shldL.rot = +0.8;
         p.armsInFront = true;
+        p.drawArmsMode = 'default';
         break;
 
       case 'open_palms':
-        // Natural welcoming / explanatory posture:
-        p.shldL.rot = +3.5;
-        p.shldR.rot = -3.5;
-        p.elbL.rot  = +7.0;
-        p.elbR.rot  = -7.0;
-        p.wrtL.rot  = +4.5;
-        p.wrtR.rot  = -4.5;
-        p.torso.scaleX = 1.012;
+        // Welcoming / explanatory posture with visibly open hands and supinated forearms:
+        p.shldL.rot = +5.5;
+        p.shldL.ty  = -1.5;
+        p.shldR.rot = -5.5;
+        p.shldR.ty  = -1.5;
+        p.elbL.rot  = +14.0;
+        p.elbL.tx   = +2.0;
+        p.elbR.rot  = -14.0;
+        p.elbR.tx   = -2.0;
+        p.wrtL.rot  = +16.0;
+        p.wrtL.tx   = +6.0;
+        p.wrtR.rot  = -16.0;
+        p.wrtR.tx   = -6.0;
+        p.torso.scaleX = 1.018;
+        p.torso.scaleY = 1.010;
         p.head.rot  = +0.8;
+        p.drawArmsMode = 'default';
         break;
 
       case 'thinking':
-        // Contemplative pose: right hand touches chin/jawline:
+        // Preserved contemplative hand-to-chin pose:
         p.shldR.rot = +0.8;
         p.shldR.ty  = -2.0;
         p.elbR.rot  = +134.0;
@@ -272,43 +292,51 @@
         p.elbR.ty   = -6.0;
         p.wrtR.rot  = +14.0;
         p.shldL.rot = -1.5;
-        p.elbL.rot  = -12.0;
+        p.elbL.rot  = -10.0;
         p.head.rot  = +3.2;
         p.neck.rot  = +1.6;
         p.armsInFront = true;
+        p.drawArmsMode = 'default';
         break;
 
       case 'hands_on_hips':
-        // Confident grounded stance with hands resting on jacket waistband/hips:
-        p.shldL.rot = +2.5;
-        p.shldR.rot = -2.5;
-        p.elbL.rot  = -10.0;
-        p.elbR.rot  = +10.0;
-        p.wrtL.tx   = +16.0;
-        p.wrtR.tx   = -16.0;
+        // Both hands visibly rest against waist/hip area with elbows naturally angled outward:
+        p.shldL.rot = +3.5;
+        p.shldL.ty  = -1.5;
+        p.shldR.rot = -3.5;
+        p.shldR.ty  = -1.5;
+        p.elbL.rot  = -15.0; // Flared outward
+        p.elbR.rot  = +15.0; // Flared outward
+        p.wrtL.rot  = -18.0;
+        p.wrtL.tx   = +14.0;
         p.wrtL.ty   = -20.0;
+        p.wrtR.rot  = +18.0;
+        p.wrtR.tx   = -14.0;
         p.wrtR.ty   = -20.0;
-        p.wrtL.rot  = -10.0;
-        p.wrtR.rot  = +10.0;
         p.torso.scaleY = 1.008;
-        p.armsInFront = true;
+        p.drawArmsMode = 'hands_on_hips';
         break;
 
       case 'arms_crossed':
-        // Folded arms crossing horizontally across chest harness:
-        p.shldL.rot = -4.0;
-        p.shldR.rot = +4.0;
-        p.shldL.ty  = -2.0;
-        p.shldR.ty  = -2.0;
-        p.elbL.rot  = -35.0;
-        p.elbR.rot  = +35.0;
-        p.wrtL.tx   = +10.0;
-        p.wrtR.tx   = -10.0;
-        p.wrtL.ty   = -10.0;
-        p.wrtR.ty   = -10.0;
+        // Unmistakable crossed-arm pose across chest over tactical harness:
+        p.shldL.rot = +2.0;
+        p.shldL.ty  = -1.5;
+        p.shldR.rot = -2.0;
+        p.shldR.ty  = -1.5;
+        p.elbL.rot  = -36.0;
+        p.elbL.tx   = +4.0;
+        p.elbL.ty   = -4.0;
+        p.elbR.rot  = +38.0;
+        p.elbR.tx   = -4.0;
+        p.elbR.ty   = -6.0;
+        p.wrtL.rot  = -22.0;
+        p.wrtL.tx   = +16.0;
+        p.wrtL.ty   = -12.0;
+        p.wrtR.rot  = +24.0;
+        p.wrtR.tx   = -16.0;
+        p.wrtR.ty   = -14.0;
         p.head.rot  = -1.2;
-        p.neck.rot  = -0.6;
-        p.armsInFront = true;
+        p.drawArmsMode = 'arms_crossed';
         break;
     }
 
@@ -466,21 +494,22 @@
       // Left Leg Transforms (Parent: Pelvis)
       const applyHipL = ctx => {
         applyPelvis(ctx);
-        ctx.translate(P.hipL.x + p.hipL.tx, P.hipL.y + p.hipL.ty);
+        ctx.translate(P.hipL.x + (p.hipL.tx || 0), P.hipL.y + (p.hipL.ty || 0));
         ctx.rotate(deg(p.hipL.rot));
+        ctx.scale(p.hipL.scaleX || 1, p.hipL.scaleY || 1);
         ctx.translate(-P.hipL.x, -P.hipL.y);
       };
 
       const applyKneeL = ctx => {
         applyHipL(ctx);
-        ctx.translate(P.kneeL.x, P.kneeL.y);
+        ctx.translate(P.kneeL.x + (p.kneeL.tx || 0), P.kneeL.y + (p.kneeL.ty || 0));
         ctx.rotate(deg(p.kneeL.rot));
         ctx.translate(-P.kneeL.x, -P.kneeL.y);
       };
 
       const applyBootL = ctx => {
         applyKneeL(ctx);
-        ctx.translate(P.bootL.x, P.bootL.y);
+        ctx.translate(P.bootL.x + (p.bootL.tx || 0), P.bootL.y + (p.bootL.ty || 0));
         ctx.rotate(deg(p.bootL.rot));
         ctx.translate(-P.bootL.x, -P.bootL.y);
       };
@@ -488,21 +517,22 @@
       // Right Leg Transforms (Parent: Pelvis)
       const applyHipR = ctx => {
         applyPelvis(ctx);
-        ctx.translate(P.hipR.x + p.hipR.tx, P.hipR.y + p.hipR.ty);
+        ctx.translate(P.hipR.x + (p.hipR.tx || 0), P.hipR.y + (p.hipR.ty || 0));
         ctx.rotate(deg(p.hipR.rot));
+        ctx.scale(p.hipR.scaleX || 1, p.hipR.scaleY || 1);
         ctx.translate(-P.hipR.x, -P.hipR.y);
       };
 
       const applyKneeR = ctx => {
         applyHipR(ctx);
-        ctx.translate(P.kneeR.x, P.kneeR.y);
+        ctx.translate(P.kneeR.x + (p.kneeR.tx || 0), P.kneeR.y + (p.kneeR.ty || 0));
         ctx.rotate(deg(p.kneeR.rot));
         ctx.translate(-P.kneeR.x, -P.kneeR.y);
       };
 
       const applyBootR = ctx => {
         applyKneeR(ctx);
-        ctx.translate(P.bootR.x, P.bootR.y);
+        ctx.translate(P.bootR.x + (p.bootR.tx || 0), P.bootR.y + (p.bootR.ty || 0));
         ctx.rotate(deg(p.bootR.rot));
         ctx.translate(-P.bootR.x, -P.bootR.y);
       };
@@ -562,22 +592,38 @@
       drawPart('10_upper_leg_right', applyHipR);
       drawPart('09_pelvis_belt', applyPelvis);
 
-      if (!p.armsInFront) {
+      if (p.drawArmsMode === 'hands_on_hips') {
+        drawPart('06_jacket_torso', applyTorso);
+        drawPart('08_forearm_left', applyElbL);
+        drawPart('08_forearm_right', applyElbR);
+        drawPart('07_upper_arm_left', applyShldL);
+        drawPart('07_upper_arm_right', applyShldR);
+        drawPart('09_hand_left', applyWrtL);
+        drawPart('09_hand_right', applyWrtR);
+      } else if (p.drawArmsMode === 'arms_crossed') {
+        drawPart('06_jacket_torso', applyTorso);
+        drawPart('08_forearm_left', applyElbL);
+        drawPart('09_hand_left', applyWrtL);
+        drawPart('08_forearm_right', applyElbR);
+        drawPart('09_hand_right', applyWrtR);
+        drawPart('07_upper_arm_left', applyShldL);
+        drawPart('07_upper_arm_right', applyShldR);
+      } else if (p.armsInFront) {
+        drawPart('06_jacket_torso', applyTorso);
+        drawPart('07_upper_arm_left', applyShldL);
+        drawPart('07_upper_arm_right', applyShldR);
+        drawPart('09_hand_right', applyWrtR);
+        drawPart('08_forearm_right', applyElbR);
+        drawPart('09_hand_left', applyWrtL);
+        drawPart('08_forearm_left', applyElbL);
+      } else {
         drawPart('09_hand_left', applyWrtL);
         drawPart('09_hand_right', applyWrtR);
         drawPart('08_forearm_left', applyElbL);
         drawPart('08_forearm_right', applyElbR);
-      }
-
-      drawPart('06_jacket_torso', applyTorso);
-      drawPart('07_upper_arm_left', applyShldL);
-      drawPart('07_upper_arm_right', applyShldR);
-
-      if (p.armsInFront) {
-        drawPart('09_hand_right', applyWrtR);
-        drawPart('08_forearm_right', applyElbR);
-        drawPart('09_hand_left', applyWrtL);
-        drawPart('08_forearm_left', applyElbL);
+        drawPart('06_jacket_torso', applyTorso);
+        drawPart('07_upper_arm_left', applyShldL);
+        drawPart('07_upper_arm_right', applyShldR);
       }
 
       drawPart('05_collar_left', applyTorso);

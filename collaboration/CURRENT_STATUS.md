@@ -18,8 +18,8 @@
 | **Deformation** | Targeted Localized 2D FFD | **APPROVED** | Free-Form Deformation mesh implemented for jawline-to-collar and shoulder junctions. |
 | **Cleanup** | Grey Panel & Alpha Contamination Fix | **APPROVED** | Eliminated rectangular/trapezoidal background leaks beside torso and thighs during joint movement. |
 | **Cleanup** | Detached Pixel Micro-Cleanup | **APPROVED** | Reassigned detached hand/thigh pixel fragments to correct component masks; 0 neutral distortion. |
-| **Rigging** | Hierarchical FK Rig (`engine.js`) | **APPROVED** | 19-joint kinematic hierarchy with parent-child matrix transforms and rotational limits. |
-| **Animation Review** | **Full-Body Locomotion & Gesture Prototype** | **PENDING REVIEW** | **Awaiting user and ChatGPT visual evaluation.** Review package prepared in `collaboration/review/`. |
+| **Rigging & Kinematics** | Hierarchical FK Rig (`engine.js`) | **UPDATED & CALIBRATED** | 19-joint hierarchy with sagittal perspective kinematics, dynamic layer sorting, and calibrated rotational bounds. |
+| **Animation Review** | **Full-Body Locomotion & Gesture Prototype** | **PENDING REVIEW** | **Awaiting user and ChatGPT visual evaluation.** Corrected walk cycle & all 6 gestures rendered in `collaboration/review/`. |
 | **Next Stage** | 3D Environment Staging | **NOT STARTED** | Background depth compositing, lighting, and scene integration. |
 | **Next Stage** | Autonomous Production Queue | **NOT STARTED** | End-to-end autonomous script-to-video pipeline. |
 
@@ -42,9 +42,16 @@
 
 ## 3. Active Review Items (Pending Final Evaluation)
 
-1. **Locomotion & Gesture Evaluation Package:**
-   - Clean demonstration MP4 (`vance_clean_character_demo.mp4`), diagnostic demonstration MP4 (`vance_diagnostic_demo.mp4`), unannotated contact sheet (`vance_unannotated_contact_sheet.png`), and annotated contact sheet (`vance_annotated_contact_sheet.png`) prepared.
-   - Kinematic angles calibrated to frontal planar limits (upper arm elevation ≤ ±4.5° inside shearling collar, pelvic/hip sway clamped to ±1.6°).
+1. **Locomotion & Gesture Evaluation Package (Milestone 10 Correction Pass):**
+   - Clean demonstration MP4 (`vance_clean_character_demo.mp4`), diagnostic demonstration MP4 (`vance_diagnostic_demo.mp4`), unannotated contact sheet (`vance_unannotated_contact_sheet.png`), and annotated contact sheet (`vance_annotated_contact_sheet.png`) generated directly from `development/narrivo-hybrid/animation/engine.js`.
+   - **Kinematic Corrections Applied:**
+     - *Walking Cycle:* Alternating bipedal stepping in sagittal perspective (vertical pelvic bob -4.5px, lateral sway ±2.8px/±1.5°, stance foot grounded at `boot.ty = 0`, swing leg lifting thigh, knee -9px, and boot -14px cleanly off floor with zero joint notch tearing).
+     - *Pointing:* Arm extended toward target with clear pointing hand and head gaze directed at target.
+     - *Waving:* High greeting wave beside head with active 2.5 Hz wrist wave oscillation.
+     - *Open Palms:* Welcoming explanatory posture with open palms and supinated forearms.
+     - *Thinking:* Hand to chin contemplative pose.
+     - *Hands on Hips:* Both hands rest at waistband/hips with outward flared elbows; sleeve cuffs cap forearms cleanly via `drawArmsMode: 'hands_on_hips'`.
+     - *Arms Crossed:* Crossed-arm pose folded across tactical harness with layered forearms via `drawArmsMode: 'arms_crossed'`.
    - Character fully framed with 80 px top clearance and 120 px floor clearance with grounded combat boots.
    - **Approval status:** Pending final visual inspection by user and ChatGPT.
 
