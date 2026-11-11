@@ -19,9 +19,7 @@
 | **Cleanup** | Grey Panel & Alpha Contamination Fix | **APPROVED** | Eliminated rectangular/trapezoidal background leaks beside torso and thighs during joint movement. |
 | **Cleanup** | Detached Pixel Micro-Cleanup | **APPROVED** | Reassigned detached hand/thigh pixel fragments to correct component masks; 0 neutral distortion. |
 | **Rigging** | Hierarchical FK Rig (`engine.js`) | **APPROVED** | 19-joint kinematic hierarchy with parent-child matrix transforms and rotational limits. |
-| **Locomotion** | Frontal Bipedal Walk Cycle | **IN REVIEW / CALIBRATED** | Calibrated to frontal coronal limits (hip sway ±1.6°, knee flexion -2.5°, 0 ankle cutting). |
-| **Gestures** | Narrative Gestures (6 poses) | **IN REVIEW / CALIBRATED** | Pointing, Waving, Open Palms, Thinking, Hands on Hips, Arms Crossed calibrated in `engine.js`. |
-| **Delivery** | Clean vs Diagnostic Video Exports | **AUDITED / AWAITING SIGNOFF** | Clean export verified overlay-free across all 690 frames; Diagnostic export retains HUD. |
+| **Animation Review** | **Full-Body Locomotion & Gesture Prototype** | **PENDING REVIEW** | **Awaiting user and ChatGPT visual evaluation.** Review package prepared in `collaboration/review/`. |
 | **Next Stage** | 3D Environment Staging | **NOT STARTED** | Background depth compositing, lighting, and scene integration. |
 | **Next Stage** | Autonomous Production Queue | **NOT STARTED** | End-to-end autonomous script-to-video pipeline. |
 
@@ -42,13 +40,13 @@
 
 ---
 
-## 3. In Progress / Active Review Items
+## 3. Active Review Items (Pending Final Evaluation)
 
-1. **Locomotion & Gesture Evaluation:**
-   - Kinematic angles have been clamped to prevent frontal 2D planar artifacts (e.g., upper arm elevation limited to ±4.5° inside the shearling collar to eliminate armscye gaps).
-   - Gestures are positioned within safe portrait bounds (1080×1920) with grounded boot contact (120 px floor clearance).
-2. **Export Clarification:**
-   - Independent verification performed on `vance_clean_character_demo.mp4` confirming complete absence of text, counters, HUD cards, and title banners.
+1. **Locomotion & Gesture Evaluation Package:**
+   - Clean demonstration MP4 (`vance_clean_character_demo.mp4`), diagnostic demonstration MP4 (`vance_diagnostic_demo.mp4`), unannotated contact sheet (`vance_unannotated_contact_sheet.png`), and annotated contact sheet (`vance_annotated_contact_sheet.png`) prepared.
+   - Kinematic angles calibrated to frontal planar limits (upper arm elevation ≤ ±4.5° inside shearling collar, pelvic/hip sway clamped to ±1.6°).
+   - Character fully framed with 80 px top clearance and 120 px floor clearance with grounded combat boots.
+   - **Approval status:** Pending final visual inspection by user and ChatGPT.
 
 ---
 
