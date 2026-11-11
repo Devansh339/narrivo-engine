@@ -42,18 +42,18 @@
 
 ## 3. Active Review Items (Pending Final Evaluation)
 
-1. **Locomotion & Gesture Evaluation Package (Milestone 10 Correction Pass):**
-   - Clean demonstration MP4 (`vance_clean_character_demo.mp4`), diagnostic demonstration MP4 (`vance_diagnostic_demo.mp4`), unannotated contact sheet (`vance_unannotated_contact_sheet.png`), and annotated contact sheet (`vance_annotated_contact_sheet.png`) generated directly from `development/narrivo-hybrid/animation/engine.js`.
-   - **Kinematic Corrections Applied:**
-     - *Walking Cycle:* Alternating bipedal stepping in sagittal perspective (vertical pelvic bob -4.5px, lateral sway ±2.8px/±1.5°, stance foot grounded at `boot.ty = 0`, swing leg lifting thigh, knee -9px, and boot -14px cleanly off floor with zero joint notch tearing).
-     - *Pointing:* Arm extended toward target with clear pointing hand and head gaze directed at target.
-     - *Waving:* High greeting wave beside head with active 2.5 Hz wrist wave oscillation.
-     - *Open Palms:* Welcoming explanatory posture with open palms and supinated forearms.
-     - *Thinking:* Hand to chin contemplative pose.
-     - *Hands on Hips:* Both hands rest at waistband/hips with outward flared elbows; sleeve cuffs cap forearms cleanly via `drawArmsMode: 'hands_on_hips'`.
-     - *Arms Crossed:* Crossed-arm pose folded across tactical harness with layered forearms via `drawArmsMode: 'arms_crossed'`.
-   - Character fully framed with 80 px top clearance and 120 px floor clearance with grounded combat boots.
-   - **Approval status:** Pending final visual inspection by user and ChatGPT.
+1. **Locomotion & Gesture Evaluation Package (Milestone 10 Correction Pass — Commit `77ecc64`):**
+   - Clean demonstration MP4 (`vance_clean_character_demo.mp4`, `5,627,297` bytes, `19:42:36 +05:30`), diagnostic demonstration MP4 (`vance_diagnostic_demo.mp4`, `5,836,145` bytes, `19:43:06 +05:30`), unannotated contact sheet (`vance_unannotated_contact_sheet.png`, `2400×1400`, `1,548,203` bytes), and annotated contact sheet (`vance_annotated_contact_sheet.png`, `2400×1650`, `1,521,478` bytes) generated directly from `development/narrivo-hybrid/animation/engine.js` (`19:35:01 +05:30`) and synced to GitHub Release `vance-visual-review`.
+   - **Reconciled `engine.js` Parameters (`77ecc64`):**
+     - *Walking Cycle (`stridePeriod = 1.08 s`):* `pelvis.ty = -4.5 * bob px`, `pelvis.tx = ±2.8 px`, `pelvis.rot = ±1.5°`, `torso.rot = -pelvis.rot * 0.65`, `torso.ty = pelvis.ty * 0.35`; swing leg `hip.ty = -5.0 px`, `hip.scaleY = 0.97` min, `hip.rot = ±1.2°`, `knee.ty = -9.0 px`, `knee.rot = 0°`, `boot.ty = -14.0 px` (`0 px` in stance); opposing arms `shld.rot = ±5.5°`, `shld.ty = -1.0 px` max, `elb.rot = +10.0° / -10.0°` on forward swing, `wrt.rot = ±2.0°`.
+     - *Pointing:* `shldR.rot = -4.5°`, `ty = -1.5 px`, `elbR.rot = -24.0°`, `tx = -1.0 px`, `wrtR.rot = -34.0°`, `head.rot = -3.2°`, `neck.rot = -1.6°`, `shldL.rot = +1.0°`, `armsInFront = true`.
+     - *Waving:* `shldR.rot = -4.5°`, `ty = -2.0 px`, `elbR.rot = -132.0°`, `tx = -10.0 px`, `ty = -8.0 px`, `wrtR.rot = -24.0° + sin(5πt) * 14.0°` (`2.5 Hz`), `head.rot = +2.5°`, `neck.rot = +1.2°`, `shldL.rot = +0.8°`, `armsInFront = true`.
+     - *Open Palms:* `shldL/R.rot = +5.5° / -5.5°`, `ty = -1.5 px`, `elbL/R.rot = +14.0° / -14.0°`, `tx = ±2.0 px`, `wrtL/R.rot = +16.0° / -16.0°`, `tx = ±6.0 px`, `torso.scaleX = 1.018`, `scaleY = 1.010`, `head.rot = +0.8°`.
+     - *Thinking:* `shldR.rot = +0.8°`, `ty = -2.0 px`, `elbR.rot = +134.0°`, `tx = -8.0 px`, `ty = -6.0 px`, `wrtR.rot = +14.0°`, `shldL.rot = -1.5°`, `elbL.rot = -10.0°`, `head.rot = +3.2°`, `neck.rot = +1.6°`, `armsInFront = true`.
+     - *Hands on Hips:* `shldL/R.rot = +3.5° / -3.5°`, `ty = -1.5 px`, `elbL/R.rot = -15.0° / +15.0°`, `wrtL/R.rot = -18.0° / +18.0°`, `tx = +14.0 / -14.0 px`, `ty = -20.0 px`, `torso.scaleY = 1.008`, `drawArmsMode = 'hands_on_hips'`.
+     - *Arms Crossed:* `shldL/R.rot = +2.0° / -2.0°`, `ty = -1.5 px`, `elbL.rot = -36.0°` (`tx +4, ty -4`), `elbR.rot = +38.0°` (`tx -4, ty -6`), `wrtL.rot = -22.0°` (`tx +16, ty -12`), `wrtR.rot = +24.0°` (`tx -16, ty -14`), `head.rot = -1.2°`, `drawArmsMode = 'arms_crossed'`.
+   - Character framed on 1080×1920 canvas with 80 px top clearance and 120 px bottom clearance.
+   - **Approval status:** Pending visual inspection by user and ChatGPT.
 
 ---
 

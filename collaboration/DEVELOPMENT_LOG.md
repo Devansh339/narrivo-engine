@@ -119,25 +119,18 @@ This log documents the actual completed milestones and development progression i
 
 ---
 
-### Milestone 10 — Commander Vance Animation Correction Pass
-- **Feedback Addressed:** ChatGPT review of the 23-second video indicated that while character artwork and rendering were approved, movement and gestures required more communicative clarity:
-  1. *Walking:* Previously looked like mere weight shifting; needed alternating leg strides, visible knee and foot lift, and grounded stance.
-  2. *Pointing:* Needed an assertive pointing arm toward target with clear pointing hand and head gaze directed at target.
-  3. *Waving:* Needed active repeated 2.5 Hz wrist wave oscillation beside the head.
-  4. *Open Palms:* Needed welcoming/explanatory posture with open palms and supinated forearms.
-  5. *Thinking:* Preserved contemplative hand-to-chin gesture with subtle head tilt.
-  6. *Hands on Hips:* Both hands visibly resting against the waistband/hips with outward flared elbows and clean sleeve cuff overlap (`drawArmsMode: 'hands_on_hips'`).
-  7. *Arms Crossed:* Unmistakable crossed-arm pose folded across tactical chest harness with clean layered forearms (`drawArmsMode: 'arms_crossed'`).
-- **Kinematic Discoveries & Rig Implementation (`engine.js`):**
-  - *Frontal Walking Kinematics:* 2D coronal knee rotation tears horizontal notches because 2D knees cannot bend sideways in a frontal view. Developed sagittal perspective kinematics:
-    - Vertical pelvic bob (-4.5px) and lateral weight transfer (±2.8px, ±1.5°).
-    - Stance foot firmly grounded on canvas floor (`boot.ty = 0`) with zero floating.
-    - Swing leg lifts thigh (`hip.ty = -5px`, `scaleY = 0.97`), raises knee (`knee.ty = -9px`), and cleanly lifts boot off ground (`boot.ty = -14px`).
-    - Opposing arm swing (±5.5°) with forearm flexion on forward swing.
-  - *Layer Sorting & Armscye Preservation:*
-    - Updated `VanceRenderer.render` to dynamically re-order arm layers based on pose mode: upper arm sleeve cuffs cap forearm elbows, eliminating raw border exposures.
-- **Deliverables & Verification:**
-  - `development/narrivo-hybrid/animation/engine.js` updated with full kinematic calibrations and draw orders.
-  - 12-panel unannotated (`vance_unannotated_contact_sheet.png`) and annotated (`vance_annotated_contact_sheet.png`) contact sheets rendered directly from `engine.js`.
-  - Full 690-frame 23-second clean (`vance_clean_character_demo.mp4`) and diagnostic (`vance_diagnostic_demo.mp4`) videos re-rendered.
-  - Milestone status remains **PENDING APPROVAL** awaiting final reviewer evaluation.
+### Milestone 10 — Commander Vance Animation Correction Pass (`77ecc64`)
+- **Review Context:** ChatGPT review of the prior 23-second clean video indicated that while artwork and rendering were acceptable, several animations needed stronger movement and gesture readability (walking, pointing, waving, open palms, thinking preserved, hands on hips, arms crossed).
+- **Kinematic & Rig Changes Committed in `development/narrivo-hybrid/animation/engine.js` (`77ecc64`):**
+  1. *Walking (`evaluateWalk`, `stridePeriod = 1.08 s`):* Implemented sagittal translation/foreshortening kinematics (`pelvis.ty = -4.5 * bob`, `pelvis.tx = ±2.8 px`, `pelvis.rot = ±1.5°`, `torso.rot = ±0.975°`, `torso.ty = pelvis.ty * 0.35`, `hip.rot = ±1.2°`, `knee.rot = 0°`, swing `hip.ty = -5.0 px`, `hip.scaleY = 0.97`, `knee.ty = -9.0 px`, `boot.ty = -14.0 px`, stance `boot.ty = 0 px`, `shld.rot = ±5.5°`, `shld.ty = -1.0 px` max, `elb.rot = +10.0° / -10.0°`, `wrt.rot = ±2.0°`).
+  2. *Pointing (`evaluateGesture('pointing')`):* `shldR.rot = -4.5°` (`ty -1.5`), `elbR.rot = -24.0°` (`tx -1.0`), `wrtR.rot = -34.0°`, `head.rot = -3.2°`, `neck.rot = -1.6°`, `shldL.rot = +1.0°`, `armsInFront = true`.
+  3. *Waving (`evaluateGesture('waving')`):* `shldR.rot = -4.5°` (`ty -2.0`), `elbR.rot = -132.0°` (`tx -10.0, ty -8.0`), `wrtR.rot = -24.0° + sin(5πt) * 14.0°` (2.5 Hz oscillation), `head.rot = +2.5°`, `neck.rot = +1.2°`, `shldL.rot = +0.8°`, `armsInFront = true`.
+  4. *Open Palms (`evaluateGesture('open_palms')`):* `shldL/R.rot = ±5.5°` (`ty -1.5`), `elbL/R.rot = ±14.0°` (`tx ±2.0`), `wrtL/R.rot = ±16.0°` (`tx ±6.0`), `torso.scaleX = 1.018`, `scaleY = 1.010`, `head.rot = +0.8°`, `armsInFront = false`.
+  5. *Thinking (`evaluateGesture('thinking')`):* `shldR.rot = +0.8°` (`ty -2.0`), `elbR.rot = +134.0°` (`tx -8.0, ty -6.0`), `wrtR.rot = +14.0°`, `shldL.rot = -1.5°`, `elbL.rot = -10.0°`, `head.rot = +3.2°`, `neck.rot = +1.6°`, `armsInFront = true`.
+  6. *Hands on Hips (`evaluateGesture('hands_on_hips')`):* `shldL/R.rot = +3.5° / -3.5°` (`ty -1.5`), `elbL/R.rot = -15.0° / +15.0°`, `wrtL/R.rot = -18.0° / +18.0°` (`tx ±14.0, ty -20.0`), `torso.scaleY = 1.008`, `drawArmsMode = 'hands_on_hips'`.
+  7. *Arms Crossed (`evaluateGesture('arms_crossed')`):* `shldL/R.rot = +2.0° / -2.0°` (`ty -1.5`), `elbL.rot = -36.0°` (`tx +4.0, ty -4.0`), `elbR.rot = +38.0°` (`tx -4.0, ty -6.0`), `wrtL.rot = -22.0°` (`tx +16.0, ty -12.0`), `wrtR.rot = +24.0°` (`tx -16.0, ty -14.0`), `head.rot = -1.2°`, `drawArmsMode = 'arms_crossed'`.
+  8. *Layer Ordering (`VanceRenderer.render`):* Added `applyHip`/`applyKnee`/`applyBoot` translation & scale support and `drawArmsMode` draw branches (`'hands_on_hips'`, `'arms_crossed'`, `armsInFront`, default).
+- **Deliverables & Sync:**
+  - `vance_clean_character_demo.mp4` (`5,627,297` bytes, `19:42:36 +05:30`) and `vance_diagnostic_demo.mp4` (`5,836,145` bytes, `19:43:06 +05:30`) verified current against `engine.js` (`19:35:01 +05:30`, `77ecc64`) and uploaded to GitHub Release `vance-visual-review` (replacing earlier assets).
+  - Unannotated (`2400×1400`, `1,548,203` bytes) and annotated (`2400×1650`, `1,521,478` bytes) contact sheets staged in `collaboration/review/`.
+  - Milestone status remains **PENDING APPROVAL** awaiting user and ChatGPT visual evaluation.
